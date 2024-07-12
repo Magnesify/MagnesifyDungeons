@@ -1,0 +1,8 @@
+name: MagnesifyDungeons
+version: '${project.version}'
+main: com.magnesify.magnesifydungeons.MagnesifyDungeons
+api-version: '1.18'
+prefix: MagnesifyDungeons
+authors: [hacimertgokhan]
+description: MagnesifyDungeons, Gelişmiş zindan eklentisi.
+website: documents.magnesify.com
