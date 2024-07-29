@@ -2,7 +2,27 @@ name: MagnesifyDungeons
 version: '${project.version}'
 main: com.magnesify.magnesifydungeons.MagnesifyDungeons
 api-version: '1.18'
+database: true
 prefix: MagnesifyDungeons
 authors: [hacimertgokhan]
 description: MagnesifyDungeons, Gelişmiş zindan eklentisi.
 website: documents.magnesify.com
+commands:
+  MagnesifyDungeons:
+    aliases:
+      - mgd
+    permission: mgd.admin
+    description: MagnesifyDungeon, Ana eklenti yönetim komutu.
+  MagnesifyDungeonsBoss:
+    aliases:
+      - mgdb
+    permission: mgdb.admin
+    description: MagnesifyDungeonsBoss, Ana boss yönetim komutu.
+  Join:
+    description: MagnesifyDungeon, Zindana katılma komutu.
+  Leave:
+    description: MagnesifyDungeon, Zindandan ayrılma komutu.
+  DungeonProfile:
+    description: MagnesifyDungeon, Kişisel zindan profili,
+    aliases:
+      - dp

@@ -1,0 +1,125 @@
+settings:
+  prefix: '<#4f91fc>&lMagnesify Dungeons &8▸&f'
+  minimal-options:
+    send-damage-title: true
+    teleport-delay-for-sending-spawn: 3
+  defaults:
+    tag: '<#5794ff>&lMagnesify'
+    dungeon-world: world
+    last-dungeon: "Henüz bir zindana giriş yapmamış."
+  sounds:
+    starting: ENTITY_PLAYER_LEVELUP
+    entering: ENTITY_PLAYER_LEVELUP
+  custom-commands:
+    cancel: iptal
+    leave: ayrıl
+    join: gir
+    dungeon-menus: zindanlar
+  holders:
+    name: "İsim"
+    category: "Kategori"
+    boss_id: "Boss kimliği"
+    level: "Seviye"
+    play-time: "Oynama Süresi (Saniye)"
+    start-time: "Başlama Süresi (Saniye)"
+    none: "Yok"
+  menu:
+    title: '<#4f91fc>&lZindan Kategorileri'
+    paging:
+      next:
+        display: "&aSonraki Sayfa"
+        material: ARROW
+      previous:
+        display: "&cÖnceki Sayfa"
+        material: ARROW
+      info:
+        display: "&fSayfa: #current/&a#max"
+        material: BOOK
+  main-spawn:
+    world:
+    x:
+    y:
+    z:
+    yaw:
+    pitch:
+  messages:
+    events:
+      joined:
+        - ''
+        - '<#4f91fc>&lMagnesify Dungeons &8・ &fZindana giriş yaptın !'
+        - ' &fBossu &d#playtime &fsaniye içinde öldürmen gerek.'
+        - ' &fSonraki zindan seviyesi &d#next_level.'
+        - ' &fZindan kategorisi &d#category.'
+        - ' &fSavaş birazdan başlayacak...'
+        - ''
+        - '<#4f91fc>&lMagnesify Dungeons &8・ &fBoss Hakkında'
+        - ' &fBoss adı: &d#boss_name'
+        - ' &fCanı: &d#boss_health'
+        - ''
+    helps:
+      boss:
+        - ''
+        - '<#4f91fc>&lMagnesify Dungeons &8・ &fYaratık Oluşturma'
+        - ' &b/Mgdb create &f: Yeni yaratık oluşturur.'
+        - ' &b/Mgdb delete <yaratık> &f: Seçili yaratığı siler.'
+        - ' &b/Mgdb list &f: Yaratık listesini döndürür.'
+        - ' &b/Mgdb cancel &f: Yaratık oluşturmasını iptal et.'
+        - ''
+      player:
+        join:
+          - ''
+          - '<#4f91fc>&lMagnesify Dungeons &8・ &fEtkinlik Komutları'
+          - ' &b/join <zindan>&f: &7Seçilen zindana katılırsınız.'
+          - ' &b/join menu&f: &7Zindan kategorilerini gösterir.'
+          - ''
+      admin:
+        - ''
+        - '<#4f91fc>&lMagnesify Dungeons &8・ &fYönetim Komutları'
+        - ' &b/Mgd reload &f: Eklentiyi yeniler.'
+        - ' &b/Mgd create &f: Yeni zindan oluşturur.'
+        - ' &b/Mgd update <zindan> &f: Mevcut zindanı günceller.'
+        - ' &b/Mgd delete <zindan> &f: Seçili zindanı siler.'
+        - ' &b/Mgd list &f: Zindan listesini döndürür.'
+        - ' &b/Mgd setmainspawn &f: Ana başlangıç bölgesini ayarlarsınız.'
+        - ' &b/Mgd cancel &f: Zindan oluşturmasını iptal et.'
+        - ''
+        - ' &b・ &fBoss yönetimi için: &d/Mgdb'
+        - ''
+    error:
+      select-spawn-first: '#prefix İlk önce bir başlangıç seçmelisin ! &d/Mgd setmainspawn'
+      cannot-created: '#prefix İşlem &d#name &fadında bir zindan oluşturulamadı, bilgiler başka bir zindana ait olabilirmi ?'
+      no-data-found: '#prefix Herhangi bir veri bulunamadı.'
+    reload: '#prefix Eklenti <#4f91fc>#ms &fmilisaniye içerisinde başarıyla yenilendi.'
+    no-permission: '#prefix Bu işlem için yeterli yetkiye sahip değilsin.'
+    in-game-command: '#prefix Bu komutu konsoldan kullanamazsın.'
+    main-spawn-selected: '#prefix Ana başlangıç bölgesi ayarlandı.'
+    status:
+      lose: '#prefix Yaratık tarafından öldürüldün...'
+      win: '#prefix Yaratığı öldürdün ! 3 saniye sonra başlangıca ışınlanacaksın. Sonraki zindana geçiş yapabilirsin...'
+    boss:
+      creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
+      created: '#prefix Yaratık oluşturuldu, yaratık adı &d#name, &fidsi &d#id.'
+      creation-progress-started: '#prefix Yaratık oluşturma işlemi başladı, &dlütfen bir yaratık adı belirtin&f. İşlemi iptal etmek için &d/Mgdb cancel'
+      deleted: '#prefix &d#name &fisimli yaratık silindi.'
+      unknow-dungeon: '#prefix &d#name &fisminde bir yaratık yok.'
+      no-progress-found: '#prefix Bir yaratık oluşturmuyorsun.'
+    dungeon:
+      not-in-dungeon: '#prefix Bir zindanda değilsin.'
+      leave-success: '#prefix zindandan çıkış yaptın, korkak...'
+      full: '#prefix #name şu anda dolu, zindandaki oyuncunun görev bitimine &d#countdown &fsaniye var'
+      already-in-dungeon: '#prefix #name adlı zindana giriş yapamazsın, şu an zaten bir zindandasın !'
+      entering: '<#4f91fc>&l#countdown &fsaniye içinde zindana ışınlanıyorsun... İptal etmek için &d/#custom_commands[cancel]'
+      starting: '<#4f91fc>&l#countdown &fsaniye içinde savaş başlayacak... Çıkış yapmak için &d/#custom_commands[leave]'
+      playing: '&fBossu <#4f91fc>&l#countdown &fsaniye içinde öldürmen gerek ! Çıkış yapmak için &d/#custom_commands[leave]'
+      creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
+      created: '#prefix Zindan oluşturuldu, zindan adı &d#name, &fkategorisi &d#category.'
+      creation-progress-started: '#prefix Zindan oluşturma işlemi başladı, &dlütfen bir zindan adı belirtin&f. İşlemi iptal etmek için &d/Mgd cancel'
+      deleted: '#prefix &d#name &fisimli zindan silindi.'
+      unknow-dungeon: '#prefix &d#name &fisminde bir zindan yok.'
+      cancelled: '#prefix &fZindan oluşturma işlemi iptal edildi..'
+      no-progress-found: '#prefix Bir zindan oluşturmuyorsun.'
+      canceled:
+        must-be-number: '#prefix Girdiğin değer bir sayı olmalı.'
+      list: # Sadece 2 satır olabilir !
+        - "<#4f91fc>&lMagnesify Dungeons &8・ &fZindan Listesi"
+        - "   &f#name"
