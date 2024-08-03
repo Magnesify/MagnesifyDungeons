@@ -94,8 +94,12 @@ settings:
     in-game-command: '#prefix Bu komutu konsoldan kullanamazsın.'
     main-spawn-selected: '#prefix Ana başlangıç bölgesi ayarlandı.'
     status:
-      lose: '#prefix Yaratık tarafından öldürüldün...'
-      win: '#prefix Yaratığı öldürdün ! 3 saniye sonra başlangıca ışınlanacaksın. Sonraki zindana geçiş yapabilirsin...'
+      lose:
+        chat: '#prefix Yaratık tarafından öldürüldün...'
+      win:
+        chat: '#prefix Yaratığı öldürdün ! 3 saniye sonra başlangıca ışınlanacaksın. Sonraki zindana geçiş yapabilirsin...'
+        title: '&6&lKAZANDIN'
+        subtitle: '&fTebrikler #point puan hesabına eklendi !'
     boss:
       creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
       created: '#prefix Yaratık oluşturuldu, yaratık adı &d#name, &fidsi &d#id.'

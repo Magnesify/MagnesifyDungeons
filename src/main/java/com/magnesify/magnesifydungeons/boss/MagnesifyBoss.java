@@ -72,7 +72,6 @@ public class MagnesifyBoss {
             List<String> enchants = new ArrayList<>();
             List<String> drops = new ArrayList<>();
             drops.add("GOLDEN_APPLE:16");
-            enchants.add("MENDING:1");
             enchants.add("PROTECTION_ENVIRONMENTAL:1");
             boss.get().set("boss." + name + ".name", name);
             boss.get().set("boss." + name + ".id", id);

@@ -4,35 +4,23 @@ import com.magnesify.magnesifydungeons.boss.BossManager;
 import com.magnesify.magnesifydungeons.boss.events.BossCreateEvent;
 import com.magnesify.magnesifydungeons.boss.events.BossDeathEvent;
 import com.magnesify.magnesifydungeons.commands.Administrator;
-import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.Status;
+import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
-import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
-import com.magnesify.magnesifydungeons.files.Options;
-import com.magnesify.magnesifydungeons.files.Players;
-import com.magnesify.magnesifydungeons.modules.Defaults;
-import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.Boss;
 import com.magnesify.magnesifydungeons.files.Dungeons;
+import com.magnesify.magnesifydungeons.files.Options;
+import com.magnesify.magnesifydungeons.files.Players;
 import com.magnesify.magnesifydungeons.hanapi.GuiEvents;
+import com.magnesify.magnesifydungeons.modules.DatabaseManager;
+import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-
-import java.sql.SQLException;
-import java.util.UUID;
 
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
@@ -54,12 +42,15 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Dungeons dungeons = new Dungeons(); dungeons.reload();
         saveDefaultConfig();
 
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        databaseManager.initialize();
+
         getCommand("MagnesifyDungeons").setExecutor(new Administrator(this));
         getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
         getCommand("DungeonProfile").setExecutor(new Status(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
-        if(options.get().getBoolean("options.clean-start")) Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
+        if(!options.get().getBoolean("options.clean-start")) Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
                 "                                          _ ____     \n" +
                 "   ____ ___  ____ _____ _____  ___  _____(_) __/_  __\n" +
                 "  / __ `__ \\/ __ `/ __ `/ __ \\/ _ \\/ ___/ / /_/ / / /\n" +

@@ -42,8 +42,7 @@ public class BossDeathEvent implements Listener {
                     if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
                         if (entity.hasMetadata("name")) {
                             if(get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
-                                dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 4));
-
+                                dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
                             }
                         }
                     }
@@ -101,7 +100,8 @@ public class BossDeathEvent implements Listener {
                         dungeon.events().stop(entity);
                         get().getPlayers().updateDungeonStatus(entity, false);
                         get().getPlayers().updateDeath(entity, 1);
-                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose"));
+                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
+                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
                     }
                 }
             }
@@ -137,7 +137,8 @@ public class BossDeathEvent implements Listener {
                         item.setItemMeta(itemMeta);
                         killer.getInventory().addItem(item);
                     }
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win"));
+                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win.chat"));
+                    dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle"));
                 }
             }
         }
