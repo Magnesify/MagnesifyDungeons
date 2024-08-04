@@ -79,7 +79,6 @@ settings:
         - ' &b/Mgd create &f: Yeni zindan oluşturur.'
         - ' &b/Mgd update <zindan> &f: Mevcut zindanı günceller.'
         - ' &b/Mgd delete <zindan> &f: Seçili zindanı siler.'
-        - ' &b/Mgd list &f: Zindan listesini döndürür.'
         - ' &b/Mgd setmainspawn &f: Ana başlangıç bölgesini ayarlarsınız.'
         - ' &b/Mgd cancel &f: Zindan oluşturmasını iptal et.'
         - ''
@@ -108,7 +107,9 @@ settings:
       unknow-dungeon: '#prefix &d#name &fisminde bir yaratık yok.'
       no-progress-found: '#prefix Bir yaratık oluşturmuyorsun.'
     dungeon:
+      boss-not-exists: '#prefix Zindan aktif ancak zindanın içinde savaşacak boss henüz ayarlanmamış. Yoksa boss kaçtı mı ?'
       not-in-dungeon: '#prefix Bir zindanda değilsin.'
+      not-next-level-dungeon: '#prefix Bu zindana şu an giriş yapamazsın, önceki seviyeleri tamamlaman gerek !'
       leave-success: '#prefix zindandan çıkış yaptın, korkak...'
       full: '#prefix #name şu anda dolu, zindandaki oyuncunun görev bitimine &d#countdown &fsaniye var'
       already-in-dungeon: '#prefix #name adlı zindana giriş yapamazsın, şu an zaten bir zindandasın !'

@@ -1,10 +1,8 @@
 package com.magnesify.magnesifydungeons.events;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
-import com.magnesify.magnesifydungeons.files.Dungeons;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -84,8 +82,7 @@ public class DungeonCreateEvent implements Listener {
                         data.put("lvl", event.getMessage());
                         event.setCancelled(true);
                         creationSystemLevel.remove(event.getPlayer().getUniqueId());
-                        Dungeons dungeons = new Dungeons();
-                        Dungeon dungeon = new Dungeon(dungeons, data.get("Name"), data.get("Category"), Integer.parseInt(data.get("lvl")), data.get("BossID"), Integer.parseInt(data.get("ST")), Integer.parseInt(data.get("PT")), event.getPlayer().getLocation());
+                        Dungeon dungeon = new Dungeon(data.get("Name"), data.get("Category"), Integer.parseInt(data.get("lvl")), data.get("BossID"), Integer.parseInt(data.get("ST")), Integer.parseInt(data.get("PT")), event.getPlayer().getLocation());
                         if (dungeon.create()) {
                             dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.created").replace("#category", data.get("Category")).replace("#name", data.get("Name")));
                         } else {

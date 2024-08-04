@@ -1,11 +1,10 @@
 package com.magnesify.magnesifydungeons.storage;
 
-import com.magnesify.magnesifydungeons.files.Players;
-import org.bukkit.entity.LightningStrike;
+import com.magnesify.magnesifydungeons.files.JsonStorage;
 import org.bukkit.entity.Player;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
 
 public class PlayerMethods {
@@ -19,124 +18,117 @@ public class PlayerMethods {
     public PlayerMethods(){}
 
     public void createPlayer() {
-        Players players = new Players();
-        if(players.get().getString("players." + player.getUniqueId().toString()) == null) {
-            players.get().set("players." + player.getUniqueId().toString() + ".name", player.getName());
-            players.get().set("players." + player.getUniqueId().toString() + ".point", 0);
-            players.get().set("players." + player.getUniqueId().toString() + ".kill", 0);
-            players.get().set("players." + player.getUniqueId().toString() + ".death", 0);
-            players.get().set("players." + player.getUniqueId().toString() + ".last-dungeon", "None");
-            players.get().set("players." + player.getUniqueId().toString() + ".last-boss", "None");
-            players.get().set("players." + player.getUniqueId().toString() + ".dungeons", "None");
-            players.get().set("players." + player.getUniqueId().toString() + ".in-dungeon", false);
-            players.get().set("players." + player.getUniqueId().toString() + ".done", false);
-            players.save();
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        if(players.getValue("players." + player.getUniqueId().toString()) == null) {
+            JSONObject players_config = new JSONObject();
+            players_config.put("players." + player.getUniqueId().toString() + ".name", player.getName());
+            players_config.put("players." + player.getUniqueId().toString() + ".point", 0);
+            players_config.put("players." + player.getUniqueId().toString() + ".kill", 0);
+            players_config.put("players." + player.getUniqueId().toString() + ".death", 0);
+            players_config.put("players." + player.getUniqueId().toString() + ".last_dungeon", "Yok");
+            players_config.put("players." + player.getUniqueId().toString() + ".last_boss", "Yok");
+            players_config.put("players." + player.getUniqueId().toString() + ".in_dungeon", false);
+            players_config.put("players." + player.getUniqueId().toString() + ".done", false);
+            players.writeData(players_config);
         }
     }
 
     public boolean playerExists(Player player) {
-        Players players = new Players();
-        return players.get().getString("players." + player.getUniqueId().toString()) == null;
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return players.getValue("players." + player.getUniqueId().toString()) != null;
     }
 
     public int getPoints(Player player) {
-        Players players = new Players();
-        return players.get().getInt("players." + player.getUniqueId().toString() + ".point");
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (int) players.getValue("players." + player.getUniqueId().toString() + ".point");
     }
 
 
     public int getKill(Player player) {
-        Players players = new Players();
-        return players.get().getInt("players." + player.getUniqueId().toString() + ".point");
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (int) players.getValue("players." + player.getUniqueId().toString() + ".kill");
     }
 
 
     public int getDeath(Player player) {
-        Players players = new Players();
-        return players.get().getInt("players." + player.getUniqueId().toString() + ".death");
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (int) players.getValue("players." + player.getUniqueId().toString() + ".death");
     }
 
     public void updatePoint(Player player, int dungeon){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){
             createPlayer();
         }
-        Players players = new Players();
-        players.get().set("players." + player.getUniqueId().toString() + ".point", dungeon+getPoints(player));
-        players.save();
+        players.updateData("players." + player.getUniqueId().toString() + ".point", dungeon+getPoints(player));
     }
 
     public void updateDeath(Player player, int dungeon){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){
             createPlayer();
         }
-        Players players = new Players();
-        players.get().set("players." + player.getUniqueId().toString() + ".death", dungeon+getDeath(player));
-        players.save();
+        players.updateData("players." + player.getUniqueId().toString() + ".death", dungeon+getDeath(player));
     }
 
     public void updateKill(Player player, int dungeon){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){
             createPlayer();
         }
-        Players players = new Players();
-        players.get().set("players." + player.getUniqueId().toString() + ".kill", dungeon+getKill(player));
-        players.save();
+        players.updateData("players." + player.getUniqueId().toString() + ".kill", dungeon+getKill(player));
     }
 
 
     public void updateDungeonStatus(Player player, boolean dungeon){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){
             createPlayer();
         }
-        Players players = new Players();
-        players.get().set("players." + player.getUniqueId().toString() + ".in-dungeon", dungeon);
-        players.save();
+        players.updateData("players." + player.getUniqueId().toString() + ".in_dungeon", dungeon);
     }
 
     public boolean getDungeon(Player player)  {
-        Players players = new Players();
-        return players.get().getBoolean("players." + player.getUniqueId().toString() + ".in-dungeon");
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (boolean) players.getValue("players." + player.getUniqueId().toString() + ".in_dungeon");
     }
 
     public boolean getDone(Player player)  {
-        Players players = new Players();
-        return players.get().getBoolean("players." + player.getUniqueId().toString() + ".done");
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (boolean) players.getValue("players." + player.getUniqueId().toString() + ".done");
     }
 
     public void updateLastDungeon(Player player, String dungeon){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){
             createPlayer();
         }
-        Players players = new Players();
-        players.get().set("players." + player.getUniqueId().toString() + ".last-dungeon", dungeon);
-        players.save();
+        players.updateData("players." + player.getUniqueId().toString() + ".last_dungeon", dungeon);
     }
 
     public void setDone(Player player, boolean dungeon){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){
             createPlayer();
         }
-        Players players = new Players();
-        players.get().set("players." + player.getUniqueId().toString() + ".done", dungeon);
-        players.save();
+        players.updateData("players." + player.getUniqueId().toString() + ".done", dungeon);
     }
 
     public String getLastDungeon(Player player)  {
-        Players players = new Players();
-        return players.get().getString("players." + player.getUniqueId().toString() + ".last-dungeon");
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (String) players.getValue("players." + player.getUniqueId().toString() + ".last_dungeon");
     }
 
     public void updateLastBoss(Player player, String dungeon) {
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){
             createPlayer();
         }
-        Players players = new Players();
-        players.get().set("players." + player.getUniqueId().toString() + ".last-boss", dungeon);
-        players.save();
+        players.updateData("players." + player.getUniqueId().toString() + ".last_boss", dungeon);
     }
 
     public String getLastBoss(Player player)  {
-        Players players = new Players();
-        return players.get().getString("players." + player.getUniqueId().toString() + ".last-boss");
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (String) players.getValue("players." + player.getUniqueId().toString() + ".last_boss");
     }
 }

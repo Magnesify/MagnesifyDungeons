@@ -1,5 +1,7 @@
 package com.magnesify.magnesifydungeons.modules;
 
+import com.magnesify.magnesifydungeons.files.JsonStorage;
+
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
 public class Defaults {
@@ -17,23 +19,24 @@ public class Defaults {
     }
 
     public static class DungeonMainSpawn {
+        JsonStorage jsonStorage = new JsonStorage(get().getDataFolder()+"/datas/plugin_datas.json");
         public String world() {
-            return get().getConfig().getString("settings.main-spawn.world");
+            return (String) jsonStorage.getValue("spawn.world");
         }
         public double yaw() {
-            return get().getConfig().getDouble("settings.main-spawn.yaw");
+            return jsonStorage.getDoubleValue("spawn.yaw");
         }
         public double pitch() {
-            return get().getConfig().getDouble("settings.main-spawn.pitch");
+            return jsonStorage.getDoubleValue("spawn.pitch");
         }
-        public int x() {
-            return get().getConfig().getInt("settings.main-spawn.x");
+        public double x() {
+            return jsonStorage.getDoubleValue("spawn.x");
         }
-        public int y() {
-            return get().getConfig().getInt("settings.main-spawn.y");
+        public double y() {
+            return jsonStorage.getDoubleValue("spawn.y");
         }
-        public int z() {
-            return get().getConfig().getInt("settings.main-spawn.z");
+        public double z() {
+            return jsonStorage.getDoubleValue("spawn.z");
         }
     }
 

@@ -1,10 +1,9 @@
 package com.magnesify.magnesifydungeons.dungeon;
 
-import com.magnesify.magnesifydungeons.boss.BossManager;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.modules.DungeonManagementHandler;
-import com.magnesify.magnesifydungeons.files.Dungeons;
+import com.magnesify.magnesifydungeons.modules.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -21,7 +20,6 @@ public class Dungeon implements DungeonManagementHandler {
     private static String name;
     private static String category;
     private static String boss_id;
-    private static Dungeons dungeons;
     private static Location location;
     private static int level, PlayTime, StartTime;
 
@@ -35,11 +33,18 @@ public class Dungeon implements DungeonManagementHandler {
     }
 
     /**
+     * Oluşmuş zindandan veri çekmek için
+     */
+    public Dungeon(String name, String category) {
+        this.category = category;
+        this.name = name;
+    }
+
+    /**
      * Zindan oluşturmak için
      */
-    public Dungeon(Dungeons dungeonFile, String name, String category, int level, String boss_id, int StartTime, int PlayTime, Location location) {
+    public Dungeon(String name, String category, int level, String boss_id, int StartTime, int PlayTime, Location location) {
         this.name = name;
-        this.dungeons = dungeonFile;
         this.category = category;
         this.level = level;
         this.boss_id = boss_id;
@@ -51,35 +56,19 @@ public class Dungeon implements DungeonManagementHandler {
 
     @Override
     public boolean create() {
-        if(dungeons.get().getString("dungeons." + name) == null) {
-            dungeons.get().set("dungeons." + name + ".name", name);
-            dungeons.get().set("dungeons." + name + ".available", true);
-            dungeons.get().set("dungeons." + name + ".current-player", "None");
-            dungeons.get().set("dungeons." + name + ".category", category);
-            dungeons.get().set("dungeons." + name + ".current-level", level);
-            dungeons.get().set("dungeons." + name + ".next-level", level+1);
-            dungeons.get().set("dungeons." + name + ".point", 30);
-            dungeons.get().set("dungeons." + name + ".boss-id", boss_id);
-            dungeons.get().set("dungeons." + name + ".play-time", PlayTime);
-            dungeons.get().set("dungeons." + name + ".start-time", StartTime);
-            dungeons.get().set("dungeons." + name + ".location.world", location.getWorld().getName());
-            dungeons.get().set("dungeons." + name + ".location.x", location.getX());
-            dungeons.get().set("dungeons." + name + ".location.y", location.getY());
-            dungeons.get().set("dungeons." + name + ".location.z", location.getZ());
-            dungeons.get().set("dungeons." + name + ".location.yaw", location.getYaw());
-            dungeons.get().set("dungeons." + name + ".location.pitch", location.getPitch());
-            dungeons.save();
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        if(!databaseManager.isDungeonExists(name)) {
+            databaseManager.CreateNewDungeon(name, category, boss_id, level, PlayTime, StartTime, location);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
     public boolean delete() {
-        Dungeons dungeons = new Dungeons();
-        dungeons.get().set("dungeons." + name, null);
-        dungeons.get().getConfigurationSection("dungeons").getKeys(false).remove("dungeons." + name);
-        dungeons.save();
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.deleteDungeon(name);
         return false;
     }
 
@@ -94,9 +83,8 @@ public class Dungeon implements DungeonManagementHandler {
     }
 
     public void status(boolean bool) {
-        Dungeons dungeons = new Dungeons();
-        dungeons.get().set("dungeons." + name + ".available", bool);
-        dungeons.save();
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.setStatus(name, bool);
     }
 
     public int countdown() {
@@ -108,31 +96,23 @@ public class Dungeon implements DungeonManagementHandler {
 
 
     public int point() {
-        Dungeons dungeons = new Dungeons();;
-        return dungeons.get().getInt("dungeons." + name + ".point");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.getPoint(name);
     }
 
     public String currentPlayer() {
-        Dungeons dungeons = new Dungeons();;
-        return dungeons.get().getString("dungeons." + name + ".current-player");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.getCurrentPlayer(name);
     }
 
     public void updateCurrentPlayer(String player) {
-        Dungeons dungeons = new Dungeons();;
-        dungeons.get().set("dungeons." + name + ".current-player", player);
-        dungeons.save();
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.setCurrentPlayer(name, player);
     }
 
     public static Location location(String name) {
-        Dungeons dungeons = new Dungeons();
-        double yaw = dungeons.get().getDouble("dungeons." + name + ".location.yaw");
-        double pitch = dungeons.get().getDouble("dungeons." + name + ".location.pitch");
-        int x = dungeons.get().getInt("dungeons." + name + ".location.x");
-        int y = dungeons.get().getInt("dungeons." + name + ".location.y");
-        int z = dungeons.get().getInt("dungeons." + name + ".location.z");
-        String world = dungeons.get().getString("dungeons." + name + ".location.world");
-        if(Bukkit.getWorld(world) == null) return null;
-        return new Location(Bukkit.getWorld(world), x, y, z, (float) yaw, (float) pitch);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.getLocation(name);
     }
 
     public Parameters parameters() {
@@ -141,65 +121,57 @@ public class Dungeon implements DungeonManagementHandler {
 
     @Override
     public boolean exists() {
-        return dungeons.get().getString("dungeons." + name) != null;
-    }
-
-    public static List<String> list() {
-        List<String> a = new ArrayList<>();
-        Dungeons dungeons = new Dungeons();
-        if(dungeons.get().getConfigurationSection("dungeons").getKeys(false).isEmpty()) return null;
-        a.addAll(dungeons.get().getConfigurationSection("dungeons").getKeys(false));
-        return a;
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.isDungeonExists(name);
     }
 
     public static class Parameters {
-        Dungeons dungeons_ = new Dungeons();
+        DatabaseManager databaseManager = new DatabaseManager(get());
         public String name() {
-            return dungeons_.get().getString("dungeons." + name + ".name");
+            return databaseManager.getName(name);
         }
         public String boss() {
-            return dungeons_.get().getString("dungeons." + name + ".boss-id");
+            return databaseManager.getBoss(name);
         }
         public String category() {
-            return dungeons_.get().getString("dungeons." + name + ".category");
+            return databaseManager.getCategory(name);
         }
         public boolean status() {
-            return dungeons_.get().getBoolean("dungeons." + name + ".available");
+            return databaseManager.getStatus(name);
         }
         public int next() {
-            return dungeons_.get().getInt("dungeons." + name + ".next-level");
+            return databaseManager.getNextLevel(name);
+        }
+        public int point() {
+            return databaseManager.getPoint(name);
         }
         public int level() {
-            return dungeons_.get().getInt("dungeons." + name + ".current-level");
+            return databaseManager.getLevel(name);
         }
         public int play() {
-            return dungeons_.get().getInt("dungeons." + name + ".play-time");
+            return databaseManager.getPlayTime(name);
         }
         int start() {
-            return dungeons_.get().getInt("dungeons." + name + ".start-time");
+            return databaseManager.getStartTime(name);
         }
     }
 
     public static class Types {
-        Dungeons dungeons_ = new Dungeons();
+        DatabaseManager databaseManager = new DatabaseManager(get());
         void name(String new_data) {
-            dungeons_.get().set("dungeons." + name + ".name", new_data);
-            dungeons_.save();
+            databaseManager.setName(name, new_data);
         }
 
         void category(String new_data) {
-            dungeons_.get().set("dungeons." + name + ".category", new_data);
-            dungeons_.save();
+            databaseManager.setCategory(name, new_data);
         }
 
         void level(int new_data) {
-            dungeons_.get().set("dungeons." + name + ".level", new_data);
-            dungeons_.save();
+            databaseManager.setLevel(name, new_data);
         }
 
-        void bossId(int new_data) {
-            dungeons_.get().set("dungeons." + name + ".boss-id", new_data);
-            dungeons_.save();
+        void bossId(String new_data) {
+            databaseManager.setBossID(name, new_data);
         }
 
     }

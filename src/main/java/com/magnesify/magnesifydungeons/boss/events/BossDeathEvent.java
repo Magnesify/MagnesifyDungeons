@@ -9,7 +9,6 @@ import com.magnesify.magnesifydungeons.modules.Defaults;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,14 +34,16 @@ public class BossDeathEvent implements Listener {
         Entity entity = event.getEntity();
         if(event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
-            String metadataValue = entity.getMetadata("name").get(0).asString();
-            DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            if(metadataValue != null) {
-                if(dungeonPlayer.inDungeon()) {
-                    if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
-                        if (entity.hasMetadata("name")) {
-                            if(get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
-                                dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
+            if(entity.hasMetadata("name")) {
+                String metadataValue = entity.getMetadata("name").get(0).asString();
+                DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+                if(metadataValue != null) {
+                    if(dungeonPlayer.inDungeon()) {
+                        if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
+                            if (entity.hasMetadata("name")) {
+                                if(get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
+                                    dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
+                                }
                             }
                         }
                     }
@@ -137,8 +138,9 @@ public class BossDeathEvent implements Listener {
                         item.setItemMeta(itemMeta);
                         killer.getInventory().addItem(item);
                     }
+                    dungeonPlayer.updateCurrentLevelForDungeon(dungeon.parameters().name(), dungeon.parameters().next());
                     dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win.chat"));
-                    dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle"));
+                    dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));
                 }
             }
         }

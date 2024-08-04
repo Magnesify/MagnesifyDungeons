@@ -5,19 +5,12 @@ import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
-import com.magnesify.magnesifydungeons.hanapi.GuiManager;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-
-import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
-import static com.magnesify.magnesifydungeons.dungeon.Dungeon.location;
-import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 
 public class JoinDungeon implements CommandExecutor {
     public JoinDungeon(MagnesifyDungeons magnesifyDungeons) {}
@@ -33,20 +26,15 @@ public class JoinDungeon implements CommandExecutor {
                     dungeonPlayer.messageManager().chat(messages);
                 }
             } else if (strings.length == 1) {
-                Inventory inv = Bukkit.createInventory(null,  54, parseHexColors(get().getConfig().getString("settings.menu.title")));
-                if(strings[0].equalsIgnoreCase("menu")) {
-                    GuiManager guiManager = new GuiManager(inv);
-                    guiManager.openCategory(player);
-                } else {
-                    Dungeon dungeon = new Dungeon(strings[0]);
-                    if(!dungeonPlayer.inDungeon()) {
-                        if(dungeon.exists()) {
-                            if(dungeon.parameters().status()) {
-                                if(dungeonPlayer.stringDungeon().equalsIgnoreCase("None")) {
-                                    // ilk sefer : Burada kaldın
-                                    List<String> dungeons = dungeonPlayer.dungeons();
+                Dungeon dungeon = new Dungeon(strings[0]);
+                if(!dungeonPlayer.inDungeon()) {
+                    if(dungeon.exists()) {
+                        if(dungeon.parameters().status()) {
+                            MagnesifyBoss magnesifyBoss = new MagnesifyBoss(dungeon.parameters().boss());
+                            if(magnesifyBoss.exists()) {
+                                if(dungeonPlayer.isEnteredFirstTime(strings[0])) {
+                                    dungeonPlayer.CreateNewDungeonPlayData(strings[0]);
                                     dungeonPlayer.join(dungeon);
-                                    MagnesifyBoss magnesifyBoss = new MagnesifyBoss(dungeon.parameters().boss());
                                     dungeon.events().wait(player, dungeon);
                                     dungeon.updateCurrentPlayer(player.getName());
                                     dungeon.status(false);
@@ -54,24 +42,29 @@ public class JoinDungeon implements CommandExecutor {
                                         dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
                                     }
                                 } else {
-                                    dungeonPlayer.join(dungeon);
-                                    MagnesifyBoss magnesifyBoss = new MagnesifyBoss(dungeon.parameters().boss());
-                                    dungeon.events().wait(player, dungeon);
-                                    dungeon.updateCurrentPlayer(player.getName());
-                                    dungeon.status(false);
-                                    for(String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
-                                        dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
+                                    if(dungeonPlayer.getCurrentLevelForDungeon(strings[0]) == dungeon.parameters().level()) {
+                                        dungeonPlayer.join(dungeon);
+                                        dungeon.events().wait(player, dungeon);
+                                        dungeon.updateCurrentPlayer(player.getName());
+                                        dungeon.status(false);
+                                        for(String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
+                                            dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
+                                        }
+                                    } else {
+                                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.not-next-level-dungeon").replace("#name", strings[0]));
                                     }
                                 }
                             } else {
-                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.full").replace("#countdown", String.valueOf(dungeon.countdown())).replace("#name", strings[0]));
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.boss-not-exists").replace("#name", strings[0]));
                             }
                         } else {
-                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[0]));
+                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.full").replace("#countdown", String.valueOf(dungeon.countdown())).replace("#name", strings[0]));
                         }
                     } else {
-                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.already-in-dungeon").replace("#name", strings[0]));
+                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[0]));
                     }
+                } else {
+                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.already-in-dungeon").replace("#name", strings[0]));
                 }
             } else {
                 for(String messages : get().getConfig().getStringList("settings.messages.helps.player.join")) {

@@ -7,29 +7,30 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.Boss;
-import com.magnesify.magnesifydungeons.files.Dungeons;
-import org.bukkit.Bukkit;
+import com.magnesify.magnesifydungeons.files.JsonStorage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
-import static com.magnesify.magnesifydungeons.dungeon.Dungeon.list;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.data;
 
-public class Administrator implements Arguments, CommandExecutor {
+public class Administrator implements Arguments, CommandExecutor, TabCompleter {
     public Administrator(MagnesifyDungeons magnesifyDungeons) {}
 
     @Override
     public long reload() {
         long startTime = System.currentTimeMillis();
-        Dungeons dungeons = new Dungeons();
         Boss boss = new Boss();
         boss.reload();
-        dungeons.reload();
         get().reloadConfig();
         long endTime = System.currentTimeMillis();
         return endTime - startTime;
@@ -58,6 +59,7 @@ public class Administrator implements Arguments, CommandExecutor {
             if (strings.length == 0) {
                 help(commandSender);
             } else if (strings.length == 1) {
+                JsonStorage jsonStorage = new JsonStorage(get().getDataFolder() + "/datas/plugin_datas.json");
                 if (strings[0].equalsIgnoreCase("reload")) {
                     long millis = reload();
                     dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.reload").replace("#ms", String.valueOf(millis)));
@@ -65,7 +67,7 @@ public class Administrator implements Arguments, CommandExecutor {
                     if (commandSender instanceof Player) {
                         Player player = ((Player) commandSender).getPlayer();
                         DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-                        if(get().getConfig().getString("settings.main-spawn.world") == null ) {
+                        if(jsonStorage.getValue("spawn.world").equals("world")) {
                             dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.error.select-spawn-first"));
                         } else {
                             if (creationSystemLevel.get(player.getUniqueId()) != null) {
@@ -84,13 +86,12 @@ public class Administrator implements Arguments, CommandExecutor {
                     if (commandSender instanceof Player) {
                         Player player = ((Player) commandSender).getPlayer();
                         DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-                        get().getConfig().set("settings.main-spawn.world", player.getLocation().getWorld().getName());
-                        get().getConfig().set("settings.main-spawn.x", player.getLocation().getX());
-                        get().getConfig().set("settings.main-spawn.y", player.getLocation().getY());
-                        get().getConfig().set("settings.main-spawn.z", player.getLocation().getZ());
-                        get().getConfig().set("settings.main-spawn.yaw", player.getLocation().getYaw());
-                        get().getConfig().set("settings.main-spawn.pitch", player.getLocation().getPitch());
-                        get().saveConfig();
+                        jsonStorage.updateData("spawn.world", player.getLocation().getWorld().getName() );
+                        jsonStorage.updateData("spawn.x",  player.getLocation().getX());
+                        jsonStorage.updateData("spawn.y",  player.getLocation().getY());
+                        jsonStorage.updateData("spawn.z", player.getLocation().getZ());
+                        jsonStorage.updateData("spawn.yaw", player.getLocation().getYaw());
+                        jsonStorage.updateData("spawn.pitch", player.getLocation().getPitch());
                         dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.main-spawn-selected"));
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
@@ -110,15 +111,6 @@ public class Administrator implements Arguments, CommandExecutor {
                         }
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
-                    }
-                } else if (strings[0].equalsIgnoreCase("list")) {
-                    if(list() != null) {
-                        dungeonEntity.EntityChatManager().send(get().getConfig().getStringList("settings.messages.dungeon.list").get(0));
-                        for(String dngList : list()) {
-                            dungeonEntity.EntityChatManager().send(get().getConfig().getStringList("settings.messages.dungeon.list").get(1).replace("#name", dngList));
-                        }
-                    } else {
-                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.error.no-data-found"));
                     }
                 } else {
                     help(commandSender);
@@ -144,4 +136,23 @@ public class Administrator implements Arguments, CommandExecutor {
 
         return false;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        List<String> completions = new ArrayList<>();
+        List<String> commands = new ArrayList<>();
+
+        if (args.length == 1) {
+            commands.add("setmainspawn");
+            commands.add("cancel");
+            commands.add("reload");
+            commands.add("create");
+            commands.add("delete");
+            commands.add("update");
+            StringUtil.copyPartialMatches(args[0], commands, completions);
+        }
+        Collections.sort(completions);
+        return completions;
+    }
+
 }

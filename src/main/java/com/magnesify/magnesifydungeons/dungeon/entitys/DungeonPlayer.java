@@ -1,10 +1,10 @@
 package com.magnesify.magnesifydungeons.dungeon.entitys;
 
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
-import com.magnesify.magnesifydungeons.files.Players;
-import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
+import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.modules.Defaults;
+import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -12,9 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.json.JSONObject;
 
-import java.sql.SQLException;
-import java.util.List;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,16 +68,6 @@ public class DungeonPlayer {
         return get().getPlayers().getDone(player);
     }
 
-
-    public List<String> dungeons() {
-        Players players = new Players();
-        return players.get().getStringList("players." + player.getUniqueId().toString() + ".dungeons");
-    }
-    public String stringDungeon() {
-        Players players = new Players();
-        return players.get().getString("players." + player.getUniqueId().toString() + ".dungeons");
-    }
-
     public void leave(Dungeon dungeon) {
         Defaults defaults = new Defaults();
         dungeon.status(true);
@@ -111,6 +101,46 @@ public class DungeonPlayer {
         }
         matcher.appendTail(buffer);
         return ChatColor.translateAlternateColorCodes('&', buffer.toString());
+    }
+
+
+    public boolean isEnteredFirstTime(String dungeon) {
+        Dungeon dungeonData = new Dungeon(dungeon);
+        if(dungeonData.exists()) {
+            JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
+            return players.getValue("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".played_before") == null;
+        }
+        return false;
+    }
+
+    public void CreateNewDungeonPlayData(String dungeon) {
+        Dungeon dungeonData = new Dungeon(dungeon);
+        if(dungeonData.exists()) {
+            Date date = new Date();
+            JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".played_before", "yes");
+            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".first_join_date", date.getDate());
+            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".level", 1);
+            players.createJsonFile(jsonObject);
+        }
+    }
+
+    public int getCurrentLevelForDungeon(String dungeon) {
+        Dungeon dungeonData = new Dungeon(dungeon);
+        if(dungeonData.exists()) {
+            JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
+            return (int) players.getValue("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".level");
+        }
+        return 1;
+    }
+
+    public void updateCurrentLevelForDungeon(String dungeon, int levl) {
+        Dungeon dungeonData = new Dungeon(dungeon);
+        if(dungeonData.exists()) {
+            JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
+            players.updateData("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".level", levl);
+        }
     }
 
 }

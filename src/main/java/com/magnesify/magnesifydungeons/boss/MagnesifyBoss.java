@@ -4,6 +4,7 @@ import com.magnesify.magnesifydungeons.files.Boss;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -14,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -72,7 +72,7 @@ public class MagnesifyBoss {
             List<String> enchants = new ArrayList<>();
             List<String> drops = new ArrayList<>();
             drops.add("GOLDEN_APPLE:16");
-            enchants.add("PROTECTION_ENVIRONMENTAL:1");
+            enchants.add("protection:1");
             boss.get().set("boss." + name + ".name", name);
             boss.get().set("boss." + name + ".id", id);
             boss.get().set("boss." + name + ".mgid", "Empty");
@@ -146,7 +146,8 @@ public class MagnesifyBoss {
                 ItemMeta helmetmeta = helmet.getItemMeta();
                 for(String a : boss.get().getStringList("boss." + name + ".items.helmet.enchants")) {
                     String[] split = a.split(":");
-                    helmetmeta.addEnchant(Enchantment.getByName(split[0]), Integer.parseInt(split[1]), true);
+                    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 helmet.setItemMeta(helmetmeta);
 

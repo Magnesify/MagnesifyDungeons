@@ -2,10 +2,8 @@ package com.magnesify.magnesifydungeons.boss.events;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
-import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.Boss;
-import com.magnesify.magnesifydungeons.files.Dungeons;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

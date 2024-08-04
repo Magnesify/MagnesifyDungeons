@@ -11,22 +11,22 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.Boss;
-import com.magnesify.magnesifydungeons.files.Dungeons;
+import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
-import com.magnesify.magnesifydungeons.files.Players;
-import com.magnesify.magnesifydungeons.hanapi.GuiEvents;
 import com.magnesify.magnesifydungeons.modules.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.json.JSONObject;
 
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.data;
 
 public final class MagnesifyDungeons extends JavaPlugin {
+    private DatabaseManager dbManager;
     private static MagnesifyDungeons instance;
     public synchronized static MagnesifyDungeons get() {return instance;}
     public void setInstance(MagnesifyDungeons magnesifyDungeons) {instance = magnesifyDungeons;}
@@ -37,29 +37,44 @@ public final class MagnesifyDungeons extends JavaPlugin {
         setInstance(this);
 
         Boss boss = new Boss(); boss.reload();
-        Players players = new Players(); players.reload();
         Options options = new Options(); options.reload();
-        Dungeons dungeons = new Dungeons(); dungeons.reload();
         saveDefaultConfig();
 
-        DatabaseManager databaseManager = new DatabaseManager(this);
-        databaseManager.initialize();
+        JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
+        JsonStorage cache = new JsonStorage(this.getDataFolder() + "/datas/player_dungeon_cache.json");
+        JsonStorage players = new JsonStorage(this.getDataFolder() + "/datas/players.json");
+
+        JSONObject players_config = new JSONObject();
+        players_config.put("json_config_version", "1");
+        players.createJsonFile(players_config);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("spawn.world", "world");
+        jsonObject.put("spawn.x", 0);
+        jsonObject.put("spawn.y", 0);
+        jsonObject.put("spawn.z", 0);
+        jsonObject.put("spawn.pitch", 0);
+        jsonObject.put("spawn.yaw", 0);
+        jsonStorage.createJsonFile(jsonObject);
+
+        dbManager = new DatabaseManager(this);
+        dbManager.initialize();
 
         getCommand("MagnesifyDungeons").setExecutor(new Administrator(this));
+        getCommand("MagnesifyDungeons").setTabCompleter(new Administrator(this));
         getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
         getCommand("DungeonProfile").setExecutor(new Status(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
-        if(!options.get().getBoolean("options.clean-start")) Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
+        if(!options.get().getBoolean("options.clean-start"))
+            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
                 "                                          _ ____     \n" +
                 "   ____ ___  ____ _____ _____  ___  _____(_) __/_  __\n" +
                 "  / __ `__ \\/ __ `/ __ `/ __ \\/ _ \\/ ___/ / /_/ / / /\n" +
                 " / / / / / / /_/ / /_/ / / / /  __(__  ) / __/ /_/ / \n" +
                 "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
                 "                /____/                      /____/   \n"));
-
         Bukkit.getPluginManager().registerEvents(new DungeonPlayerEvents(this), this);
-        Bukkit.getPluginManager().registerEvents(new GuiEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonCreateEvent(this), this);
