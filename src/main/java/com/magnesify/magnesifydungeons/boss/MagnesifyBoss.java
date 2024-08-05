@@ -1,6 +1,6 @@
 package com.magnesify.magnesifydungeons.boss;
 
-import com.magnesify.magnesifydungeons.files.Boss;
+import com.magnesify.magnesifydungeons.modules.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -44,12 +43,10 @@ public class MagnesifyBoss {
     }
 
     private String name, id;
-    private Boss boss;
 
-    public MagnesifyBoss(Boss boss, String name, String id) {
+    public MagnesifyBoss(String name, String id) {
         this.name = name;
         this.id = id;
-        this.boss = boss;
     }
 
     public MagnesifyBoss(String name) {
@@ -57,130 +54,111 @@ public class MagnesifyBoss {
     }
 
     public boolean exists() {
-        Boss boss = new Boss();
-        return boss.get().getString("boss." + name) != null;
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.isBossAvailable(name);
     }
 
     public List<String> drops() {
-        Boss boss = new Boss();
-        return boss.get().getStringList("boss." + name + ".drops");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.boss().getDrops(name);
     }
 
     public boolean create() {
-        Boss boss = new Boss();
-        if(boss.get().getString("boss." + name) == null) {
-            List<String> enchants = new ArrayList<>();
-            List<String> drops = new ArrayList<>();
-            drops.add("GOLDEN_APPLE:16");
-            enchants.add("protection:1");
-            boss.get().set("boss." + name + ".name", name);
-            boss.get().set("boss." + name + ".id", id);
-            boss.get().set("boss." + name + ".mgid", "Empty");
-            boss.get().set("boss." + name + ".uuid", "Empty");
-            boss.get().set("boss." + name + ".items.helmet.material", "DIAMOND_HELMET");
-            boss.get().set("boss." + name + ".items.helmet.enchants", enchants);
-            boss.get().set("boss." + name + ".items.chestplate.material", "DIAMOND_CHESTPLATE");
-            boss.get().set("boss." + name + ".items.chestplate.enchants", enchants);
-            boss.get().set("boss." + name + ".items.leggings.material", "DIAMOND_LEGGINGS");
-            boss.get().set("boss." + name + ".items.leggings.enchants", enchants);
-            boss.get().set("boss." + name + ".items.boots.material", "DIAMOND_BOOTS");
-            boss.get().set("boss." + name + ".items.boots.enchants", enchants);
-            boss.get().set("boss." + name + ".items.weapon.material", "DIAMOND_SWORD");
-            boss.get().set("boss." + name + ".items.weapon.enchants", enchants);
-            boss.get().set("boss." + name + ".generics.damage", 5.0);
-            boss.get().set("boss." + name + ".generics.attack-knockback", 5.0);
-            boss.get().set("boss." + name + ".generics.max-health", 20.0);
-            boss.get().set("boss." + name + ".drops", drops);
-            boss.get().set("boss." + name + ".type", "ZOMBIE");
-            boss.get().set("boss." + name + ".display-name", ("&c" + name));
-            boss.save();
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        if(!databaseManager.isBossAvailable(name)) {
+            databaseManager.CreateNewBoss(name, id, "Empty", "Empty", "DIAMOND_HELMET/protection:1,mending:1", "DIAMOND_CHESTPLATE/protection:1,mending:1", "DIAMOND_LEGGINGS/protection:1,mending:1", "DIAMOND_BOOTS/protection:1,mending:1", "DIAMOND_SWORD/sharpness:1,mending:1", "20.0:5.0:40.0", "GOLDEN_APPLE:1/DIAMOND:1", "ZOMBIE", String.format("&c&l%s", name));
             return true;
         }
         return false;
     }
 
     public String name() {
-        Boss boss = new Boss();
-        return boss.get().getString("boss." + name + ".name");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.boss().getName(name);
     }
 
     public double health() {
-        Boss boss = new Boss();
-        return boss.get().getDouble("boss." + name + ".generics.max-health");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.boss().getHealth(name);
     }
 
     public void killBoss() {
-        Boss boss = new Boss();
-        UUID uuid = UUID.fromString(boss.get().getString("boss." + name + ".uuid"));
-        Entity entity = Bukkit.getEntity(uuid);
-        if (entity.hasMetadata("name")) {
-            String metadataValue = entity.getMetadata("name").get(0).asString();
-            if(boss.get().getString("boss." + name + ".mgid").equalsIgnoreCase(metadataValue)) {
-                entity.remove();
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        if(!databaseManager.boss().getUUID(name).equalsIgnoreCase("Yok")) {
+            UUID uuid = UUID.fromString(databaseManager.boss().getUUID(name));
+            Entity entity = Bukkit.getEntity(uuid);
+            if (entity.hasMetadata("name")) {
+                String metadataValue = entity.getMetadata("name").get(0).asString();
+                if(databaseManager.boss().getMGID(name).equalsIgnoreCase(metadataValue)) {
+                    entity.remove();
+                }
             }
         }
     }
 
     public void spawn(Location location, Player player) {
-        Boss boss = new Boss();
-        switch (boss.get().getString("boss." + name + ".type")) {
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        switch (databaseManager.boss().getType(name)) {
             case "ZOMBIE":
                 Zombie zombie = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
-                zombie.setCustomName(parseHexColors(boss.get().getString("boss." + name + ".display-name")));
+                zombie.setCustomName(parseHexColors(databaseManager.boss().getDisplay(name)));
                 zombie.setCustomNameVisible(true);
                 String randStr = generateRandomString();
-                boss.get().set("boss." + name + ".mgid", randStr);
-                boss.get().set("boss." + name + ".uuid", zombie.getUniqueId().toString());
-                boss.save();
+                databaseManager.boss().setMGID(name, randStr);
+                databaseManager.boss().setUUID(name, zombie.getUniqueId().toString());
                 String last_dungeon = get().getPlayers().getLastDungeon(player);
                 get().getPlayers().updateLastBoss(player, randStr);
                 zombie.setMetadata("name", new FixedMetadataValue(get(), randStr));
                 zombie.setMetadata("dungeon", new FixedMetadataValue(get(), last_dungeon));
                 zombie.setMetadata("boss", new FixedMetadataValue(get(), name));
-                zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(boss.get().getDouble("boss." + name + ".generics.max-health"));
-                zombie.setHealth(boss.get().getDouble("boss." + name + ".generics.max-health"));
-                zombie.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(boss.get().getDouble("boss." + name + ".generics.damage"));
-                zombie.getAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK).setBaseValue(boss.get().getDouble("boss." + name + ".generics.attack-knockback"));
+                zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(databaseManager.boss().getHealth(name));
+                zombie.setHealth(databaseManager.boss().getHealth(name));
+                zombie.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(databaseManager.boss().getAttack(name));
+                zombie.getAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK).setBaseValue(databaseManager.boss().getKnockback(name));
 
-                ItemStack helmet = new ItemStack(Material.getMaterial(boss.get().getString("boss." + name + ".items.helmet.material")));
+                ItemStack helmet = new ItemStack(Material.getMaterial(databaseManager.boss().getHelmetItem(name)));
                 ItemMeta helmetmeta = helmet.getItemMeta();
-                for(String a : boss.get().getStringList("boss." + name + ".items.helmet.enchants")) {
+                for(String a : databaseManager.boss().getHelmetEnchants(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
                     helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 helmet.setItemMeta(helmetmeta);
 
-                ItemStack chestplate = new ItemStack(Material.getMaterial(boss.get().getString("boss." + name + ".items.chestplate.material")));
+                ItemStack chestplate = new ItemStack(Material.getMaterial(databaseManager.boss().getChestplateItem(name)));
                 ItemMeta chestplatemeta = chestplate.getItemMeta();
-                for(String a : boss.get().getStringList("boss." + name + ".items.chestplate.enchants")) {
+                for(String a : databaseManager.boss().getChestplateEnchants(name)) {
                     String[] split = a.split(":");
-                    chestplatemeta.addEnchant(Enchantment.getByName(split[0]), Integer.parseInt(split[1]), true);
+                    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 chestplate.setItemMeta(chestplatemeta);
 
-                ItemStack leggings = new ItemStack(Material.getMaterial(boss.get().getString("boss." + name + ".items.leggings.material")));
+                ItemStack leggings = new ItemStack(Material.getMaterial(databaseManager.boss().getLeggingsItem(name)));
                 ItemMeta leggingsmeta = leggings.getItemMeta();
-                for(String a : boss.get().getStringList("boss." + name + ".items.leggings.enchants")) {
+                for(String a : databaseManager.boss().getLeggingsEnchant(name)) {
                     String[] split = a.split(":");
-                    leggingsmeta.addEnchant(Enchantment.getByName(split[0]), Integer.parseInt(split[1]), true);
+                    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 leggings.setItemMeta(leggingsmeta);
 
-                ItemStack boots = new ItemStack(Material.getMaterial(boss.get().getString("boss." + name + ".items.boots.material")));
+                ItemStack boots = new ItemStack(Material.getMaterial(databaseManager.boss().getBootsItem(name)));
                 ItemMeta bootsmeta = boots.getItemMeta();
-                for(String a : boss.get().getStringList("boss." + name + ".items.boots.enchants")) {
+                for(String a : databaseManager.boss().getBootsEnchant(name)) {
                     String[] split = a.split(":");
-                    bootsmeta.addEnchant(Enchantment.getByName(split[0]), Integer.parseInt(split[1]), true);
+                    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 boots.setItemMeta(bootsmeta);
 
 
-                ItemStack weapon = new ItemStack(Material.getMaterial(boss.get().getString("boss." + name + ".items.weapon.material")));
+                ItemStack weapon = new ItemStack(Material.getMaterial(databaseManager.boss().getWeaponsItem(name)));
                 ItemMeta weaponmeta = weapon.getItemMeta();
-                for(String a : boss.get().getStringList("boss." + name + ".items.weapon.enchants")) {
+                for(String a : databaseManager.boss().getWeaponEnchant(name)) {
                     String[] split = a.split(":");
-                    weaponmeta.addEnchant(Enchantment.getByName(split[0]), Integer.parseInt(split[1]), true);
+                    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
 
                 weapon.setItemMeta(weaponmeta);

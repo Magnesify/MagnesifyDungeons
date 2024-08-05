@@ -87,6 +87,11 @@ public class Dungeon implements DungeonManagementHandler {
         databaseManager.setStatus(name, bool);
     }
 
+    public boolean getStatus() {
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.getStatus(name);
+    }
+
     public int countdown() {
         if(countdownTime.get(name) != null) {
             return countdownTime.get(name);
@@ -201,7 +206,7 @@ public class Dungeon implements DungeonManagementHandler {
                             player.teleport(location(parameters().name()));
                             countdowns.remove(playerId);
                             this.cancel();
-                            start(player, dungeon.parameters().name(), location(dungeon.parameters().name()), dungeon);
+                            start(player, dungeon.parameters().boss(), location(dungeon.parameters().name()), dungeon);
                         }
                     } else {
                         this.cancel();
@@ -260,7 +265,9 @@ public class Dungeon implements DungeonManagementHandler {
                                 countdowns.put(playerId, remainingTime - 1);
                                 dungeonPlayer.messageManager().actionbar(get().getConfig().getString("settings.messages.dungeon.playing").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.leave")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
                             } else {
-                                dungeonPlayer.leave(dungeon);
+                                if(dungeon.getStatus()) {
+                                    dungeonPlayer.leave(dungeon);
+                                }
                                 countdowns.remove(playerId);
                                 countdownTime.remove(name);
                                 this.cancel();

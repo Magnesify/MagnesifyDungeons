@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class DatabaseManager {
@@ -41,6 +43,7 @@ public class DatabaseManager {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeons (name TEXT, available BOOLEAN, current_player TEXT, category TEXT, current_level INTEGER DEFAULT 0,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, boss_id TEXT, play_time INTEGER DEFAULT 3, start_time INTEGER DEFAULT 5, point INTEGER DEFAULT 0, next_level INTEGER DEFAULT 0, PRIMARY KEY(name, category))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS boss (name TEXT, id TEXT, mgid TEXT, uuid TEXT,helmet TEXT,chestplate TEXT,leggings TEXT,boots TEXT,weapon TEXT,damage DOUBLE DEFAULT 0.0, knockback DOUBLE DEFAULT 0.0,max_health DOUBLE DEFAULT 0.0, drops TEXT DEFAULT 'GOLDEN_APPLE', type TEXT DEFAULT 'ZOMBIE', display TEXT DEFAULT '&cMagnesify', PRIMARY KEY(name, mgid))");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -80,6 +83,445 @@ public class DatabaseManager {
             }
             return false;
         });
+    }
+
+    public CompletableFuture<Boolean> CreateNewBoss(String name, String id, String mgid, String uuid, String helmet, String chestplate, String leggings, String boots, String weapn,String generics, String drops, String type, String display) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO boss (name, id, mgid, uuid,helmet,chestplate,leggings,boots,weapon,damage, knockback,max_health, drops, type, display) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)")) {
+                String[] split_generics = generics.split(":");
+                statement.setString(1, name);
+                statement.setString(2, id);
+                statement.setString(3, mgid);
+                statement.setString(4, uuid);
+                statement.setString(5, helmet);
+                statement.setString(6, chestplate);
+                statement.setString(7, leggings);
+                statement.setString(8, boots);
+                statement.setString(9, weapn);
+                statement.setString(10, split_generics[0]); // damage
+                statement.setString(11, split_generics[1]); // knockback
+                statement.setString(12, split_generics[2]); // max_health
+                statement.setString(13, drops);
+                statement.setString(14, type);
+                statement.setString(15, display);
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+    public Boss boss() {
+        return new Boss();
+    }
+
+
+    public class Boss {
+
+        public String getName(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT name FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("name");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getUUID(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT uuid FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("uuid");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getMGID(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT mgid FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("mgid");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getType(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT type FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("type");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getDisplay(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT display FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("display");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getHelmetItem(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT helmet FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("helmet");
+                    String[] spl = point.split("/");
+                    return spl[0];
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public List<String> getHelmetEnchants(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT helmet FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("helmet");
+                    String[] spl = point.split("/");
+                    String[] spl1 = spl[1].split(",");
+                    List<String> list = new ArrayList<>();
+                    for(int i = 0;i<spl1.length;i++) {
+                        list.add(spl1[i]);
+
+                    }
+                    return list;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public List<String> getChestplateEnchants(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT chestplate FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("chestplate");
+                    String[] spl = point.split("/");
+                    String[] spl1 = spl[1].split(",");
+                    List<String> list = new ArrayList<>();
+                    for(int i = 0;i<spl1.length;i++) {
+                        list.add(spl1[i]);
+
+                    }
+                    return list;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public List<String> getLeggingsEnchant(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT leggings FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("leggings");
+                    String[] spl = point.split("/");
+                    String[] spl1 = spl[1].split(",");
+                    List<String> list = new ArrayList<>();
+                    for(int i = 0;i<spl1.length;i++) {
+                        list.add(spl1[i]);
+
+                    }
+                    return list;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public List<String> getBootsEnchant(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT boots FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("boots");
+                    String[] spl = point.split("/");
+                    String[] spl1 = spl[1].split(",");
+                    List<String> list = new ArrayList<>();
+                    for(int i = 0;i<spl1.length;i++) {
+                        list.add(spl1[i]);
+
+                    }
+                    return list;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public String getChestplateItem(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT chestplate FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("chestplate");
+                    String[] spl = point.split("/");
+                    return spl[0];
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public List<String> getWeaponEnchant(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT weapon FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("weapon");
+                    String[] spl = point.split("/");
+                    String[] spl1 = spl[1].split(",");
+                    List<String> list = new ArrayList<>();
+                    for(int i = 0;i<spl1.length;i++) {
+                        list.add(spl1[i]);
+
+                    }
+                    return list;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public List<String> getDrops(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT drops FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("drops");
+                    String[] spl = point.split("/");
+                    List<String> list = new ArrayList<>();
+                    for(int i = 0;i<spl.length;i++) {
+                        list.add(spl[i]);
+
+                    }
+                    return list;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        public String getLeggingsItem(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT leggings FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("leggings");
+                    String[] spl = point.split("/");
+                    return spl[0];
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getBootsItem(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT boots FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("boots");
+                    String[] spl = point.split("/");
+                    return spl[0];
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getWeaponsItem(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT weapon FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("weapon");
+                    String[] spl = point.split("/");
+                    return spl[0];
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public double getHealth(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT max_health FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    double point = resultSet.getDouble("max_health");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+        public double getKnockback(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT knockback FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    double point = resultSet.getDouble("knockback");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+        public double getAttack(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT damage FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    double point = resultSet.getDouble("damage");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
+        public CompletableFuture<Boolean> setMGID(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET mgid = ? WHERE name = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public CompletableFuture<Boolean> setUUID(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET uuid = ? WHERE name = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
     }
 
 
@@ -128,20 +570,17 @@ public class DatabaseManager {
     }
 
 
-    public CompletableFuture<Boolean> isBossAvailable(String dungeon) {
+    public Boolean isBossAvailable(String dungeon) {
         load();
-        return CompletableFuture.supplyAsync(() -> {
-            try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM boss WHERE name = ?")) {
-                statement.setString(1, dungeon);
-
-                ResultSet resultSet = statement.executeQuery();
-                return resultSet.next();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return false;
-        });
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM boss WHERE name = ?")) {
+            statement.setString(1, dungeon);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
@@ -178,6 +617,8 @@ public class DatabaseManager {
         }
         return 0;
     }
+
+
 
 
     public String getCurrentPlayer(String dungeon) {

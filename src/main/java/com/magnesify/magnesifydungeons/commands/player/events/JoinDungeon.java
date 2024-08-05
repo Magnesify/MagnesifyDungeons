@@ -33,13 +33,17 @@ public class JoinDungeon implements CommandExecutor {
                             MagnesifyBoss magnesifyBoss = new MagnesifyBoss(dungeon.parameters().boss());
                             if(magnesifyBoss.exists()) {
                                 if(dungeonPlayer.isEnteredFirstTime(strings[0])) {
-                                    dungeonPlayer.CreateNewDungeonPlayData(strings[0]);
-                                    dungeonPlayer.join(dungeon);
-                                    dungeon.events().wait(player, dungeon);
-                                    dungeon.updateCurrentPlayer(player.getName());
-                                    dungeon.status(false);
-                                    for(String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
-                                        dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
+                                    if(dungeon.parameters().level() == 1) {
+                                        dungeonPlayer.CreateNewDungeonPlayData(strings[0]);
+                                        dungeonPlayer.join(dungeon);
+                                        dungeon.events().wait(player, dungeon);
+                                        dungeon.updateCurrentPlayer(player.getName());
+                                        dungeon.status(false);
+                                        for(String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
+                                            dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
+                                        }
+                                    } else {
+                                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.not-first-level").replace("#name", strings[0]));
                                     }
                                 } else {
                                     if(dungeonPlayer.getCurrentLevelForDungeon(strings[0]) == dungeon.parameters().level()) {

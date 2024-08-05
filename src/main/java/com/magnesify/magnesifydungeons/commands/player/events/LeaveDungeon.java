@@ -9,8 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
-
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
 public class LeaveDungeon implements CommandExecutor {
@@ -25,7 +23,7 @@ public class LeaveDungeon implements CommandExecutor {
             if(dungeonPlayer.inDungeon()) {
                 String dungeonName = get().getPlayers().getLastDungeon(player);
                 Dungeon dungeon = new Dungeon(dungeonName);
-                if(dungeon != null) {
+                if(dungeonPlayer.inDungeon()) {
                     dungeon.status(true);
                     dungeonPlayer.leave(dungeon);
                     dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.leave-success").replace("#name", strings[0]));

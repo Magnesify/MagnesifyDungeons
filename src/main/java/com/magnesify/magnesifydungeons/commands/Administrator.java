@@ -6,7 +6,6 @@ import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
-import com.magnesify.magnesifydungeons.files.Boss;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,8 +28,6 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
     @Override
     public long reload() {
         long startTime = System.currentTimeMillis();
-        Boss boss = new Boss();
-        boss.reload();
         get().reloadConfig();
         long endTime = System.currentTimeMillis();
         return endTime - startTime;

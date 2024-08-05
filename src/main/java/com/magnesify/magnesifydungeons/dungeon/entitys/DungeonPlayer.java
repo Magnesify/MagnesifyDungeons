@@ -108,7 +108,7 @@ public class DungeonPlayer {
         Dungeon dungeonData = new Dungeon(dungeon);
         if(dungeonData.exists()) {
             JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
-            return players.getValue("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".played_before") == null;
+            return players.getValue("cache." + player.getUniqueId().toString() + "." + dungeonData.parameters().category() + ".played_before") == null;
         }
         return false;
     }
@@ -119,9 +119,9 @@ public class DungeonPlayer {
             Date date = new Date();
             JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".played_before", "yes");
-            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".first_join_date", date.getDate());
-            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".level", 1);
+            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeonData.parameters().category() + ".played_before", "yes");
+            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeonData.parameters().category() + ".first_join_date", date.getDate());
+            jsonObject.put("cache." + player.getUniqueId().toString() + "." + dungeonData.parameters().category() + ".level", 1);
             players.createJsonFile(jsonObject);
         }
     }
@@ -130,7 +130,7 @@ public class DungeonPlayer {
         Dungeon dungeonData = new Dungeon(dungeon);
         if(dungeonData.exists()) {
             JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
-            return (int) players.getValue("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".level");
+            return (int) players.getValue("cache." + player.getUniqueId().toString() + "." + dungeonData.parameters().category() + ".level");
         }
         return 1;
     }
@@ -139,7 +139,7 @@ public class DungeonPlayer {
         Dungeon dungeonData = new Dungeon(dungeon);
         if(dungeonData.exists()) {
             JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/player_dungeon_cache.json");
-            players.updateData("cache." + player.getUniqueId().toString() + "." + dungeon + "." + dungeonData.parameters().category() + ".level", levl);
+            players.updateData("cache." + player.getUniqueId().toString() + "." + dungeonData.parameters().category() + ".level", levl);
         }
     }
 

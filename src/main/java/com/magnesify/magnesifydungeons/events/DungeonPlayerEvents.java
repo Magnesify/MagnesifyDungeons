@@ -2,19 +2,20 @@ package com.magnesify.magnesifydungeons.events;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
+import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.modules.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.Defaults;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scoreboard.*;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
-import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 
 public class DungeonPlayerEvents implements Listener {
     public DungeonPlayerEvents(MagnesifyDungeons magnesifyDungeons) {}
@@ -23,11 +24,14 @@ public class DungeonPlayerEvents implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
         dungeonPlayer.createDungeonAccount(event);
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = manager.getNewScoreboard();
-        Objective objective = board.registerNewObjective("Magnesify", "Dungeons", parseHexColors(get().getConfig().getString("settings.defaults.tag")));
-        objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        event.getPlayer().setScoreboard(board);
+        Defaults defaults = new Defaults();
+        if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
+            Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
+            event.getPlayer().teleport(loc);
+        } else {
+            DungeonConsole dungeonConsole = new DungeonConsole();
+            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıç henüz ayarlanmamış &d/mgd setmainspawn &fyazarak başlangıcı ayarlayabilirsin.");
+        }
     }
 
     @EventHandler

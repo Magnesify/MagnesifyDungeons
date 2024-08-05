@@ -10,7 +10,6 @@ import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
-import com.magnesify.magnesifydungeons.files.Boss;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
 import com.magnesify.magnesifydungeons.modules.DatabaseManager;
@@ -20,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
@@ -36,9 +37,21 @@ public final class MagnesifyDungeons extends JavaPlugin {
     public void onEnable() {
         setInstance(this);
 
-        Boss boss = new Boss(); boss.reload();
         Options options = new Options(); options.reload();
         saveDefaultConfig();
+
+        File dataFolder = getDataFolder();
+        File datasFolder = new File(dataFolder, "datas");
+        if (!datasFolder.exists()) {
+            if (datasFolder.mkdirs()) {
+                getLogger().info("[MagnesifyDungeons] 'datas' klasörü başarıyla oluşturuldu.");
+            } else {
+                getLogger().warning("[MagnesifyDungeons] 'datas' klasörü oluşturulurken bir sorun oluştu.");
+            }
+        } else {
+            getLogger().info("[MagnesifyDungeons] 'datas' klasörü zaten mevcut.");
+        }
+
 
         JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
         JsonStorage cache = new JsonStorage(this.getDataFolder() + "/datas/player_dungeon_cache.json");
@@ -47,6 +60,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         JSONObject players_config = new JSONObject();
         players_config.put("json_config_version", "1");
         players.createJsonFile(players_config);
+        cache.createJsonFile(players_config);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("spawn.world", "world");

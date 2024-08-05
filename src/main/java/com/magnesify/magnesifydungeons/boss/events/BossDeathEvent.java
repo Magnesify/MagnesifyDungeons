@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -86,23 +87,25 @@ public class BossDeathEvent implements Listener {
 
     @EventHandler
     public void onKill(PlayerDeathEvent event) {
-        Player entity = event.getEntity();
+        Player entity = event.getEntity().getPlayer();
         Entity killer = event.getEntity().getKiller();
         if(killer != null) {
-            if (killer.hasMetadata("name")) {
-                String metadataValue = entity.getMetadata("name").get(0).asString();
-                DungeonPlayer dungeonPlayer = new DungeonPlayer(entity);
-                if(dungeonPlayer.inDungeon()) {
-                    if(get().getPlayers().getLastBoss(entity).equalsIgnoreCase(metadataValue)) {
-                        Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(entity));
-                        dungeon.status(true);
-                        entity.remove();
-                        get().getPlayers().setDone(entity, true);
-                        dungeon.events().stop(entity);
-                        get().getPlayers().updateDungeonStatus(entity, false);
-                        get().getPlayers().updateDeath(entity, 1);
-                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
-                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+            if(killer instanceof Zombie) {
+                if (killer.hasMetadata("name")) {
+                    String metadataValue = entity.getMetadata("name").get(0).asString();
+                    DungeonPlayer dungeonPlayer = new DungeonPlayer(entity);
+                    if(dungeonPlayer.inDungeon()) {
+                        if(get().getPlayers().getLastBoss(entity).equalsIgnoreCase(metadataValue)) {
+                            Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(entity));
+                            dungeon.status(true);
+                            entity.remove();
+                            get().getPlayers().setDone(entity, true);
+                            dungeon.events().stop(entity);
+                            get().getPlayers().updateDungeonStatus(entity, false);
+                            get().getPlayers().updateDeath(entity, 1);
+                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
+                            dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+                        }
                     }
                 }
             }
