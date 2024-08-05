@@ -7,6 +7,7 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
+import com.magnesify.magnesifydungeons.modules.DatabaseManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +32,18 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
         get().reloadConfig();
         long endTime = System.currentTimeMillis();
         return endTime - startTime;
+    }
+
+    public boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -115,11 +128,142 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             } else if (strings.length == 2) {
                 if (strings[0].equalsIgnoreCase("delete")) {
                     Dungeon dungeon = new Dungeon(strings[1]);
-                    if(dungeon.exists()) {
+                    if (dungeon.exists()) {
                         dungeon.delete();
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.deleted").replace("#name", strings[1]));
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                    }
+                } else {
+                    help(commandSender);
+                }
+            }else if (strings.length == 3) {
+                if (strings[0].equalsIgnoreCase("update")) {
+                    if (strings[1].equalsIgnoreCase("baslangic")) {
+                        if (commandSender instanceof Player) {
+                            Player player = ((Player) commandSender).getPlayer();
+                            String zindan = strings[2];
+                            Dungeon dungeon = new Dungeon(zindan);
+                            if (dungeon.exists()) {
+                                DatabaseManager databaseManager = new DatabaseManager(get());
+                                databaseManager.setSpawn(strings[2], player.getLocation());
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.spawn").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+                        }
+                    } else {
+                        help(commandSender);
+                    }
+                } else {
+                    help(commandSender);
+                }
+            }else if (strings.length == 4) {
+                if (strings[0].equalsIgnoreCase("update")) {
+                    if (strings[1].equalsIgnoreCase("puan")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            Dungeon dungeon = new Dungeon(zindan);
+                            if(dungeon.exists()) {
+                                DatabaseManager databaseManager = new DatabaseManager(get());
+                                databaseManager.setPoint(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.point").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    } else if (strings[1].equalsIgnoreCase("seviye")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            Dungeon dungeon = new Dungeon(zindan);
+                            if(dungeon.exists()) {
+                                DatabaseManager databaseManager = new DatabaseManager(get());
+                                databaseManager.setLevel(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.level").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("sonraki-seviye")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            Dungeon dungeon = new Dungeon(zindan);
+                            if(dungeon.exists()) {
+                                DatabaseManager databaseManager = new DatabaseManager(get());
+                                databaseManager.setNextLevel(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("oynama-suresi")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            Dungeon dungeon = new Dungeon(zindan);
+                            if(dungeon.exists()) {
+                                DatabaseManager databaseManager = new DatabaseManager(get());
+                                databaseManager.setPlaytime(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.play-time").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("baslama-suresi")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            Dungeon dungeon = new Dungeon(zindan);
+                            if(dungeon.exists()) {
+                                DatabaseManager databaseManager = new DatabaseManager(get());
+                                databaseManager.setStarttime(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.start-time").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("kategori")) {
+                        String zindan = strings[2];
+                        Dungeon dungeon = new Dungeon(zindan);
+                        if(dungeon.exists()) {
+                            DatabaseManager databaseManager = new DatabaseManager(get());
+                            databaseManager.setCategory(strings[2], strings[3]);
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("isim")) {
+                        String zindan = strings[2];
+                        Dungeon dungeon = new Dungeon(zindan);
+                        if(dungeon.exists()) {
+                            DatabaseManager databaseManager = new DatabaseManager(get());
+                            databaseManager.setName(strings[2], strings[3]);
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.name").replace("#value", strings[3]).replace("#name", strings[2]));
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("boss")) {
+                        String zindan = strings[2];
+                        Dungeon dungeon = new Dungeon(zindan);
+                        if(dungeon.exists()) {
+                            DatabaseManager databaseManager = new DatabaseManager(get());
+                            databaseManager.setBossID(strings[2], strings[3]);
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.boss").replace("#value", strings[3]).replace("#name", strings[2]));
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                        }
+                    } else {
+                        help(commandSender);
                     }
                 } else {
                     help(commandSender);
@@ -147,6 +291,19 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             commands.add("delete");
             commands.add("update");
             StringUtil.copyPartialMatches(args[0], commands, completions);
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("update")) {
+                commands.add("boss");
+                commands.add("baslangic");
+                commands.add("sonraki-seviye");
+                commands.add("seviye");
+                commands.add("puan");
+                commands.add("isim");
+                commands.add("kategori");
+                commands.add("oynama-suresi");
+                commands.add("baslama-suresi");
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
         }
         Collections.sort(completions);
         return completions;

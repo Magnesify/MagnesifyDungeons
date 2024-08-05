@@ -507,6 +507,8 @@ public class DatabaseManager {
         }
 
 
+
+
         public CompletableFuture<Boolean> setUUID(String dungeon, String bool) {
             load();
             return CompletableFuture.supplyAsync(() -> {
@@ -553,6 +555,8 @@ public class DatabaseManager {
     }
 
 
+
+
     public CompletableFuture<Boolean> isDungeonAvailable(String dungeon) {
         load();
         return CompletableFuture.supplyAsync(() -> {
@@ -587,7 +591,7 @@ public class DatabaseManager {
     public Dungeon getDungeon(String dungeon) {
         load();
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM dungeons WHERE player = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM dungeons WHERE name = ?")) {
             statement.setString(1, dungeon);
             
             ResultSet resultSet = statement.executeQuery();
@@ -825,8 +829,38 @@ public class DatabaseManager {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET current_player = ? WHERE player = ?")) {
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET current_player = ? WHERE name = ?")) {
                 statement.setString(1, bool);
+                statement.setString(2, dungeon);
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+    public CompletableFuture<Boolean> setPoint(String dungeon, int bool) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET point = ? WHERE name = ?")) {
+                statement.setInt(1, bool);
+                statement.setString(2, dungeon);
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+    public CompletableFuture<Boolean> setNextLevel(String dungeon, int bool) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET next_level = ? WHERE name = ?")) {
+                statement.setInt(1, bool);
                 statement.setString(2, dungeon);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
@@ -840,7 +874,7 @@ public class DatabaseManager {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET name = ? WHERE player = ?")) {
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET name = ? WHERE name = ?")) {
                 statement.setString(1, bool);
                 statement.setString(2, dungeon);
                 return statement.executeUpdate() > 0;
@@ -855,7 +889,7 @@ public class DatabaseManager {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET category = ? WHERE player = ?")) {
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET category = ? WHERE name = ?")) {
                 statement.setString(1, bool);
                 statement.setString(2, dungeon);
                 return statement.executeUpdate() > 0;
@@ -869,7 +903,7 @@ public class DatabaseManager {
     public CompletableFuture<Boolean> setBossID(String dungeon, String bool) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET boss_id = ? WHERE player = ?")) {
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET boss_id = ? WHERE name = ?")) {
                 statement.setString(1, bool);
                 statement.setString(2, dungeon);
                 return statement.executeUpdate() > 0;
@@ -884,9 +918,59 @@ public class DatabaseManager {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET level = ? WHERE player = ?")) {
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET level = ? WHERE name = ?")) {
                 statement.setInt(1, bool);
                 statement.setString(2, dungeon);
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+    public CompletableFuture<Boolean> setPlaytime(String dungeon, int bool) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET play_time = ? WHERE name = ?")) {
+                statement.setInt(1, bool);
+                statement.setString(2, dungeon);
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+    public CompletableFuture<Boolean> setStarttime(String dungeon, int bool) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET start_time = ? WHERE name = ?")) {
+                statement.setInt(1, bool);
+                statement.setString(2, dungeon);
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+    public CompletableFuture<Boolean> setSpawn(String dungeon, Location location) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("UPDATE dungeons SET world = ?, x = ?, y= ?, z = ?, yaw = ?, pitch = ? WHERE name = ?")) {
+                statement.setString(1, location.getWorld().getName());
+                statement.setDouble(2, location.getX());
+                statement.setDouble(3, location.getY());
+                statement.setDouble(4, location.getZ());
+                statement.setFloat(5, location.getYaw());
+                statement.setFloat(6, location.getPitch());
+                statement.setString(7, dungeon);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
                 e.printStackTrace();

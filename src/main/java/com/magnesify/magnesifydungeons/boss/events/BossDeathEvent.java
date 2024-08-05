@@ -6,6 +6,7 @@ import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.modules.Defaults;
+import com.magnesify.magnesifydungeons.modules.StatsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -103,6 +104,9 @@ public class BossDeathEvent implements Listener {
                             dungeon.events().stop(entity);
                             get().getPlayers().updateDungeonStatus(entity, false);
                             get().getPlayers().updateDeath(entity, 1);
+                            StatsManager statsManager = new StatsManager();
+                            statsManager.updateMatch(killer.getUniqueId().toString(), 1);
+                            statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
                             dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
                             dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
                         }
@@ -141,6 +145,8 @@ public class BossDeathEvent implements Listener {
                         item.setItemMeta(itemMeta);
                         killer.getInventory().addItem(item);
                     }
+                    StatsManager statsManager = new StatsManager();
+                    statsManager.updateMatch(killer.getUniqueId().toString(), 1);
                     dungeonPlayer.updateCurrentLevelForDungeon(dungeon.parameters().name(), dungeon.parameters().next());
                     dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win.chat"));
                     dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));

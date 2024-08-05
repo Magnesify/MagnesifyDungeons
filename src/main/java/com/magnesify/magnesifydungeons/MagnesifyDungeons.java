@@ -52,14 +52,28 @@ public final class MagnesifyDungeons extends JavaPlugin {
             getLogger().info("[MagnesifyDungeons] 'datas' klasörü zaten mevcut.");
         }
 
+        File cachesFolder = new File(dataFolder, "caches");
+        if (!cachesFolder.exists()) {
+            if (cachesFolder.mkdirs()) {
+                getLogger().info("'caches' klasörü başarıyla oluşturuldu.");
+            } else {
+                getLogger().warning("'caches' klasörü oluşturulurken bir sorun oluştu.");
+            }
+        } else {
+            getLogger().info("'caches' klasörü zaten mevcut.");
+        }
+
 
         JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
-        JsonStorage cache = new JsonStorage(this.getDataFolder() + "/datas/player_dungeon_cache.json");
+        JsonStorage cache = new JsonStorage(this.getDataFolder() + "/caches/player_dungeon_cache.json");
         JsonStorage players = new JsonStorage(this.getDataFolder() + "/datas/players.json");
+
+        JsonStorage stats = new JsonStorage(this.getDataFolder() + "/caches/statistics.json");
 
         JSONObject players_config = new JSONObject();
         players_config.put("json_config_version", "1");
         players.createJsonFile(players_config);
+        stats.createJsonFile(players_config);
         cache.createJsonFile(players_config);
 
         JSONObject jsonObject = new JSONObject();
