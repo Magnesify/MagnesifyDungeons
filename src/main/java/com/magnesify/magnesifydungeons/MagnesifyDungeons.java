@@ -10,6 +10,7 @@ import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupBlockPlaces;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
@@ -110,6 +111,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DungeonPlayerEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
+        Bukkit.getPluginManager().registerEvents(new TriggerSetupBlockPlaces(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonCreateEvent(this), this);
 
         for(Player player : Bukkit.getOnlinePlayers()) {

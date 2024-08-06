@@ -89,7 +89,7 @@ settings:
         admin:
           - ''
           - '<#4f91fc>&lMagnesify Trigger Type Dungeons &8・ &fYönetim Komutları'
-          - ' &b/Mgdt setup &f: Yeni zindan oluşturur.'
+          - ' &b/Mgdt setup <Zindan Adı> <Kategorisi> &f: Yeni zindan oluşturur.'
           - ' &b/Mgdt delete <zindan> &f: Seçili zindanı siler.'
           - ' &b/Mgdt cancel &f: Zindan oluşturmasını iptal et.'
           - ''

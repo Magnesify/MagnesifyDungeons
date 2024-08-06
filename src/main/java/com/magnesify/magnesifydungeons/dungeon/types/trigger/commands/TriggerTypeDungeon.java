@@ -5,6 +5,7 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.TriggerSetup;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,15 +35,22 @@ public class TriggerTypeDungeon implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         DungeonEntity dungeonEntity = new DungeonEntity(commandSender);
         if(commandSender.hasPermission("mgd.ttd")) {
-            if (strings.length == 1) {
+            if (strings.length == 0) {
                 help(commandSender);
-            } else if (strings.length == 2) {
+            } else if (strings.length == 3) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
                 if (strings[0].equalsIgnoreCase("setup")) {
+                    String name = strings[1];
+                    String category = strings[2];
                     if(commandSender instanceof Player) {
-                        Player player = ((Player) commandSender).getPlayer();
-                        TriggerSetup setup = new TriggerSetup();
-                        setup.StartSetup(player);
-                        dungeonEntity.EntityChatManager().send("&aKurulum işlemi başlatıldı.");
+                        if(!databaseManager.TriggerTypeDungeons().isDungeonExists(name)) {
+                            Player player = ((Player) commandSender).getPlayer();
+                            TriggerSetup setup = new TriggerSetup();
+                            setup.StartSetup(player, name, player.getLocation());
+                            dungeonEntity.EntityChatManager().send("&aKurulum işlemi başlatıldı.");
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.error.cannot-created").replace("#category", category).replace("#name", name));
+                        }
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
 
