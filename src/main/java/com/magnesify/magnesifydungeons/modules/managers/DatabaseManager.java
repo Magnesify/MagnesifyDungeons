@@ -1,4 +1,4 @@
-package com.magnesify.magnesifydungeons.modules;
+package com.magnesify.magnesifydungeons.modules.managers;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -42,8 +43,9 @@ public class DatabaseManager {
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeons (name TEXT, available BOOLEAN, current_player TEXT, category TEXT, current_level INTEGER DEFAULT 0,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, boss_id TEXT, play_time INTEGER DEFAULT 3, start_time INTEGER DEFAULT 5, point INTEGER DEFAULT 0, next_level INTEGER DEFAULT 0, PRIMARY KEY(name, category))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeons (name TEXT, available BOOLEAN, current_player TEXT, category TEXT, current_level INTEGER DEFAULT 0,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, boss_id TEXT, play_time INTEGER DEFAULT 3, start_time INTEGER DEFAULT 5, point INTEGER DEFAULT 0, next_level INTEGER DEFAULT 0, type TEXT, PRIMARY KEY(name, category))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS boss (name TEXT, id TEXT, mgid TEXT, uuid TEXT,helmet TEXT,chestplate TEXT,leggings TEXT,boots TEXT,weapon TEXT,damage DOUBLE DEFAULT 0.0, knockback DOUBLE DEFAULT 0.0,max_health DOUBLE DEFAULT 0.0, drops TEXT DEFAULT 'GOLDEN_APPLE', type TEXT DEFAULT 'ZOMBIE', display TEXT DEFAULT '&cMagnesify', PRIMARY KEY(name, mgid))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS stats (name TEXT,uuid TEXT, kill INTEGER DEFAULT 0, death INTEGER DEFAULT 0, win INTEGER DEFAULT 0, lose INTEGER DEFAULT 0, played_match INTEGER DEFAULT 0, PRIMARY KEY(name))");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,7 +62,7 @@ public class DatabaseManager {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("INSERT INTO dungeons (name, available, current_player, category, current_level,next_level,world, x, y, z, yaw, pitch, boss_id, play_time, start_time, point) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)")) {
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO dungeons (name, available, current_player, category, current_level,next_level,world, x, y, z, yaw, pitch, boss_id, play_time, start_time, point, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?,?)")) {
                 statement.setString(1, dungeon_name);
                 statement.setBoolean(2, true);
                 statement.setString(3, "Yok");
@@ -77,6 +79,49 @@ public class DatabaseManager {
                 statement.setInt(14, Playtime);
                 statement.setInt(15, Start);
                 statement.setInt(16, 0);
+                statement.setString(17, "Normal");
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+
+    public CompletableFuture<Boolean> CreateNewStats(Player player) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO stats (name, uuid, kill, death, played_match,win,lose) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                statement.setString(1, player.getName());
+                statement.setString(2, player.getUniqueId().toString());
+                statement.setInt(3, 0);
+                statement.setInt(4, 0);
+                statement.setInt(5, 0);
+                statement.setInt(6, 0);
+                statement.setInt(7, 0);
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+    }
+
+
+    public CompletableFuture<Boolean> CreateTestStats(String player, String uuid) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO stats (name, uuid, kill, death, played_match,win,lose) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                statement.setString(1, player);
+                statement.setString(2, uuid);
+                statement.setInt(3, 0);
+                statement.setInt(4, 0);
+                statement.setInt(5, 0);
+                statement.setInt(6, 0);
+                statement.setInt(7, 0);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -112,6 +157,309 @@ public class DatabaseManager {
             }
             return false;
         });
+    }
+
+    public List<String> getAllDungeons() {
+        load();
+        List<String> dung = new ArrayList<>();
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            String query = "SELECT name FROM dungeons";
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                String name = rs.getString("name");
+                dung.add(name);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        }
+        return dung;
+    }
+
+
+    public Stats stats() {
+        return new Stats();
+    }
+
+    public class Stats {
+        public Sort sort() {
+            return new Sort();
+        }
+        public class Sort {
+
+            public List<Player> getSortedPlayersByKill() {
+                load();
+                List<Player> players = new ArrayList<>();
+                try {
+                    Connection conn = getConnection();
+                    Statement stmt = conn.createStatement();
+                    String query = "SELECT * FROM stats ORDER BY kill DESC";
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        String name = rs.getString("name");  // 'name' sütun adını değiştirebilirsiniz
+                        int kill = rs.getInt("kill");         // 'kill' sütun adını değiştirebilirsiniz
+                        int death = rs.getInt("death");         // 'kill' sütun adını değiştirebilirsiniz
+                        int played_match = rs.getInt("played_match");         // 'kill' sütun adını değiştirebilirsiniz
+                        int win = rs.getInt("win");         // 'kill' sütun adını değiştirebilirsiniz
+                        int lose = rs.getInt("lose");         // 'kill' sütun adını değiştirebilirsiniz
+                        players.add(new Player(name, kill, win, lose, death, played_match));
+                    }
+                    rs.close();
+                    stmt.close();
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("SQL Exception: " + e.getMessage());
+                }
+                return players;
+            }
+
+            public class Player {
+                private String name;
+                private int kill,death,win,lose,match;
+
+                public Player(String name, int kill, int win, int lose, int death, int match) {
+                    this.name = name;
+                    this.kill = kill;
+                    this.lose = lose;
+                    this.win = win;
+                    this.match = match;
+                    this.death = death;
+                }
+
+                public String getName() {
+                    return name;
+                }
+
+                public int getKill() {
+                    return kill;
+                }
+
+                public int getDeath() {
+                    return death;
+                }
+
+                public int getLose() {
+                    return lose;
+                }
+
+                public int getMatch() {
+                    return match;
+                }
+
+                public int getWin() {
+                    return win;
+                }
+            }
+        }
+
+        public int getKill(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT kill FROM stats WHERE uuid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    int point = resultSet.getInt("kill");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
+        public CompletableFuture<Boolean> setKill(String dungeon, int bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE stats SET kill = ? WHERE uuid = ?")) {
+                    statement.setInt(1, getKill(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public int getDeath(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT death FROM stats WHERE uuid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    int point = resultSet.getInt("death");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
+        public CompletableFuture<Boolean> setDeath(String dungeon, int bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE stats SET death = ? WHERE uuid = ?")) {
+                    statement.setInt(1, getDeath(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public int getMatch(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT played_match FROM stats WHERE uuid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    int point = resultSet.getInt("played_match");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
+        public CompletableFuture<Boolean> setMatch(String dungeon, int bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE stats SET played_match = ? WHERE uuid = ?")) {
+                    statement.setInt(1, getMatch(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public int getWin(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT win FROM stats WHERE uuid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    int point = resultSet.getInt("win");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
+        public CompletableFuture<Boolean> setWin(String dungeon, int bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE stats SET win = ? WHERE uuid = ?")) {
+                    statement.setInt(1, getWin(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public int getLose(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT lose FROM stats WHERE uuid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    int point = resultSet.getInt("lose");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
+        public CompletableFuture<Boolean> setLose(String dungeon, int bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE stats SET lose = ? WHERE uuid = ?")) {
+                    statement.setInt(1, getLose(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public String getName(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT name FROM stats WHERE uuid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("name");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Bilinmiyor";
+        }
+
+
+
+        public CompletableFuture<Boolean> setName(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE stats SET name = ? WHERE uuid = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
     }
 
     public Boss boss() {
@@ -620,6 +968,24 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return 0;
+    }
+
+
+    public String getType(String dungeon) {
+        load();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT type FROM dungeons WHERE name = ?")) {
+            statement.setString(1, dungeon);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String point = resultSet.getString("type");
+                return point;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Normal";
     }
 
 

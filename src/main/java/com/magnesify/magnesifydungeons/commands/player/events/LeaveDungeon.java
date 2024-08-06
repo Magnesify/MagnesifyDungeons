@@ -26,9 +26,10 @@ public class LeaveDungeon implements CommandExecutor {
                 if(dungeonPlayer.inDungeon()) {
                     dungeon.status(true);
                     dungeonPlayer.leave(dungeon);
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.leave-success").replace("#name", strings[0]));
+                    dungeon.events().stop(player);
+                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.leave-success"));
                 } else {
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[0]));
+                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon"));
                 }
             } else {
                 dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.not-in-dungeon"));

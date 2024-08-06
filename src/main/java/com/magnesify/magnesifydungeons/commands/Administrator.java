@@ -1,13 +1,14 @@
 package com.magnesify.magnesifydungeons.commands;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
+import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.commands.administrator.Arguments;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
-import com.magnesify.magnesifydungeons.modules.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +19,7 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
@@ -60,6 +62,23 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                 dungeonConsole.ConsoleOutputManager().write(messages);
             }
         }
+    }
+
+    public static String generateRandomString() {
+        final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < 3; i++) {
+            if (i > 0) {
+                sb.append("b");
+            }
+            for (int j = 0; j < 2; j++) {
+                sb.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
+            }
+        }
+
+        return sb.toString();
     }
 
     @Override
@@ -122,6 +141,12 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                     }
+                } else if (strings[0].equalsIgnoreCase("test")) {
+                    DatabaseManager databaseManager = new DatabaseManager(get());
+                    for(int i = 0;i<15;i++) {
+                        databaseManager.CreateTestStats(generateRandomString(), generateRandomString());
+                    }
+                    dungeonEntity.EntityChatManager().send("&aTest verileri oluşturuldu.");
                 } else {
                     help(commandSender);
                 }
@@ -134,12 +159,34 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
                     }
+                }else if (strings[0].equalsIgnoreCase("join")) {
+                    if (commandSender instanceof Player) {
+                        Player player = ((Player) commandSender).getPlayer();
+                        DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+                        Dungeon dungeon = new Dungeon(strings[1]);
+                        if (dungeon.exists()) {
+                            dungeonPlayer.join(dungeon);
+                            dungeon.events().wait(player, dungeon);
+                            dungeon.updateCurrentPlayer(player.getName());
+                            dungeon.status(false);
+                            MagnesifyBoss magnesifyBoss = new MagnesifyBoss(dungeon.parameters().boss());
+                            for (String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
+                                dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+
+                        }
+                    } else {
+                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+
+                    }
                 } else {
                     help(commandSender);
                 }
             }else if (strings.length == 3) {
                 if (strings[0].equalsIgnoreCase("update")) {
-                    if (strings[1].equalsIgnoreCase("baslangic")) {
+                    if (strings[1].equalsIgnoreCase("spawn")) {
                         if (commandSender instanceof Player) {
                             Player player = ((Player) commandSender).getPlayer();
                             String zindan = strings[2];
@@ -162,7 +209,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                 }
             }else if (strings.length == 4) {
                 if (strings[0].equalsIgnoreCase("update")) {
-                    if (strings[1].equalsIgnoreCase("puan")) {
+                    if (strings[1].equalsIgnoreCase("point")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             Dungeon dungeon = new Dungeon(zindan);
@@ -176,7 +223,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         } else {
                             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
                         }
-                    } else if (strings[1].equalsIgnoreCase("seviye")) {
+                    } else if (strings[1].equalsIgnoreCase("level")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             Dungeon dungeon = new Dungeon(zindan);
@@ -190,7 +237,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         } else {
                             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
                         }
-                    }else if (strings[1].equalsIgnoreCase("sonraki-seviye")) {
+                    }else if (strings[1].equalsIgnoreCase("next-level")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             Dungeon dungeon = new Dungeon(zindan);
@@ -204,7 +251,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         } else {
                             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
                         }
-                    }else if (strings[1].equalsIgnoreCase("oynama-suresi")) {
+                    }else if (strings[1].equalsIgnoreCase("play-time")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             Dungeon dungeon = new Dungeon(zindan);
@@ -218,7 +265,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         } else {
                             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
                         }
-                    }else if (strings[1].equalsIgnoreCase("baslama-suresi")) {
+                    }else if (strings[1].equalsIgnoreCase("start-time")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             Dungeon dungeon = new Dungeon(zindan);
@@ -232,7 +279,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         } else {
                             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
                         }
-                    }else if (strings[1].equalsIgnoreCase("kategori")) {
+                    }else if (strings[1].equalsIgnoreCase("category")) {
                         String zindan = strings[2];
                         Dungeon dungeon = new Dungeon(zindan);
                         if(dungeon.exists()) {
@@ -242,7 +289,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         } else {
                             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                         }
-                    }else if (strings[1].equalsIgnoreCase("isim")) {
+                    }else if (strings[1].equalsIgnoreCase("name")) {
                         String zindan = strings[2];
                         Dungeon dungeon = new Dungeon(zindan);
                         if(dungeon.exists()) {
@@ -294,15 +341,37 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("update")) {
                 commands.add("boss");
-                commands.add("baslangic");
-                commands.add("sonraki-seviye");
-                commands.add("seviye");
-                commands.add("puan");
-                commands.add("isim");
-                commands.add("kategori");
-                commands.add("oynama-suresi");
-                commands.add("baslama-suresi");
+                commands.add("spawn");
+                commands.add("next-level");
+                commands.add("level");
+                commands.add("point");
+                commands.add("name");
+                commands.add("category");
+                commands.add("play-time");
+                commands.add("start-time");
                 StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+            if (args[0].equalsIgnoreCase("delete")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
+                    commands.add(databaseManager.getAllDungeons().get(i));
+                }
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+            if (args[0].equalsIgnoreCase("join")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
+                    commands.add(databaseManager.getAllDungeons().get(i));
+                }
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+        } else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("update")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
+                    commands.add(databaseManager.getAllDungeons().get(i));
+                }
+                StringUtil.copyPartialMatches(args[2], commands, completions);
             }
         }
         Collections.sort(completions);

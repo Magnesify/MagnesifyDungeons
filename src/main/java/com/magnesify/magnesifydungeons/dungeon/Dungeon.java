@@ -3,7 +3,7 @@ package com.magnesify.magnesifydungeons.dungeon;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.modules.DungeonManagementHandler;
-import com.magnesify.magnesifydungeons.modules.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;

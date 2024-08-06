@@ -1,6 +1,7 @@
 package com.magnesify.magnesifydungeons.storage;
 
 import com.magnesify.magnesifydungeons.files.JsonStorage;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
@@ -20,6 +21,8 @@ public class PlayerMethods {
     public void createPlayer() {
         JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if(players.getValue("players." + player.getUniqueId().toString()) == null) {
+            DatabaseManager databaseManager = new DatabaseManager(get());
+            databaseManager.CreateNewStats(player);
             JSONObject players_config = new JSONObject();
             players_config.put("players." + player.getUniqueId().toString() + ".name", player.getName());
             players_config.put("players." + player.getUniqueId().toString() + ".point", 0);

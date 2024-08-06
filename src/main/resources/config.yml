@@ -77,13 +77,25 @@ settings:
         - '<#4f91fc>&lMagnesify Dungeons &8・ &fYönetim Komutları'
         - ' &b/Mgd reload &f: Eklentiyi yeniler.'
         - ' &b/Mgd create &f: Yeni zindan oluşturur.'
-        - ' &b/Mgd update <zindan> <puan,isim,boss,oynama-suresi,baslama-suresi,seviye,sonraki-seviye,kategori> <Yeni Değer> &f: Mevcut zindanı günceller.'
+        - ' &b/Mgd join <Zindan> &f: Zindana direkt giriş yaparsınız (Sunucu geliştirme modunda iken kullanınız).'
+        - ' &b/Mgd update <point, name, boss, playtime, start time, level, next-level, category> <zindan> <Yeni Değer> &f: Mevcut zindanı günceller.'
         - ' &b/Mgd delete <zindan> &f: Seçili zindanı siler.'
         - ' &b/Mgd setmainspawn &f: Ana başlangıç bölgesini ayarlarsınız.'
         - ' &b/Mgd cancel &f: Zindan oluşturmasını iptal et.'
         - ''
         - ' &b・ &fBoss yönetimi için: &d/Mgdb'
         - ''
+      trigger-type-dungeon:
+        admin:
+          - ''
+          - '<#4f91fc>&lMagnesify Trigger Type Dungeons &8・ &fYönetim Komutları'
+          - ' &b/Mgdt setup &f: Yeni zindan oluşturur.'
+          - ' &b/Mgdt delete <zindan> &f: Seçili zindanı siler.'
+          - ' &b/Mgdt cancel &f: Zindan oluşturmasını iptal et.'
+          - ''
+          - ' &b・ &fBoss yönetimi için: &d/Mgdb'
+          - ' &b・ &fSeviyeli zindan yönetimi için: &d/Mgd'
+          - ''
     error:
       select-spawn-first: '#prefix İlk önce bir başlangıç seçmelisin ! &d/Mgd setmainspawn'
       cannot-created: '#prefix İşlem &d#name &fadında bir zindan oluşturulamadı, bilgiler başka bir zindana ait olabilirmi ?'
@@ -95,6 +107,8 @@ settings:
     status:
       lose:
         chat: '#prefix Yaratık tarafından öldürüldün...'
+        title: '&c&lKAYBETTIN'
+        subtitle: '&fYaratık tarafından öldürüldün...'
       win:
         chat: '#prefix Yaratığı öldürdün ! 3 saniye sonra başlangıca ışınlanacaksın. Sonraki zindana geçiş yapabilirsin...'
         title: '&6&lKAZANDIN'

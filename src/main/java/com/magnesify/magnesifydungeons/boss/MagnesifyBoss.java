@@ -1,6 +1,6 @@
 package com.magnesify.magnesifydungeons.boss;
 
-import com.magnesify.magnesifydungeons.modules.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -87,10 +87,12 @@ public class MagnesifyBoss {
         if(!databaseManager.boss().getUUID(name).equalsIgnoreCase("Yok")) {
             UUID uuid = UUID.fromString(databaseManager.boss().getUUID(name));
             Entity entity = Bukkit.getEntity(uuid);
-            if (entity.hasMetadata("name")) {
-                String metadataValue = entity.getMetadata("name").get(0).asString();
-                if(databaseManager.boss().getMGID(name).equalsIgnoreCase(metadataValue)) {
-                    entity.remove();
+            if(entity != null) {
+                if (entity.hasMetadata("name")) {
+                    String metadataValue = entity.getMetadata("name").get(0).asString();
+                    if(databaseManager.boss().getMGID(name).equalsIgnoreCase(metadataValue)) {
+                        entity.remove();
+                    }
                 }
             }
         }

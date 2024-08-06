@@ -18,10 +18,17 @@ commands:
       - mgdb
     permission: mgdb.admin
     description: MagnesifyDungeonsBoss, Ana boss yönetim komutu.
+  MagnesifyDungeonsTrigger:
+    aliases:
+      - mgdt
+    permission: mgdt.admin
+    description: MagnesifyDungeonsTrigger, Trigger tip zindan yönetim komutu.
   Join:
     description: MagnesifyDungeon, Zindana katılma komutu.
   Leave:
     description: MagnesifyDungeon, Zindandan ayrılma komutu.
+  Stats:
+    description: MagnesifyDungeon, Sıralama komutu.
   DungeonProfile:
     description: MagnesifyDungeon, Kişisel zindan profili,
     aliases:

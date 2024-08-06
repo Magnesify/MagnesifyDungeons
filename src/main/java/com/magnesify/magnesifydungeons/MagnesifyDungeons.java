@@ -4,15 +4,17 @@ import com.magnesify.magnesifydungeons.boss.BossManager;
 import com.magnesify.magnesifydungeons.boss.events.BossCreateEvent;
 import com.magnesify.magnesifydungeons.boss.events.BossDeathEvent;
 import com.magnesify.magnesifydungeons.commands.Administrator;
+import com.magnesify.magnesifydungeons.commands.player.MainMenu;
 import com.magnesify.magnesifydungeons.commands.player.Status;
 import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
-import com.magnesify.magnesifydungeons.modules.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -44,12 +46,12 @@ public final class MagnesifyDungeons extends JavaPlugin {
         File datasFolder = new File(dataFolder, "datas");
         if (!datasFolder.exists()) {
             if (datasFolder.mkdirs()) {
-                getLogger().info("[MagnesifyDungeons] 'datas' klasörü başarıyla oluşturuldu.");
+                getLogger().info("'datas' klasörü başarıyla oluşturuldu.");
             } else {
-                getLogger().warning("[MagnesifyDungeons] 'datas' klasörü oluşturulurken bir sorun oluştu.");
+                getLogger().warning("'datas' klasörü oluşturulurken bir sorun oluştu.");
             }
         } else {
-            getLogger().info("[MagnesifyDungeons] 'datas' klasörü zaten mevcut.");
+            getLogger().info("'datas' klasörü zaten mevcut.");
         }
 
         File cachesFolder = new File(dataFolder, "caches");
@@ -90,10 +92,13 @@ public final class MagnesifyDungeons extends JavaPlugin {
 
         getCommand("MagnesifyDungeons").setExecutor(new Administrator(this));
         getCommand("MagnesifyDungeons").setTabCompleter(new Administrator(this));
+        getCommand("MagnesifyDungeonsTrigger").setExecutor(new TriggerTypeDungeon(this));
         getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
         getCommand("DungeonProfile").setExecutor(new Status(this));
+        getCommand("Stats").setExecutor(new MainMenu(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
+
         if(!options.get().getBoolean("options.clean-start"))
             Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
                 "                                          _ ____     \n" +
