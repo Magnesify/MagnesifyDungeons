@@ -1,0 +1,17 @@
+kits:
+  Viking:
+    display: '&6&lViking'
+    material: IRON_AXE
+    lore:
+      - ''
+      - '&7Mistik bir savaş sonrasında savaş bölgesine kalan silahlar...'
+      - '&7Hepsi, birer ruhu taşıyor.'
+    items:
+      1:
+        material: IRON_AXE
+        name: "&6Balta"
+        durability: 10
+        lore:
+          - ''
+        enchants:
+          - "mending:1"
