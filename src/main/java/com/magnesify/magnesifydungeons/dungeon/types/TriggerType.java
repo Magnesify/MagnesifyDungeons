@@ -167,6 +167,11 @@ public class TriggerType {
         return databaseManager.TriggerTypeDungeons().getBossLocation(name);
     }
 
+    public static Location bosspoints(String name, int lvl) {
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.TriggerTypeDungeons().getBosspointsLocation(name, lvl);
+    }
+
     public class Events {
 
         private final Map<UUID, Integer> countdowns = new HashMap<>();
@@ -224,10 +229,10 @@ public class TriggerType {
                             playerMethods.updateLastBoss(player, boss);
                             MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss);
                             if(magnesifyBoss.exists()) {
-                                magnesifyBoss.spawn(boss_location(dungeon), player);
+                                magnesifyBoss.spawn(bosspoints(dungeon, 1), player);
                             } else {
                                 MagnesifyBoss magnesify = new MagnesifyBoss("Magnesify");
-                                magnesify.spawn(boss_location(dungeon), player);
+                                magnesify.spawn(bosspoints(dungeon, 1), player);
                             }
                             play(player, parameters(dungeon).name(), dungeon);
                         }

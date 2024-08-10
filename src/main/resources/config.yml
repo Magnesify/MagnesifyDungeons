@@ -97,7 +97,7 @@ settings:
       created: '#prefix Yaratık oluşturuldu, yaratık adı &d#name, &fidsi &d#id.'
       creation-progress-started: '#prefix Yaratık oluşturma işlemi başladı, &dlütfen bir yaratık adı belirtin&f. İşlemi iptal etmek için &d/Mgdb cancel'
       deleted: '#prefix &d#name &fisimli yaratık silindi.'
-      unknow-dungeon: '#prefix &d#name &fisminde bir yaratık yok.'
+      unknow-boss: '#prefix &d#name &fisminde bir yaratık yok.'
       no-progress-found: '#prefix Bir yaratık oluşturmuyorsun.'
     update:
       point: '#prefix &b#name &fadlı zindanın puanı değiştirildi, yeni değer: &e#value'

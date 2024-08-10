@@ -10,14 +10,19 @@ import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
 
-public class TriggerTypeDungeon implements CommandExecutor {
+public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
 
     public static HashMap<String, String> new_dungeon = new HashMap<>();
 
@@ -39,12 +44,168 @@ public class TriggerTypeDungeon implements CommandExecutor {
     }
 
     @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        List<String> completions = new ArrayList<>();
+        List<String> commands = new ArrayList<>();
+
+        if (args.length == 1) {
+            commands.add("setup");
+            commands.add("delete");
+            commands.add("update");
+            StringUtil.copyPartialMatches(args[0], commands, completions);
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("update")) {
+                commands.add("boss");
+                commands.add("spawn");
+                commands.add("next-level");
+                commands.add("level");
+                commands.add("point");
+                commands.add("name");
+                commands.add("category");
+                commands.add("play-time");
+                commands.add("start-time");
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+            if (args[0].equalsIgnoreCase("delete")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
+                    commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
+                }
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+            if (args[0].equalsIgnoreCase("join")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
+                    commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
+                }
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+        } else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("update")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
+                    commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
+                }
+                StringUtil.copyPartialMatches(args[2], commands, completions);
+            }
+        }
+        Collections.sort(completions);
+        return completions;
+    }
+
+
+    public boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         DungeonEntity dungeonEntity = new DungeonEntity(commandSender);
         if(commandSender.hasPermission("mgd.ttd")) {
             DatabaseManager databaseManager = new DatabaseManager(get());
             if (strings.length == 0) {
                 help(commandSender);
+            }else if (strings.length == 4) {
+                if (strings[0].equalsIgnoreCase("update")) {
+                    if (strings[1].equalsIgnoreCase("point")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                                databaseManager.TriggerTypeDungeons().setPoint(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.point").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    } else if (strings[1].equalsIgnoreCase("level")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                                databaseManager.TriggerTypeDungeons().setLevel(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.level").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("next-level")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                                databaseManager.TriggerTypeDungeons().setNextLevel(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("play-time")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                                databaseManager.TriggerTypeDungeons().setPlaytime(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.play-time").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("start-time")) {
+                        String zindan = strings[2];
+                        if (isNumeric(strings[3])) {
+                            if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                                databaseManager.TriggerTypeDungeons().setStarttime(strings[2], Integer.parseInt(strings[3]));
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.start-time").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("category")) {
+                        String zindan = strings[2];
+                        if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                            databaseManager.TriggerTypeDungeons().setCategory(strings[2], strings[3]);
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("name")) {
+                        String zindan = strings[2];
+                        if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                            databaseManager.TriggerTypeDungeons().setName(strings[2], strings[3]);
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.name").replace("#value", strings[3]).replace("#name", strings[2]));
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                        }
+                    }else if (strings[1].equalsIgnoreCase("boss")) {
+                        String zindan = strings[2];
+                        if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
+                            databaseManager.TriggerTypeDungeons().setBossID(strings[2], strings[3]);
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.boss").replace("#value", strings[3]).replace("#name", strings[2]));
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                        }
+                    } else {
+                        help(commandSender);
+                    }
+                } else {
+                    help(commandSender);
+                }
             } else if (strings.length == 2) {
                 if(strings[0].equalsIgnoreCase("join")) {
                     String name = strings[1];
@@ -86,6 +247,23 @@ public class TriggerTypeDungeon implements CommandExecutor {
                         }
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+                    }
+                } if (strings[0].equalsIgnoreCase("update")) {
+                    if (strings[1].equalsIgnoreCase("spawn")) {
+                        if (commandSender instanceof Player) {
+                            String name = strings[1];
+                            Player player = ((Player) commandSender).getPlayer();
+                            if(!databaseManager.TriggerTypeDungeons().isDungeonExists(name)) {
+                                databaseManager.TriggerTypeDungeons().setSpawn(strings[2], player.getLocation());
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.update.spawn").replace("#value", strings[3]).replace("#name", strings[2]));
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+                        }
+                    } else {
+                        help(commandSender);
                     }
                 } else {
                     help(commandSender);

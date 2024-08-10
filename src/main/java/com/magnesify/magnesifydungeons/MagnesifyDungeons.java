@@ -5,7 +5,7 @@ import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.boss.events.BossCreateEvent;
 import com.magnesify.magnesifydungeons.boss.events.BossDeathEvent;
 import com.magnesify.magnesifydungeons.commands.Administrator;
-import com.magnesify.magnesifydungeons.commands.player.MainMenu;
+import com.magnesify.magnesifydungeons.commands.player.Stats;
 import com.magnesify.magnesifydungeons.commands.player.Status;
 import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
@@ -105,9 +105,11 @@ public final class MagnesifyDungeons extends JavaPlugin {
         getCommand("MagnesifyDungeons").setExecutor(new Administrator(this));
         getCommand("MagnesifyDungeons").setTabCompleter(new Administrator(this));
         getCommand("MagnesifyDungeonsTrigger").setExecutor(new TriggerTypeDungeon(this));
+        getCommand("MagnesifyDungeonsTrigger").setTabCompleter(new TriggerTypeDungeon(this));
         getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
+        getCommand("MagnesifyDungeonsBoss").setTabCompleter(new BossManager(this));
         getCommand("DungeonProfile").setExecutor(new Status(this));
-        getCommand("Stats").setExecutor(new MainMenu(this));
+        getCommand("Stats").setExecutor(new Stats(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
 

@@ -12,8 +12,8 @@ import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
-public class MainMenu implements CommandExecutor {
-    public MainMenu(MagnesifyDungeons magnesifyDungeons) {}
+public class Stats implements CommandExecutor {
+    public Stats(MagnesifyDungeons magnesifyDungeons) {}
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {

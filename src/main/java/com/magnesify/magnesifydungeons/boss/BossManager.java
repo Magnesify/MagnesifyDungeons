@@ -4,17 +4,22 @@ import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.boss.events.BossCreateEvent.bossSystemLevel;
 
-public class BossManager implements CommandExecutor {
+public class BossManager implements CommandExecutor, TabCompleter {
 
     public BossManager(MagnesifyDungeons magnesifyDungeons) {}
 
@@ -39,6 +44,7 @@ public class BossManager implements CommandExecutor {
         if(commandSender instanceof Player) {
             Player player = (Player) commandSender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+            DatabaseManager databaseManager = new DatabaseManager(get());
             if(player.hasPermission("mgdb.admin")) {
                 if (strings.length == 0) {
                     help(commandSender);
@@ -55,6 +61,18 @@ public class BossManager implements CommandExecutor {
                     } else {
                         help(commandSender);
                     }
+                } else if (strings.length == 2) {
+                    if (strings[0].equalsIgnoreCase("delete")) {
+                        String name = strings[1];
+                        if(databaseManager.isBossAvailable(name)) {
+                            databaseManager.boss().delete(name);
+                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.boss.deleted"));
+                        } else {
+                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.boss.unknow-boss"));
+                        }
+                    } else {
+                        help(commandSender);
+                    }
                 } else {
                     help(commandSender);
                 }
@@ -67,4 +85,27 @@ public class BossManager implements CommandExecutor {
         }
         return false;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        List<String> completions = new ArrayList<>();
+        List<String> commands = new ArrayList<>();
+
+        if (args.length == 1) {
+            commands.add("create");
+            commands.add("delete");
+            StringUtil.copyPartialMatches(args[0], commands, completions);
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("delete")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.boss().getAllBoss().size(); i++) {
+                    commands.add(databaseManager.boss().getAllBoss().get(i));
+                }
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+        }
+        Collections.sort(completions);
+        return completions;
+    }
+
 }

@@ -155,7 +155,7 @@ public class DatabaseManager {
                 statement.setInt(14, Playtime);
                 statement.setInt(15, Start);
                 statement.setInt(16, 0);
-                statement.setString(17, "Normal");
+                statement.setString(17, "Trigger");
                 statement.setInt(18, total_checpoints);
                 statement.setString(19, "Hayır");
                 statement.setString(20, location.getWorld().getName());
@@ -175,7 +175,7 @@ public class DatabaseManager {
 
     public CompletableFuture<Boolean> CreateNewStats(Player player) {
         load();
-        if(isPlayerExists(player.getName())) {
+        if(!isPlayerExists(player.getName())) {
             return CompletableFuture.supplyAsync(() -> {
                 try (Connection connection = getConnection();
                      PreparedStatement statement = connection.prepareStatement("INSERT INTO stats (name, uuid, kill, death, played_match,win,lose) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
@@ -559,6 +559,41 @@ public class DatabaseManager {
 
 
     public class Boss {
+
+        public List<String> getAllBoss() {
+            load();
+            List<String> dung = new ArrayList<>();
+            try {
+                Connection conn = getConnection();
+                Statement stmt = conn.createStatement();
+                String query = "SELECT name FROM boss";
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    dung.add(name);
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println("SQL Exception: " + e.getMessage());
+            }
+            return dung;
+        }
+
+        public CompletableFuture<Boolean> delete(String dungeon) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("DELETE FROM boss WHERE name = ?")) {
+                    statement.setString(1, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
 
         public String getName(String dungeon) {
             load();
@@ -1088,7 +1123,7 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "Normal";
+        return "Unknow";
     }
 
 
@@ -1699,6 +1734,28 @@ public class DatabaseManager {
                 e.printStackTrace();
             }
             return 0;
+        }
+
+
+        public List<String> getAllDungeons() {
+            load();
+            List<String> dung = new ArrayList<>();
+            try {
+                Connection conn = getConnection();
+                Statement stmt = conn.createStatement();
+                String query = "SELECT name FROM trigger_type_dungeons";
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    dung.add(name);
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println("SQL Exception: " + e.getMessage());
+            }
+            return dung;
         }
 
         public int getPlayTime(String dungeon) {
