@@ -13,26 +13,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon.new_dungeon;
+
 public class TriggerSetup {
 
-    /*
-
-        Setup başladığında yöneticinin eline şunlar verilecek.
-        Yeşil yün - Zindana başlangıç bölgesi
-        Sarı yün - Sonraki seviyeye geçiş yapılacak alan
-        Kırmızı yün - Yaratığın spawn olacağı nokta
-        Turuncu yün - Son seviyeye geçiş yapılacak alan
-        Kızıltaş Meşale - Kurulumu iptal etme
-
-     */
-
-
-    public void StartSetup(Player player, String name, Location location) {
+    public void StartSetup(Player player, Location location) {
         Inventory inventory = player.getInventory();
 
-        ItemStack start_location = new ItemStack(Material.GREEN_WOOL, 1);
+        ItemStack start_location = new ItemStack(Material.NAME_TAG, 1);
         ItemMeta start_location_meta = start_location.getItemMeta();
-        start_location_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi : " + name));
+        start_location_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"));
         List<String> slm = new ArrayList<>();
         slm.add(" ");
         slm.add(ChatColor.translateAlternateColorCodes('&', "&fZindana giren oyuncuların başlayacağı ilk bölgeyi seçmek için kullanılır."));
@@ -40,9 +30,9 @@ public class TriggerSetup {
         start_location.setItemMeta(start_location_meta);
         inventory.setItem(0, start_location);
 
-        ItemStack checkpoint = new ItemStack(Material.YELLOW_WOOL, 1);
+        ItemStack checkpoint = new ItemStack(Material.REPEATER, 1);
         ItemMeta checkpoint_meta = checkpoint.getItemMeta();
-        checkpoint_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi : " + name));
+        checkpoint_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"));
         List<String> cpm = new ArrayList<>();
         cpm.add(" ");
         cpm.add(ChatColor.translateAlternateColorCodes('&', "&fCheckpoint olarak düşünülebilir, yeni bir seviyeye geçiş için kullanılır."));
@@ -50,9 +40,9 @@ public class TriggerSetup {
         checkpoint.setItemMeta(checkpoint_meta);
         inventory.setItem(1, checkpoint);
 
-        ItemStack boss = new ItemStack(Material.RED_WOOL, 1);
+        ItemStack boss = new ItemStack(Material.SHEARS, 1);
         ItemMeta boss_meta = boss.getItemMeta();
-        boss_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aFinal Yaratığının Doğum Noktası : " + name));
+        boss_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aFinal Yaratığının Doğum Noktası"));
         List<String> bm = new ArrayList<>();
         bm.add(" ");
         bm.add(ChatColor.translateAlternateColorCodes('&', "&fFinal yaratığının doğacağı lokasyonu seçmek için kullanırsınız."));
@@ -60,8 +50,38 @@ public class TriggerSetup {
         boss.setItemMeta(boss_meta);
         inventory.setItem(2, boss);
 
+        ItemStack bp = new ItemStack(Material.IRON_SWORD, 1);
+        ItemMeta bp_meta = bp.getItemMeta();
+        bp_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aYaratık Doğum Noktası"));
+        List<String> bpm = new ArrayList<>();
+        bpm.add(" ");
+        bpm.add(ChatColor.translateAlternateColorCodes('&', "&fYaratığının doğacağı lokasyonu seçmek için kullanırsınız."));
+        bp_meta.setLore(bpm);
+        bp.setItemMeta(bp_meta);
+        inventory.setItem(3, bp);
+
+        ItemStack cancel = new ItemStack(Material.ARROW, 1);
+        ItemMeta cancel_meta = cancel.getItemMeta();
+        cancel_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"));
+        List<String> cm = new ArrayList<>();
+        cm.add(" ");
+        cm.add(ChatColor.translateAlternateColorCodes('&', "&fKurulumu iptal etmek için sağ tıklayınız."));
+        cancel_meta.setLore(cm);
+        cancel.setItemMeta(cancel_meta);
+        inventory.setItem(8, cancel);
+
+        ItemStack kurulum = new ItemStack(Material.GREEN_DYE, 1);
+        ItemMeta kurulum_meta = cancel.getItemMeta();
+        kurulum_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"));
+        List<String> km = new ArrayList<>();
+        km.add(" ");
+        km.add(ChatColor.translateAlternateColorCodes('&', "&fKurulumu tamamlamak için tıklayınız."));
+        kurulum_meta.setLore(km);
+        kurulum.setItemMeta(kurulum_meta);
+        inventory.setItem(7, kurulum);
+
         DatabaseManager databaseManager = new DatabaseManager(MagnesifyDungeons.get());
-        databaseManager.CreateNewTriggerTypeDungeon(name, "Yok", "Yok", 1, 60, 10, location, 1);
+        databaseManager.CreateNewTriggerTypeDungeon(new_dungeon.get("new"), "Yok", "Yok", 1, 60, 10, location, 1);
 
     }
 

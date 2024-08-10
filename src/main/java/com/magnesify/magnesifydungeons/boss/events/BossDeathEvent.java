@@ -6,6 +6,7 @@ import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.modules.Defaults;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.managers.StatsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -41,10 +42,13 @@ public class BossDeathEvent implements Listener {
                 DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
                 if(metadataValue != null) {
                     if(dungeonPlayer.inDungeon()) {
-                        if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
-                            if (entity.hasMetadata("name")) {
-                                if(get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
-                                    dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
+                        DatabaseManager databaseManager = new DatabaseManager(get());
+                        if(databaseManager.getType(get().getPlayers().getLastDungeon(player)).equalsIgnoreCase("Normal")) {
+                            if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
+                                if (entity.hasMetadata("name")) {
+                                    if (get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
+                                        dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
+                                    }
                                 }
                             }
                         }
@@ -96,20 +100,23 @@ public class BossDeathEvent implements Listener {
                     String metadataValue = entity.getMetadata("name").get(0).asString();
                     DungeonPlayer dungeonPlayer = new DungeonPlayer(entity);
                     if(dungeonPlayer.inDungeon()) {
-                        if(get().getPlayers().getLastBoss(entity).equalsIgnoreCase(metadataValue)) {
-                            Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(entity));
-                            dungeon.status(true);
-                            entity.remove();
-                            get().getPlayers().setDone(entity, true);
-                            dungeon.events().stop(entity);
-                            get().getPlayers().updateDungeonStatus(entity, false);
-                            get().getPlayers().updateDeath(entity, 1);
-                            StatsManager statsManager = new StatsManager();
-                            statsManager.updateMatch(killer.getUniqueId().toString(), 1);
-                            statsManager.updateDeath(killer.getUniqueId().toString(), 1);
-                            statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
-                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
-                            dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+                        Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(entity));
+                        DatabaseManager databaseManager = new DatabaseManager(get());
+                        if(databaseManager.getType(get().getPlayers().getLastDungeon(entity)).equalsIgnoreCase("Normal")) {
+                            if (get().getPlayers().getLastBoss(entity).equalsIgnoreCase(metadataValue)) {
+                                dungeon.status(true);
+                                entity.remove();
+                                get().getPlayers().setDone(entity, true);
+                                dungeon.events().stop(entity);
+                                get().getPlayers().updateDungeonStatus(entity, false);
+                                get().getPlayers().updateDeath(entity, 1);
+                                StatsManager statsManager = new StatsManager();
+                                statsManager.updateMatch(killer.getUniqueId().toString(), 1);
+                                statsManager.updateDeath(killer.getUniqueId().toString(), 1);
+                                statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+                            }
                         }
                     }
                 }
@@ -127,31 +134,34 @@ public class BossDeathEvent implements Listener {
             DungeonPlayer dungeonPlayer = new DungeonPlayer(killer);
             if(dungeonPlayer.inDungeon()) {
                 if(get().getPlayers().getLastBoss(killer).equalsIgnoreCase(metadataValue)) {
-                    sendspawn(killer);
-                    Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(killer));
-                    dungeon.status(true);
-                    entity.remove();
-                    get().getPlayers().setDone(killer, true);
-                    dungeon.events().stop(killer);
-                    get().getPlayers().updateDungeonStatus(killer, false);
-                    get().getPlayers().updatePoint(killer, dungeon.point());
-                    get().getPlayers().updateKill(killer, 1);
-                    event.getDrops().clear();
-                    MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss_name);
-                    for(String a : magnesifyBoss.drops()) {
-                        String[] split = a.split(":");
-                        ItemStack item = new ItemStack(Material.getMaterial(split[0]));
-                        ItemMeta itemMeta = item.getItemMeta();
-                        item.setAmount(Integer.parseInt(split[1]));
-                        item.setItemMeta(itemMeta);
-                        killer.getInventory().addItem(item);
+                    DatabaseManager databaseManager = new DatabaseManager(get());
+                    if (databaseManager.getType(get().getPlayers().getLastDungeon(killer)).equalsIgnoreCase("Normal")) {
+                        sendspawn(killer);
+                        Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(killer));
+                        dungeon.status(true);
+                        entity.remove();
+                        get().getPlayers().setDone(killer, true);
+                        dungeon.events().stop(killer);
+                        get().getPlayers().updateDungeonStatus(killer, false);
+                        get().getPlayers().updatePoint(killer, dungeon.point());
+                        get().getPlayers().updateKill(killer, 1);
+                        event.getDrops().clear();
+                        MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss_name);
+                        for (String a : magnesifyBoss.drops()) {
+                            String[] split = a.split(":");
+                            ItemStack item = new ItemStack(Material.getMaterial(split[0]));
+                            ItemMeta itemMeta = item.getItemMeta();
+                            item.setAmount(Integer.parseInt(split[1]));
+                            item.setItemMeta(itemMeta);
+                            killer.getInventory().addItem(item);
+                        }
+                        StatsManager statsManager = new StatsManager();
+                        statsManager.updateMatch(killer.getUniqueId().toString(), 1);
+                        statsManager.updateKill(killer.getUniqueId().toString(), 1);
+                        dungeonPlayer.updateCurrentLevelForDungeon(dungeon.parameters().name(), dungeon.parameters().next());
+                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win.chat"));
+                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));
                     }
-                    StatsManager statsManager = new StatsManager();
-                    statsManager.updateMatch(killer.getUniqueId().toString(), 1);
-                    statsManager.updateKill(killer.getUniqueId().toString(), 1);
-                    dungeonPlayer.updateCurrentLevelForDungeon(dungeon.parameters().name(), dungeon.parameters().next());
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win.chat"));
-                    dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));
                 }
             }
         }

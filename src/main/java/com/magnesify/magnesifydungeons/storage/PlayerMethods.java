@@ -40,6 +40,10 @@ public class PlayerMethods {
         JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         return players.getValue("players." + player.getUniqueId().toString()) != null;
     }
+    public boolean inDungeon(Player player) {
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        return (boolean) players.getValue("players." + player.getUniqueId().toString() + ".in_dungeon");
+    }
 
     public int getPoints(Player player) {
         JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");

@@ -1,6 +1,7 @@
 package com.magnesify.magnesifydungeons;
 
 import com.magnesify.magnesifydungeons.boss.BossManager;
+import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.boss.events.BossCreateEvent;
 import com.magnesify.magnesifydungeons.boss.events.BossDeathEvent;
 import com.magnesify.magnesifydungeons.commands.Administrator;
@@ -10,7 +11,7 @@ import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon;
-import com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupBlockPlaces;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
@@ -43,27 +44,37 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Options options = new Options(); options.reload();
         saveDefaultConfig();
 
+        if(!options.get().getBoolean("options.clean-start"))
+            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
+                    "                                          _ ____     \n" +
+                    "   ____ ___  ____ _____ _____  ___  _____(_) __/_  __\n" +
+                    "  / __ `__ \\/ __ `/ __ `/ __ \\/ _ \\/ ___/ / /_/ / / /\n" +
+                    " / / / / / / /_/ / /_/ / / / /  __(__  ) / __/ /_/ / \n" +
+                    "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
+                    "                /____/                      /____/   \n" +
+                    "\n\n<#4b8eff>Magnesify Dungeons&f, Hacı Mert Gökhan tarafından geliştirildi."));
+
         File dataFolder = getDataFolder();
         File datasFolder = new File(dataFolder, "datas");
         if (!datasFolder.exists()) {
             if (datasFolder.mkdirs()) {
-                getLogger().info("'datas' klasörü başarıyla oluşturuldu.");
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü başarıyla oluşturuldu."));
             } else {
-                getLogger().warning("'datas' klasörü oluşturulurken bir sorun oluştu.");
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü oluşturulurken bir sorun oluştu."));
             }
         } else {
-            getLogger().info("'datas' klasörü zaten mevcut.");
+            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü zaten mevcut."));
         }
 
         File cachesFolder = new File(dataFolder, "caches");
         if (!cachesFolder.exists()) {
             if (cachesFolder.mkdirs()) {
-                getLogger().info("'caches' klasörü başarıyla oluşturuldu.");
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü başarıyla oluşturuldu."));
             } else {
-                getLogger().warning("'caches' klasörü oluşturulurken bir sorun oluştu.");
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü oluşturulurken bir sorun oluştu."));
             }
         } else {
-            getLogger().info("'caches' klasörü zaten mevcut.");
+            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü zaten mevcut."));
         }
 
 
@@ -100,25 +111,22 @@ public final class MagnesifyDungeons extends JavaPlugin {
         getCommand("Join").setExecutor(new JoinDungeon(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
 
-        if(!options.get().getBoolean("options.clean-start"))
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
-                "                                          _ ____     \n" +
-                "   ____ ___  ____ _____ _____  ___  _____(_) __/_  __\n" +
-                "  / __ `__ \\/ __ `/ __ `/ __ \\/ _ \\/ ___/ / /_/ / / /\n" +
-                " / / / / / / /_/ / /_/ / / / /  __(__  ) / __/ /_/ / \n" +
-                "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
-                "                /____/                      /____/   \n"));
         Bukkit.getPluginManager().registerEvents(new DungeonPlayerEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
-        Bukkit.getPluginManager().registerEvents(new TriggerSetupBlockPlaces(this), this);
+        Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonCreateEvent(this), this);
+
+        MagnesifyBoss create_boss = new MagnesifyBoss("Magnesify", "Magnesify");
+        if(create_boss.create()) {
+            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fBoss 'Magnesify' oluşturuldu..."));
+        }
 
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(!Bukkit.getOnlinePlayers().isEmpty()) {
                 DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
                 dungeonPlayer.create();
-                if(options.get().getBoolean("options.send-new-data-log")) Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format("<#4f91fc>[Magnesify Dungeons] %s için bir veri bulunamadı, veri oluşturuluyor.", player.getUniqueId().toString())));
+                if(options.get().getBoolean("options.send-new-data-log")) Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format("<#4b8eff>[Magnesify Dungeons] %s için bir veri bulunamadı, veri oluşturuluyor.", player.getUniqueId().toString())));
             }
         }
         new BukkitRunnable() {

@@ -1,11 +1,10 @@
 settings:
-  prefix: '<#4f91fc>&lMagnesify Dungeons &8▸&f'
+  prefix: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r &8・&r'
   minimal-options:
     send-damage-title: true
     teleport-delay-for-sending-spawn: 3
   defaults:
-    tag: '<#5794ff>&lMagnesify'
-    dungeon-world: world
+    dungeon-world: "Magnesify"
     last-dungeon: "Henüz bir zindana giriş yapmamış."
   sounds:
     starting: ENTITY_PLAYER_LEVELUP
@@ -14,7 +13,6 @@ settings:
     cancel: iptal
     leave: ayrıl
     join: gir
-    dungeon-menus: zindanlar
   holders:
     name: "İsim"
     category: "Kategori"
@@ -23,30 +21,11 @@ settings:
     play-time: "Oynama Süresi (Saniye)"
     start-time: "Başlama Süresi (Saniye)"
     none: "Yok"
-  menu:
-    title: '<#4f91fc>&lZindan Kategorileri'
-    paging:
-      next:
-        display: "&aSonraki Sayfa"
-        material: ARROW
-      previous:
-        display: "&cÖnceki Sayfa"
-        material: ARROW
-      info:
-        display: "&fSayfa: #current/&a#max"
-        material: BOOK
-  main-spawn:
-    world:
-    x:
-    y:
-    z:
-    yaw:
-    pitch:
   messages:
     events:
       joined:
         - ''
-        - '<#4f91fc>&lMagnesify Dungeons &8・ &fZindana giriş yaptın !'
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fZindana giriş yaptın !'
         - ' &fBossu &d#playtime &fsaniye içinde öldürmen gerek.'
         - ' &fSonraki zindan seviyesi &d#next_level.'
         - ' &fZindan kategorisi &d#category.'
@@ -59,7 +38,7 @@ settings:
     helps:
       boss:
         - ''
-        - '<#4f91fc>&lMagnesify Dungeons &8・ &fYaratık Oluşturma'
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fYaratık Oluşturma'
         - ' &b/Mgdb create &f: Yeni yaratık oluşturur.'
         - ' &b/Mgdb delete <yaratık> &f: Seçili yaratığı siler.'
         - ' &b/Mgdb list &f: Yaratık listesini döndürür.'
@@ -68,13 +47,13 @@ settings:
       player:
         join:
           - ''
-          - '<#4f91fc>&lMagnesify Dungeons &8・ &fEtkinlik Komutları'
+          - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fEtkinlik Komutları'
           - ' &b/join <zindan>&f: &7Seçilen zindana katılırsınız.'
           - ' &b/join menu&f: &7Zindan kategorilerini gösterir.'
           - ''
       admin:
         - ''
-        - '<#4f91fc>&lMagnesify Dungeons &8・ &fYönetim Komutları'
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fYönetim Komutları'
         - ' &b/Mgd reload &f: Eklentiyi yeniler.'
         - ' &b/Mgd create &f: Yeni zindan oluşturur.'
         - ' &b/Mgd join <Zindan> &f: Zindana direkt giriş yaparsınız (Sunucu geliştirme modunda iken kullanınız).'
@@ -88,10 +67,10 @@ settings:
       trigger-type-dungeon:
         admin:
           - ''
-          - '<#4f91fc>&lMagnesify Trigger Type Dungeons &8・ &fYönetim Komutları'
+          - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fYönetim Komutları'
           - ' &b/Mgdt setup <Zindan Adı> <Kategorisi> &f: Yeni zindan oluşturur.'
+          - ' &b/Mgdt join <Zindan> &f: Seçili zindana giriş yaparsın.'
           - ' &b/Mgdt delete <zindan> &f: Seçili zindanı siler.'
-          - ' &b/Mgdt cancel &f: Zindan oluşturmasını iptal et.'
           - ''
           - ' &b・ &fBoss yönetimi için: &d/Mgdb'
           - ' &b・ &fSeviyeli zindan yönetimi için: &d/Mgd'
@@ -148,6 +127,12 @@ settings:
       unknow-dungeon: '#prefix &d#name &fisminde bir zindan yok.'
       cancelled: '#prefix &fZindan oluşturma işlemi iptal edildi..'
       no-progress-found: '#prefix Bir zindan oluşturmuyorsun.'
+      last-level:
+        title: '&6&lSON SEVİYE'
+        subtitle: '&fBitişe çok yaklaştın !'
+      new-level:
+        title: '&6&lSONRAKİ SEVİYE'
+        subtitle: '&fTebrikler ! &d#level. &fseviyeye ulaştın !'
       canceled:
         must-be-number: '#prefix Girdiğin değer bir sayı olmalı.'
       list: # Sadece 2 satır olabilir !

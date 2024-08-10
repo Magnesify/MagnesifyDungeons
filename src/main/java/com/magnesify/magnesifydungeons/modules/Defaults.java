@@ -6,6 +6,8 @@ import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
 public class Defaults {
 
+    public static String TEXT_PREFIX = "<#1a88fb>M<#317dfb>a<#4772fc>g<#5e67fc>n<#745dfc>e<#8b52fc>s<#a147fd>i<#b83cfd>f<#ce31fd>y &8▸&r";
+
     public static String name = get().getConfig().getString("settings.holders.name");
     public static String category = get().getConfig().getString("settings.holders.category");
     public static String boss_id = get().getConfig().getString("settings.holders.boss_id");
