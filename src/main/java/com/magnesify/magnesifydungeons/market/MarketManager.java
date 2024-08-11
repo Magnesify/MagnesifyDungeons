@@ -1,9 +1,11 @@
-package com.magnesify.magnesifydungeons.kits;
+package com.magnesify.magnesifydungeons.market;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.market.file.MarketFile;
+import com.magnesify.magnesifydungeons.market.gui.MarketGuiLoader;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,9 +14,9 @@ import org.bukkit.entity.Player;
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
 
-public class KitManager implements CommandExecutor {
+public class MarketManager implements CommandExecutor {
 
-    public KitManager(MagnesifyDungeons magnesifyDungeons) {}
+    public MarketManager(MagnesifyDungeons magnesifyDungeons) {}
 
     public void help(CommandSender sender) {
         if(sender instanceof Player) {
@@ -35,20 +37,29 @@ public class KitManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         DungeonEntity dungeonEntity = new DungeonEntity(commandSender);
-        if (commandSender.hasPermission("mgd.kit")) {
+        if (commandSender.hasPermission("mgd.market")) {
             if(strings.length == 0) {
-                help(commandSender);
+                if(commandSender instanceof Player) {
+                    Player player = (Player) commandSender;
+                    MarketGuiLoader.openInventory(player);
+                } else {
+                    dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+                }
             } else if (strings.length == 1) {
                 if (strings[0].equalsIgnoreCase("reload")) {
-                    KitsFile kitsFile = new KitsFile();
-                    kitsFile.saveKitsConfig();
-                    dungeonEntity.EntityChatManager().send(TEXT_PREFIX + " &fkits.yml başarıyla kaydedildi...");
+                    MarketFile marketFile = new MarketFile();
+                    marketFile.saveKitsConfig();
+                    dungeonEntity.EntityChatManager().send(TEXT_PREFIX + " &fmarket.yml başarıyla kaydedildi...");
                 } else {
                     if(commandSender instanceof Player) {
                         Player player = (Player) commandSender;
-                        KitGuiLoader.openInventory(player);
+                        MarketGuiLoader.openInventory(player);
+                    } else {
+                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                     }
                 }
+            } else {
+                help(commandSender);
             }
         } else {
             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.no-permission"));

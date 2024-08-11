@@ -16,9 +16,9 @@ import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
-import com.magnesify.magnesifydungeons.kits.KitGuiInteract;
-import com.magnesify.magnesifydungeons.kits.KitManager;
-import com.magnesify.magnesifydungeons.kits.KitsFile;
+import com.magnesify.magnesifydungeons.market.gui.MarketGuiInteract;
+import com.magnesify.magnesifydungeons.market.MarketManager;
+import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
@@ -53,8 +53,8 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.OFF);
 
         Options options = new Options(); options.reload();
-        KitsFile kitsFile = new KitsFile();
-        kitsFile.createKitsConfig();
+        MarketFile marketFile = new MarketFile();
+        marketFile.createKitsConfig();
         saveDefaultConfig();
 
         if(!options.get().getBoolean("options.clean-start"))
@@ -121,7 +121,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         getCommand("MagnesifyDungeonsTrigger").setTabCompleter(new TriggerTypeDungeon(this));
         getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
         getCommand("MagnesifyDungeonsBoss").setTabCompleter(new BossManager(this));
-        getCommand("MagnesifyDungeonsKits").setExecutor(new KitManager(this));
+        getCommand("MagnesifyDungeonsMarket").setExecutor(new MarketManager(this));
         getCommand("DungeonProfile").setExecutor(new Status(this));
         getCommand("Stats").setExecutor(new Stats(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
@@ -131,7 +131,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
-        Bukkit.getPluginManager().registerEvents(new KitGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new MarketGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonCreateEvent(this), this);
 
         MagnesifyBoss create_boss = new MagnesifyBoss("Magnesify", "Magnesify");

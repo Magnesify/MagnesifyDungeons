@@ -4,7 +4,7 @@ import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
-import com.magnesify.magnesifydungeons.dungeon.types.TriggerType;
+import com.magnesify.magnesifydungeons.dungeon.TriggerType;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.TriggerSetup;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.command.Command;

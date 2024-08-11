@@ -21,8 +21,8 @@ import java.util.HashMap;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
-import static com.magnesify.magnesifydungeons.dungeon.types.TriggerType.inGameHashMap;
-import static com.magnesify.magnesifydungeons.dungeon.types.TriggerType.level;
+import static com.magnesify.magnesifydungeons.dungeon.TriggerType.inGameHashMap;
+import static com.magnesify.magnesifydungeons.dungeon.TriggerType.level;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.TriggerVector.isInTriggerLocation;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon.new_dungeon;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;

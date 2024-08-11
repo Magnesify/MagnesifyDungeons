@@ -1,4 +1,4 @@
-package com.magnesify.magnesifydungeons.dungeon.types;
+package com.magnesify.magnesifydungeons.dungeon;
 
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;

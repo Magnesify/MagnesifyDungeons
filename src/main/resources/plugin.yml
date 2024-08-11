@@ -18,11 +18,11 @@ commands:
       - mgdb
     permission: mgdb.admin
     description: MagnesifyDungeonsBoss, Ana boss yönetim komutu.
-  MagnesifyDungeonsKits:
+  MagnesifyDungeonsMarket:
     aliases:
-      - mgdk
-    permission: mgdk.admin
-    description: MagnesifyDungeonsKits, Ana kit yönetim komutu.
+      - mgdm
+    permission: mgdm.admin
+    description: MagnesifyDungeonsMarket, Ana market komutu.
   MagnesifyDungeonsTrigger:
     aliases:
       - mgdt

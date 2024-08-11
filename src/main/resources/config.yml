@@ -1,7 +1,7 @@
 settings:
-  kits:
-    title: '&8Kitler'
   prefix: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r &8・&r'
+  market:
+    title: '&8Kitler'
   minimal-options:
     send-damage-title: true
     teleport-delay-for-sending-spawn: 3
@@ -15,6 +15,9 @@ settings:
     cancel: iptal
     leave: ayrıl
     join: gir
+    market: market
+    stats: istatistikler
+    profile: profil
   holders:
     name: "İsim"
     category: "Kategori"
@@ -42,7 +45,7 @@ settings:
         admin:
           - ''
           - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fKitler'
-          - ' &b/Mgdk reload &f: kits.yml dosyasını kaydeder.'
+          - ' &b/Mgdk reload &f: market.yml dosyasını kaydeder.'
           - ' &b/Mgdk &f: Kit menüsünü açar.'
           - ''
       boss:

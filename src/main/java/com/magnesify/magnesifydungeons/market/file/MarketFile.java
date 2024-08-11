@@ -1,4 +1,4 @@
-package com.magnesify.magnesifydungeons.kits;
+package com.magnesify.magnesifydungeons.market.file;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -7,22 +7,21 @@ import java.io.File;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
-public class KitsFile {
+public class MarketFile {
     private FileConfiguration kitsConfig = null;
     private File kitsFile = null;
 
     public void createKitsConfig() {
         if (kitsFile == null) {
-            kitsFile = new File(get().getDataFolder(), "kits.yml");
+            kitsFile = new File(get().getDataFolder(), "market.yml");
         }
         if (!kitsFile.exists()) {
-            get().saveResource("kits.yml", false); // Bu, varsayılan bir kits.yml varsa onu kopyalar
+            get().saveResource("market.yml", false); // Bu, varsayılan bir market.yml varsa onu kopyalar
         }
         kitsConfig = YamlConfiguration.loadConfiguration(kitsFile);
-        get().getLogger().severe("'kits.yml' yükleniyor...");
     }
 
-    public FileConfiguration getKitsConfig() {
+    public FileConfiguration getMarketConfig() {
         if (kitsConfig == null) {
             createKitsConfig();
         }
@@ -34,9 +33,9 @@ public class KitsFile {
             return;
         }
         try {
-            getKitsConfig().save(kitsFile);
+            getMarketConfig().save(kitsFile);
         } catch (Exception e) {
-            get().getLogger().severe("kits.yml kaydedilirken bir hata oluştu !");
+            get().getLogger().severe("market.yml kaydedilirken bir hata oluştu !");
         }
     }
 }
