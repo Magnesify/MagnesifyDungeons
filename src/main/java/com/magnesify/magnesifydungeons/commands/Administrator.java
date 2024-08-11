@@ -9,6 +9,8 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
+import com.magnesify.magnesifydungeons.storage.PlayerMethods;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -204,6 +206,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     } else {
                         help(commandSender);
                     }
+
                 } else {
                     help(commandSender);
                 }
@@ -312,6 +315,38 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     } else {
                         help(commandSender);
                     }
+                } else if (strings[0].equalsIgnoreCase("point")) {
+                    Player player = Bukkit.getPlayer(strings[2]);
+                    if(player != null) {
+                        if(isNumeric(strings[3])) {
+                            PlayerMethods playerMethods = new PlayerMethods();
+                            DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+                            int a = Integer.parseInt(strings[3]);
+                            if (strings[1].equalsIgnoreCase("give")) {
+                                playerMethods.updatePoint(player, a);
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.point.admin.gived").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.point.player.gived.title").replace("#player", player.getName()).replace("#amount", String.valueOf(a)),get().getConfig().getString("settings.messages.point.player.gived.subtitle").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                            } else if (strings[1].equalsIgnoreCase("take")) {
+                                playerMethods.removePoint(player, a);
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.point.admin.taked").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.point.player.taked.title").replace("#player", player.getName()).replace("#amount", String.valueOf(a)),get().getConfig().getString("settings.messages.point.player.taked.subtitle").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                            } else if (strings[1].equalsIgnoreCase("set")) {
+                                playerMethods.setPoint(player, a);
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.point.admin.set").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.point.player.set.title").replace("#player", player.getName()).replace("#amount", String.valueOf(a)),get().getConfig().getString("settings.messages.point.player.set.subtitle").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                            } else if (strings[1].equalsIgnoreCase("reset")) {
+                                playerMethods.resetPoint(player);
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.point.admin.reset").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.point.player.reset.title").replace("#player", player.getName()).replace("#amount", String.valueOf(a)),get().getConfig().getString("settings.messages.point.player.reset.subtitle").replace("#player", player.getName()).replace("#amount", String.valueOf(a)));
+                            } else {
+                                help(commandSender);
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.canceled.must-be-number"));
+                        }
+                    } else {
+                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.error.player-not-online"));
+                    }
                 } else {
                     help(commandSender);
                 }
@@ -334,6 +369,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             commands.add("setmainspawn");
             commands.add("cancel");
             commands.add("reload");
+            commands.add("point");
             commands.add("create");
             commands.add("delete");
             commands.add("update");
@@ -351,6 +387,13 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                 commands.add("start-time");
                 StringUtil.copyPartialMatches(args[1], commands, completions);
             }
+            if (args[0].equalsIgnoreCase("point")) {
+                commands.add("give");
+                commands.add("take");
+                commands.add("set");
+                commands.add("reset");
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
             if (args[0].equalsIgnoreCase("delete")) {
                 DatabaseManager databaseManager = new DatabaseManager(get());
                 for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
@@ -366,12 +409,27 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                 StringUtil.copyPartialMatches(args[1], commands, completions);
             }
         } else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("point")) {
+                for(Player player : Bukkit.getOnlinePlayers()) {
+                    commands.add(player.getName());
+                }
+                StringUtil.copyPartialMatches(args[2], commands, completions);
+            }
             if (args[0].equalsIgnoreCase("update")) {
                 DatabaseManager databaseManager = new DatabaseManager(get());
                 for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
                     commands.add(databaseManager.getAllDungeons().get(i));
                 }
                 StringUtil.copyPartialMatches(args[2], commands, completions);
+            }
+        } else if (args.length == 4) {
+            if (args[0].equalsIgnoreCase("point")) {
+                commands.add("1");
+                commands.add("10");
+                commands.add("100");
+                commands.add("1000");
+                commands.add("10000");
+                StringUtil.copyPartialMatches(args[3], commands, completions);
             }
         }
         Collections.sort(completions);

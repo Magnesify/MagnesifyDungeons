@@ -1,7 +1,12 @@
 settings:
   prefix: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r &8・&r'
+  countdown-warnings:
+    30:
+      warn-at: 30
+    10:
+      warn-at: 10
   market:
-    title: '&8Kitler'
+    title: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls'
   minimal-options:
     send-damage-title: true
     teleport-delay-for-sending-spawn: 3
@@ -27,6 +32,7 @@ settings:
     start-time: "Başlama Süresi (Saniye)"
     none: "Yok"
   messages:
+
     events:
       joined:
         - ''
@@ -68,6 +74,7 @@ settings:
         - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fYönetim Komutları'
         - ' &b/Mgd reload &f: Eklentiyi yeniler.'
         - ' &b/Mgd create &f: Yeni zindan oluşturur.'
+        - ' &b/Mgd point <give, take, reset, set> <oyuncu> <miktar> &f: Oyuncu hesabına puan ekler.'
         - ' &b/Mgd join <Zindan> &f: Zindana direkt giriş yaparsınız (Sunucu geliştirme modunda iken kullanınız).'
         - ' &b/Mgd update <point, name, boss, playtime, start time, level, next-level, category> <zindan> <Yeni Değer> &f: Mevcut zindanı günceller.'
         - ' &b/Mgd delete <zindan> &f: Seçili zindanı siler.'
@@ -88,13 +95,39 @@ settings:
           - ' &b・ &fSeviyeli zindan yönetimi için: &d/Mgd'
           - ''
     error:
+      player-not-online: '#prefix Oyuncu aktif değil !'
       select-spawn-first: '#prefix İlk önce bir başlangıç seçmelisin ! &d/Mgd setmainspawn'
       cannot-created: '#prefix İşlem &d#name &fadında bir zindan oluşturulamadı, bilgiler başka bir zindana ait olabilirmi ?'
       no-data-found: '#prefix Herhangi bir veri bulunamadı.'
+    countdown-warn:
+      title: '&c&lHIZLI OL'
+      subtitle: '&fGeriye sadece &c#remain &fsaniye kaldı !'
     reload: '#prefix Eklenti <#4f91fc>#ms &fmilisaniye içerisinde başarıyla yenilendi.'
     no-permission: '#prefix Bu işlem için yeterli yetkiye sahip değilsin.'
     in-game-command: '#prefix Bu komutu konsoldan kullanamazsın.'
     main-spawn-selected: '#prefix Ana başlangıç bölgesi ayarlandı.'
+    point:
+      player:
+        reset:
+          title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+          subtitle: '&fHesabın sıfırlandı !'
+        set:
+          title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+          subtitle: '&fPuanın &e#amount &folarak ayarlandı !'
+        taked:
+          title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+          subtitle: '&fHesabından &e#amount &fpuan kaldırıldı !'
+        gived:
+          title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+          subtitle: '&fHesabına &e#amount &fpuan eklendi !'
+      admin:
+        gived: '#prefix &e#player &fadlı oyuncuya &e#amount &fadet puan eklendi.'
+        reset: '#prefix &e#player &fadlı oyuncunun hesabı sıfırlandı.'
+        taked: '#prefix &e#player &fadlı oyuncudan &e#amount &fadet puan alındı.'
+        set: '#prefix &e#player &fadlı oyuncunun hesabı &e#amount &Folarak ayarlandı.'
+    market:
+      buy: '#prefix &fÜrün #product &e#price &fkarşılığında satın alındı'
+      not-enough-balance: '#prefix #product &fürününü satın almak için yeteri miktarda bütçen yok, gerekli olan: &e#price'
     status:
       lose:
         chat: '#prefix Yaratık tarafından öldürüldün...'
@@ -105,6 +138,8 @@ settings:
         title: '&6&lKAZANDIN'
         subtitle: '&fTebrikler #point puan hesabına eklendi !'
     boss:
+      updated:
+        type: '#prefix &fYaratık tipi güncellendi...'
       creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
       created: '#prefix Yaratık oluşturuldu, yaratık adı &d#name, &fidsi &d#id.'
       creation-progress-started: '#prefix Yaratık oluşturma işlemi başladı, &dlütfen bir yaratık adı belirtin&f. İşlemi iptal etmek için &d/Mgdb cancel'
@@ -125,7 +160,7 @@ settings:
       boss-not-exists: '#prefix Zindan aktif ancak zindanın içinde savaşacak boss henüz ayarlanmamış. Yoksa boss kaçtı mı ?'
       not-in-dungeon: '#prefix Bir zindanda değilsin.'
       not-next-level-dungeon: '#prefix Bu zindana şu an giriş yapamazsın, önceki seviyeleri tamamlaman gerek !'
-      leave-success: '#prefix zindandan çıkış yaptın, korkak...'
+      leave-success: '#prefix Zindandan çıkış yaptın, korkak...'
       not-first-level: '#prefix Bu zindanın seviyesi giriş seviyesi değil !'
       full: '#prefix #name şu anda dolu, zindandaki oyuncunun görev bitimine &d#countdown &fsaniye var'
       already-in-dungeon: '#prefix #name adlı zindana giriş yapamazsın, şu an zaten bir zindandasın !'

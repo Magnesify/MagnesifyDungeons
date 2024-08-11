@@ -1,6 +1,7 @@
 options:
   clean-start: false
   send-new-data-log: true
+  use-market: true
     
     
     

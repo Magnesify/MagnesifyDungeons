@@ -23,12 +23,8 @@ market:
     items:
       1:
         material: IRON_AXE
-        name: "&6Balta"
-        durability: 10
-        lore:
-          - ''
-        enchants:
-          - "mending:1"
+        display: "&6Balta"
+        amount: 1
   Sovalye:
     display: '&6&lŞövalye'
     material: IRON_SWORD
@@ -46,7 +42,7 @@ market:
       1:
         material: IRON_SWORD
         name: "&6Kılıç"
-        durability: 10
+        amount: 2
         lore:
           - ''
         enchants:
@@ -67,4 +63,6 @@ market:
     items:
       1:
         commands:
-          - "say Merhaba"
+          - "[command:console] say Merhaba <player> !"
+          - "[actionbar] &a&lSeni gördüğüme sevindim !"
+          - "[give] APPLE 16"

@@ -47,7 +47,7 @@ public class DatabaseManager {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS trigger_type_dungeons (name TEXT, available BOOLEAN, current_player TEXT, category TEXT, current_level INTEGER DEFAULT 0,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, boss_id TEXT, play_time INTEGER DEFAULT 3, start_time INTEGER DEFAULT 5, point INTEGER DEFAULT 0, next_level INTEGER DEFAULT 0, type TEXT,checkpoint_amount INTEGER DEFAULT 1, enable TEXT DEFAULT 'Hayır', boss_world TEXT, boss_x DOUBLE, boss_y DOUBLE, boss_z DOUBLE, boss_yaw FLOAT, boss_pitch FLOAT, PRIMARY KEY(name, category))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS boss (name TEXT, id TEXT, mgid TEXT, uuid TEXT,helmet TEXT,chestplate TEXT,leggings TEXT,boots TEXT,weapon TEXT,damage DOUBLE DEFAULT 0.0, knockback DOUBLE DEFAULT 0.0,max_health DOUBLE DEFAULT 0.0, drops TEXT DEFAULT 'GOLDEN_APPLE', type TEXT DEFAULT 'ZOMBIE', display TEXT DEFAULT '&cMagnesify', PRIMARY KEY(name, mgid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS stats (name TEXT,uuid TEXT, kill INTEGER DEFAULT 0, death INTEGER DEFAULT 0, win INTEGER DEFAULT 0, lose INTEGER DEFAULT 0, played_match INTEGER DEFAULT 0, PRIMARY KEY(name, uuid))");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS checkpoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT , PRIMARY KEY(connected_dungeon, checkpoint_queue))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS checkpoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT ,boss TEXT, PRIMARY KEY(connected_dungeon, checkpoint_queue))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS bosspoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT , PRIMARY KEY(connected_dungeon, checkpoint_queue))");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,11 +61,11 @@ public class DatabaseManager {
         return dataSource.getConnection();
     }
 
-    public CompletableFuture<Boolean> CreateNewCheckpoint(String dungeon_name, int queue, Location location) {
+    public CompletableFuture<Boolean> CreateNewCheckpoint(String dungeon_name, int queue, Location location, String boss) {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("INSERT INTO checkpoints (connected_dungeon, checkpoint_queue, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO checkpoints (connected_dungeon, checkpoint_queue, world, x, y, z, yaw, pitch, boss) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)")) {
                 statement.setString(1, dungeon_name);
                 statement.setInt(2, queue);
                 statement.setString(3, location.getWorld().getName());
@@ -74,6 +74,7 @@ public class DatabaseManager {
                 statement.setDouble(6, location.getZ());
                 statement.setFloat(7, location.getYaw());
                 statement.setFloat(8, location.getPitch());
+                statement.setString(9, boss);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -981,6 +982,22 @@ public class DatabaseManager {
         }
 
 
+        public CompletableFuture<Boolean> setType(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET type = ? WHERE name = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
 
 
         public CompletableFuture<Boolean> setUUID(String dungeon, String bool) {
@@ -1853,6 +1870,23 @@ public class DatabaseManager {
                     float yaw = resultSet.getFloat("yaw");
                     float pitch = resultSet.getFloat("pitch");
                     return new Location(Bukkit.getWorld(world) == null ? null : Bukkit.getWorld(world), x, y, z, yaw, pitch);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public String getCheckpointBoss(String dungeon, int level) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM checkpoints WHERE connected_dungeon = ? AND checkpoint_queue = ?")) {
+                statement.setString(1, dungeon);
+                statement.setInt(2, level);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String world = resultSet.getString("boss");
+                    return world;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

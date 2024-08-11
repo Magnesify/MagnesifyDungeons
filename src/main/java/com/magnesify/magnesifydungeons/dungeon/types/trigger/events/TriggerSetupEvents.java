@@ -1,7 +1,6 @@
 package com.magnesify.magnesifydungeons.dungeon.types.trigger.events;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
-import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
@@ -20,9 +19,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.HashMap;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
-import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.dungeon.TriggerType.inGameHashMap;
 import static com.magnesify.magnesifydungeons.dungeon.TriggerType.level;
+import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.TriggerVector.isInTriggerLocation;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon.new_dungeon;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
@@ -121,14 +120,14 @@ public class TriggerSetupEvents implements Listener {
                     setupDataHolder.put("level_boss", setupDataHolder.get("level_boss") + 1);
                     databaseManager.CreateNewBosspoints(new_dungeon.get("new"), setupDataHolder.get("level_boss"), event.getPlayer().getLocation());
                 }
-                event.getPlayer().sendMessage(parseHexColors(String.format("%s %s. seviye için yaratığın doğum noktası seçildi ! Koordinat bilgisi: &b%s x:%s, y:%s, z:%s", TEXT_PREFIX, String.valueOf(setupDataHolder.get("level")), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
+                event.getPlayer().sendMessage(parseHexColors(String.format("%s %s. seviye için yaratığın doğum noktası seçildi ! Koordinat bilgisi: &b%s x:%s, y:%s, z:%s", TEXT_PREFIX, String.valueOf(setupDataHolder.get("level_boss")), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
             } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
                 if(setupDataHolder.get("level") == null) {
                     setupDataHolder.put("level", 1);
-                    databaseManager.CreateNewCheckpoint(new_dungeon.get("new"), setupDataHolder.get("level"), event.getPlayer().getLocation());
+                    databaseManager.CreateNewCheckpoint(new_dungeon.get("new"), setupDataHolder.get("level"), event.getPlayer().getLocation(), "Magnesify");
                 } else {
                     setupDataHolder.put("level", setupDataHolder.get("level") + 1);
-                    databaseManager.CreateNewCheckpoint(new_dungeon.get("new"), setupDataHolder.get("level"), event.getPlayer().getLocation());
+                    databaseManager.CreateNewCheckpoint(new_dungeon.get("new"), setupDataHolder.get("level"), event.getPlayer().getLocation(), "Magnesify");
                 }
                 event.getPlayer().sendMessage(parseHexColors(String.format("%s %s. seviye seçildi ! Koordinat bilgisi: &b%s x:%s, y:%s, z:%s", TEXT_PREFIX, String.valueOf(setupDataHolder.get("level")), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
             } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"))) {
@@ -170,11 +169,6 @@ public class TriggerSetupEvents implements Listener {
                 if(isInTriggerLocation(location, databaseManager.TriggerTypeDungeons().getCheckpointLocation(playerMethods.getLastDungeon(event.getPlayer()), level.get(event.getPlayer().getUniqueId())))) {
                     if(databaseManager.TriggerTypeDungeons().getTotalCheckpoints(playerMethods.getLastDungeon(event.getPlayer())) == level.get(event.getPlayer().getUniqueId())) {
                         dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.dungeon.last-level.title"), get().getConfig().getString("settings.messages.dungeon.last-level.subtitle").replace("#level", String.valueOf(level.get(event.getPlayer().getUniqueId()))));
-                    } else {
-                        level.put(event.getPlayer().getUniqueId(), level.get(event.getPlayer().getUniqueId()) + 1);
-                        MagnesifyBoss magnesifyBoss = new MagnesifyBoss("Magnesify");
-                        magnesifyBoss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(playerMethods.getLastDungeon(event.getPlayer()),level.get(event.getPlayer().getUniqueId())), event.getPlayer());
-                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.dungeon.new-level.title"), get().getConfig().getString("settings.messages.dungeon.new-level.subtitle").replace("#level", String.valueOf(level.get(event.getPlayer().getUniqueId()))));
                     }
                 }
             }

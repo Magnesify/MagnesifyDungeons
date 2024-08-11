@@ -5,6 +5,8 @@ api-version: '1.18'
 database: true
 prefix: MagnesifyDungeons
 authors: [hacimertgokhan]
+softdepend:
+  - ItemsAdder
 description: MagnesifyDungeons, Gelişmiş zindan eklentisi.
 website: documents.magnesify.com
 commands:
@@ -21,6 +23,7 @@ commands:
   MagnesifyDungeonsMarket:
     aliases:
       - mgdm
+      - dungeonmarket
     permission: mgdm.admin
     description: MagnesifyDungeonsMarket, Ana market komutu.
   MagnesifyDungeonsTrigger:

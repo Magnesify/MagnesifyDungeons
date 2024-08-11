@@ -16,9 +16,9 @@ import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
-import com.magnesify.magnesifydungeons.market.gui.MarketGuiInteract;
 import com.magnesify.magnesifydungeons.market.MarketManager;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
+import com.magnesify.magnesifydungeons.market.gui.MarketGuiInteract;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
@@ -28,8 +28,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
@@ -45,19 +43,12 @@ public final class MagnesifyDungeons extends JavaPlugin {
     @Override
     public void onEnable() {
         setInstance(this);
-
-        Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.HikariDataSource").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.HikariConfig").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.OFF);
-
         Options options = new Options(); options.reload();
         MarketFile marketFile = new MarketFile();
         marketFile.createKitsConfig();
         saveDefaultConfig();
 
-        if(!options.get().getBoolean("options.clean-start"))
+        if(!options.get().getBoolean("options.clean-start")) {
             Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
                     "                                          _ ____     \n" +
                     "   ____ ___  ____ _____ _____  ___  _____(_) __/_  __\n" +
@@ -66,6 +57,18 @@ public final class MagnesifyDungeons extends JavaPlugin {
                     "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
                     "                /____/                      /____/   \n" +
                     "\n\n<#4b8eff>Magnesify Dungeons&f, Hacı Mert Gökhan tarafından geliştirildi."));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fMarkette mevcut olarak <#4b8eff>" + marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false).size() + "&f adet ürün bulunuyor."));
+            if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'ItemsAdder' tespit edildi. Markete uyarlanıyor..."));
+            } else {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fItemsAdder bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+            }
+            if(Bukkit.getPluginManager().getPlugin("Vault") != null) {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'Vault' tespit edildi. Markete uyarlanıyor..."));
+            } else {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fVault bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+            }
+        }
 
         File dataFolder = getDataFolder();
         File datasFolder = new File(dataFolder, "datas");
@@ -90,7 +93,6 @@ public final class MagnesifyDungeons extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü zaten mevcut."));
         }
 
-
         JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
         JsonStorage cache = new JsonStorage(this.getDataFolder() + "/caches/player_dungeon_cache.json");
         JsonStorage players = new JsonStorage(this.getDataFolder() + "/datas/players.json");
@@ -111,7 +113,6 @@ public final class MagnesifyDungeons extends JavaPlugin {
         jsonObject.put("spawn.pitch", 0);
         jsonObject.put("spawn.yaw", 0);
         jsonStorage.createJsonFile(jsonObject);
-
         dbManager = new DatabaseManager(this);
         dbManager.initialize();
 

@@ -73,6 +73,22 @@ public class BossManager implements CommandExecutor, TabCompleter {
                     } else {
                         help(commandSender);
                     }
+                } else if (strings.length == 4) {
+                    if (strings[0].equalsIgnoreCase("update")) {
+                        if (strings[1].equalsIgnoreCase("type")) {
+                            String name = strings[2];
+                            if (databaseManager.isBossAvailable(name)) {
+                                databaseManager.boss().setType(name, strings[3]);
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.boss.updated.type"));
+                            } else {
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.boss.unknow-boss"));
+                            }
+                        } else {
+                            help(commandSender);
+                        }
+                    } else {
+                        help(commandSender);
+                    }
                 } else {
                     help(commandSender);
                 }
@@ -94,6 +110,7 @@ public class BossManager implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             commands.add("create");
             commands.add("delete");
+            commands.add("update");
             StringUtil.copyPartialMatches(args[0], commands, completions);
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("delete")) {
@@ -102,6 +119,18 @@ public class BossManager implements CommandExecutor, TabCompleter {
                     commands.add(databaseManager.boss().getAllBoss().get(i));
                 }
                 StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+            if (args[0].equalsIgnoreCase("update")) {
+                commands.add("type");
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+        } else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("update")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.boss().getAllBoss().size(); i++) {
+                    commands.add(databaseManager.boss().getAllBoss().get(i));
+                }
+                StringUtil.copyPartialMatches(args[2], commands, completions);
             }
         }
         Collections.sort(completions);

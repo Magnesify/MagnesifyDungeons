@@ -2,7 +2,6 @@ package com.magnesify.magnesifydungeons.market.gui;
 
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -23,7 +22,7 @@ public class MarketGuiLoader {
 
     @Deprecated
     public static void openInventory(Player ent) {
-        inv = Bukkit.createInventory(null,  54, ChatColor.translateAlternateColorCodes('&', get().getConfig().getString("settings.market.title")));
+        inv = Bukkit.createInventory(null,  54, parseHexColors(get().getConfig().getString("settings.market.title")));
         loadItems(ent);
         ent.openInventory(inv);
     }

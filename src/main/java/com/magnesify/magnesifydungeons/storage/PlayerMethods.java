@@ -80,6 +80,23 @@ public class PlayerMethods {
         players.updateData("players." + player.getUniqueId().toString() + ".point", getPoints(player)-dungeon);
     }
 
+
+    public void setPoint(Player player, int dungeon){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        if (playerExists(player)){
+            createPlayer();
+        }
+        players.updateData("players." + player.getUniqueId().toString() + ".point", dungeon);
+    }
+
+    public void resetPoint(Player player){
+        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
+        if (playerExists(player)){
+            createPlayer();
+        }
+        players.updateData("players." + player.getUniqueId().toString() + ".point", 0);
+    }
+
     public void updateDeath(Player player, int dungeon){
         JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
         if (playerExists(player)){

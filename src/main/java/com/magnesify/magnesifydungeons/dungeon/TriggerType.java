@@ -260,12 +260,30 @@ public class TriggerType {
                                 countdownTime.put(name, countTime-1);
                                 countdowns.put(playerId, remainingTime - 1);
                                 dungeonPlayer.messageManager().actionbar(get().getConfig().getString("settings.messages.dungeon.playing").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.leave")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
-                            } else {
-                                if(parameters(dungeon).status()) {
-                                    leave(player, dungeon);
-                                    PlayerMethods playerMethods = new PlayerMethods(player);
-                                    playerMethods.updateDungeonStatus(player, false);
+                                for(String warn : get().getConfig().getConfigurationSection("settings.countdown-warnings").getKeys(false)) {
+                                    int warn_at = get().getConfig().getInt("settings.countdown-warnings." + warn + ".warn-at");
+                                    if(remainingTime == warn_at) {
+                                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.countdown-warn.title"), get().getConfig().getString("settings.messages.countdown-warn.subtitle").replace("#remain", String.valueOf(remainingTime)));
+                                        return;
+                                    }
                                 }
+                            } else {
+                                leave(player, dungeon);
+                                PlayerMethods playerMethods = new PlayerMethods(player);
+                                playerMethods.updateDungeonStatus(player, false);
+                                Defaults defaults = new Defaults();
+                                String last_dungeon= get().getPlayers().getLastDungeon(player);
+                                MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
+                                magnesifyBoss.killBoss();
+                                if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
+                                    Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
+                                    player.teleport(loc);
+                                } else {
+                                    DungeonConsole dungeonConsole = new DungeonConsole();
+                                    dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?");
+                                }
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+                                get().getPlayers().updateDungeonStatus(player, false);
                                 countdowns.remove(playerId);
                                 countdownTime.remove(name);
                                 this.cancel();

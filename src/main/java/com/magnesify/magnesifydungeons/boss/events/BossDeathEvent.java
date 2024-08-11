@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
+import static com.magnesify.magnesifydungeons.dungeon.TriggerType.level;
 
 public class BossDeathEvent implements Listener {
     public BossDeathEvent(MagnesifyDungeons magnesifyDungeons) {}
@@ -42,13 +43,10 @@ public class BossDeathEvent implements Listener {
                 DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
                 if(metadataValue != null) {
                     if(dungeonPlayer.inDungeon()) {
-                        DatabaseManager databaseManager = new DatabaseManager(get());
-                        if(databaseManager.getType(get().getPlayers().getLastDungeon(player)).equalsIgnoreCase("Normal")) {
-                            if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
-                                if (entity.hasMetadata("name")) {
-                                    if (get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
-                                        dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
-                                    }
+                        if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
+                            if (entity.hasMetadata("name")) {
+                                if (get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
+                                    dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
                                 }
                             }
                         }
@@ -117,6 +115,18 @@ public class BossDeathEvent implements Listener {
                                 dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
                                 dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
                             }
+                        } else {
+                            if (get().getPlayers().getLastBoss(entity).equalsIgnoreCase(metadataValue)) {
+                                entity.remove();
+                                get().getPlayers().updateDungeonStatus(entity, false);
+                                get().getPlayers().updateDeath(entity, 1);
+                                StatsManager statsManager = new StatsManager();
+                                statsManager.updateMatch(killer.getUniqueId().toString(), 1);
+                                statsManager.updateDeath(killer.getUniqueId().toString(), 1);
+                                statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+                            }
                         }
                     }
                 }
@@ -161,6 +171,33 @@ public class BossDeathEvent implements Listener {
                         dungeonPlayer.updateCurrentLevelForDungeon(dungeon.parameters().name(), dungeon.parameters().next());
                         dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win.chat"));
                         dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));
+                    } else {
+                        entity.remove();
+                        get().getPlayers().updateKill(killer, 1);
+                        event.getDrops().clear();
+                        MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss_name);
+                        for (String a : magnesifyBoss.drops()) {
+                            String[] split = a.split(":");
+                            ItemStack item = new ItemStack(Material.getMaterial(split[0]));
+                            ItemMeta itemMeta = item.getItemMeta();
+                            item.setAmount(Integer.parseInt(split[1]));
+                            item.setItemMeta(itemMeta);
+                            killer.getInventory().addItem(item);
+                        }
+                        StatsManager statsManager = new StatsManager();
+                        statsManager.updateMatch(killer.getUniqueId().toString(), 1);
+                        statsManager.updateKill(killer.getUniqueId().toString(), 1);
+                        level.put(killer.getUniqueId(), level.get(killer.getUniqueId()) + 1);
+                        MagnesifyBoss next_boss = new MagnesifyBoss(databaseManager.TriggerTypeDungeons().getCheckpointBoss(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())));
+                        if(next_boss.exists()) {
+                            next_boss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer),level.get(killer.getUniqueId())), killer);
+                        } else {
+                            DungeonConsole dungeonConsole = new DungeonConsole();
+                            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &f" + next_boss.name() + " adında bir yaratık yok, hata oluşmaması adına Magnesify, Normal yaratığı doğuruyor...");
+                            MagnesifyBoss spawnDefaultboss = new MagnesifyBoss("Magnesify");
+                            spawnDefaultboss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer),level.get(killer.getUniqueId())), killer);
+                        }
+                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.dungeon.new-level.title"), get().getConfig().getString("settings.messages.dungeon.new-level.subtitle").replace("#level", String.valueOf(level.get(killer.getUniqueId()))));
                     }
                 }
             }
