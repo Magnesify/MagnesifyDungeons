@@ -38,7 +38,7 @@ public class MarketGuiInteract implements Listener {
             for (String ranks : marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false)) {
                 int price = marketFile.getMarketConfig().getInt("market." + ranks + ".price.value");
                 int slot = marketFile.getMarketConfig().getInt("market." + ranks + ".slot");
-                for (String items : marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false)) {
+                for (String items : marketFile.getMarketConfig().getConfigurationSection("market." + ranks + ".items").getKeys(false)) {
                     boolean commands = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".commands");
                     boolean material = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".material");
                     boolean enchants = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".enchants");
@@ -56,15 +56,13 @@ public class MarketGuiInteract implements Listener {
                                     }
                                 }
                                 if (material) {
-                                    System.out.println("A");
                                     if(enchants) {
-                                        System.out.println("b");
                                         int amount = marketFile.getMarketConfig().getInt("market." + ranks + ".items." + items + ".amount");
                                         ItemStack itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".material")), amount);
                                         ItemMeta meta = itemStack.getItemMeta();
                                         if(display) meta.setDisplayName(parseHexColors(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".display") ));
                                         if(lore) {
-                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + ranks + ".lore");
+                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + ranks + ".items." + items + ".lore");
                                             List<String> sub_lore = new ArrayList<>();
                                             for(int a = 0; a<main_lores.size();a++) {
                                                 sub_lore.add(parseHexColors(main_lores.get(a)));
@@ -73,20 +71,19 @@ public class MarketGuiInteract implements Listener {
                                         }
                                         for(String ench : marketFile.getMarketConfig().getStringList("market." + ranks + ".items." + items + ".enchants")) {
                                             String[] spl = ench.split(":");
-                                            NamespacedKey namespacedKey = new NamespacedKey(get(), spl[0]);
-                                            meta.addEnchant(Enchantment.getByKey(namespacedKey), Integer.parseInt(spl[1]), true);
+                                            NamespacedKey key = new NamespacedKey("minecraft", spl[0]);
+                                            meta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(spl[1]), true);
                                         }
+                                        // enchantta sorun var.
                                         itemStack.setItemMeta(meta);
                                         player.getInventory().addItem(itemStack);
-                                        System.out.println("C");
                                     } else {
                                         int amount = marketFile.getMarketConfig().getInt("market." + ranks + ".items." + items + ".amount");
-                                        System.out.println("D");
                                         ItemStack itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".material")), amount);
                                         ItemMeta meta = itemStack.getItemMeta();
                                         if(display) meta.setDisplayName(parseHexColors(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".display") ));
                                         if(lore) {
-                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + ranks + ".lore");
+                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + ranks + ".items." + items + ".lore");
                                             List<String> sub_lore = new ArrayList<>();
                                             for(int a = 0; a<main_lores.size();a++) {
                                                 sub_lore.add(parseHexColors(main_lores.get(a)));

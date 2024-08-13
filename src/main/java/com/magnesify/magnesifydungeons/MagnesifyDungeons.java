@@ -6,16 +6,20 @@ import com.magnesify.magnesifydungeons.boss.events.BossCreateEvent;
 import com.magnesify.magnesifydungeons.boss.events.BossDeathEvent;
 import com.magnesify.magnesifydungeons.commands.Administrator;
 import com.magnesify.magnesifydungeons.commands.player.Stats;
-import com.magnesify.magnesifydungeons.commands.player.Status;
+import com.magnesify.magnesifydungeons.commands.player.Profile;
 import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
+import com.magnesify.magnesifydungeons.commands.player.events.options.SendMessage;
+import com.magnesify.magnesifydungeons.commands.player.profile.ProfileGuiInteract;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
+import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
+import com.magnesify.magnesifydungeons.genus.gui.GenusGuiInteract;
 import com.magnesify.magnesifydungeons.market.MarketManager;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import com.magnesify.magnesifydungeons.market.gui.MarketGuiInteract;
@@ -42,11 +46,15 @@ public final class MagnesifyDungeons extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        long startTime = System.currentTimeMillis();
         setInstance(this);
         Options options = new Options(); options.reload();
         MarketFile marketFile = new MarketFile();
         marketFile.createKitsConfig();
+        GenusFile genusFile = new GenusFile();
+        genusFile.createGenusConfig();
         saveDefaultConfig();
+        LogFilter.registerFilter();
 
         if(!options.get().getBoolean("options.clean-start")) {
             Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
@@ -67,6 +75,16 @@ public final class MagnesifyDungeons extends JavaPlugin {
                 Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'Vault' tespit edildi. Markete uyarlanıyor..."));
             } else {
                 Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fVault bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+            }
+            if(Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'MythicMobs' tespit edildi. Eklentiye uyarlanıyor..."));
+            } else {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fMythicMobs bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+            }
+            if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'PlaceholderAPI' tespit edildi. Eklentiye uyarlanıyor..."));
+            } else {
+                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fPlaceholderAPI bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
             }
         }
 
@@ -97,7 +115,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         JsonStorage cache = new JsonStorage(this.getDataFolder() + "/caches/player_dungeon_cache.json");
         JsonStorage players = new JsonStorage(this.getDataFolder() + "/datas/players.json");
 
-        JsonStorage stats = new JsonStorage(this.getDataFolder() + "/caches/statistics.json");
+        JsonStorage stats = new JsonStorage(this.getDataFolder() + "/caches/genus.json");
 
         JSONObject players_config = new JSONObject();
         players_config.put("json_config_version", "1");
@@ -123,16 +141,19 @@ public final class MagnesifyDungeons extends JavaPlugin {
         getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
         getCommand("MagnesifyDungeonsBoss").setTabCompleter(new BossManager(this));
         getCommand("MagnesifyDungeonsMarket").setExecutor(new MarketManager(this));
-        getCommand("DungeonProfile").setExecutor(new Status(this));
+        getCommand("DungeonProfile").setExecutor(new Profile(this));
         getCommand("Stats").setExecutor(new Stats(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
 
+        Bukkit.getPluginManager().registerEvents(new GenusGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonPlayerEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
+        Bukkit.getPluginManager().registerEvents(new ProfileGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new MarketGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new SendMessage(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonCreateEvent(this), this);
 
         MagnesifyBoss create_boss = new MagnesifyBoss("Magnesify", "Magnesify");
@@ -147,6 +168,9 @@ public final class MagnesifyDungeons extends JavaPlugin {
                 if(options.get().getBoolean("options.send-new-data-log")) Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format("<#4b8eff>[Magnesify Dungeons] %s için bir veri bulunamadı, veri oluşturuluyor.", player.getUniqueId().toString())));
             }
         }
+        long endTime = System.currentTimeMillis();
+        Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fEklenti " + String.valueOf(endTime-startTime) + " ms`de yüklendi..."));
+
         new BukkitRunnable() {
             @Override
             public void run() {

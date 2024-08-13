@@ -1,7 +1,6 @@
 options:
   clean-start: false
   send-new-data-log: true
-  use-market: true
-    
-    
-    
+  players-can-see-chat-while-in-dungeon: true
+  players-can-use-chat-while-in-dungeon: true
+  open-genus-select-gui-if-genus-is-not-set: true

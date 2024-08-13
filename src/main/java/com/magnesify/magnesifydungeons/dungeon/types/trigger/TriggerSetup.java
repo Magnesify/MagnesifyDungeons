@@ -40,16 +40,6 @@ public class TriggerSetup {
         checkpoint.setItemMeta(checkpoint_meta);
         inventory.setItem(1, checkpoint);
 
-        ItemStack boss = new ItemStack(Material.SHEARS, 1);
-        ItemMeta boss_meta = boss.getItemMeta();
-        boss_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aFinal Yaratığının Doğum Noktası"));
-        List<String> bm = new ArrayList<>();
-        bm.add(" ");
-        bm.add(ChatColor.translateAlternateColorCodes('&', "&fFinal yaratığının doğacağı lokasyonu seçmek için kullanırsınız."));
-        boss_meta.setLore(bm);
-        boss.setItemMeta(boss_meta);
-        inventory.setItem(2, boss);
-
         ItemStack bp = new ItemStack(Material.IRON_SWORD, 1);
         ItemMeta bp_meta = bp.getItemMeta();
         bp_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aYaratık Doğum Noktası"));
@@ -58,7 +48,7 @@ public class TriggerSetup {
         bpm.add(ChatColor.translateAlternateColorCodes('&', "&fYaratığının doğacağı lokasyonu seçmek için kullanırsınız."));
         bp_meta.setLore(bpm);
         bp.setItemMeta(bp_meta);
-        inventory.setItem(3, bp);
+        inventory.setItem(2, bp);
 
         ItemStack cancel = new ItemStack(Material.ARROW, 1);
         ItemMeta cancel_meta = cancel.getItemMeta();

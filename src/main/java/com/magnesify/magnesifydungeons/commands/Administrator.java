@@ -7,7 +7,10 @@ import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
+import com.magnesify.magnesifydungeons.genus.gui.GenusGuiLoader;
+import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
@@ -34,6 +37,10 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
     public long reload() {
         long startTime = System.currentTimeMillis();
         get().reloadConfig();
+        MarketFile marketFile = new MarketFile();
+        marketFile.saveKitsConfig();
+        GenusFile genusFile = new GenusFile();
+        genusFile.saveGenusConfig();
         long endTime = System.currentTimeMillis();
         return endTime - startTime;
     }
@@ -117,15 +124,23 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     if (commandSender instanceof Player) {
                         Player player = ((Player) commandSender).getPlayer();
                         DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-                        jsonStorage.updateData("spawn.world", player.getLocation().getWorld().getName() );
-                        jsonStorage.updateData("spawn.x",  player.getLocation().getX());
-                        jsonStorage.updateData("spawn.y",  player.getLocation().getY());
+                        jsonStorage.updateData("spawn.world", player.getLocation().getWorld().getName());
+                        jsonStorage.updateData("spawn.x", player.getLocation().getX());
+                        jsonStorage.updateData("spawn.y", player.getLocation().getY());
                         jsonStorage.updateData("spawn.z", player.getLocation().getZ());
                         jsonStorage.updateData("spawn.yaw", player.getLocation().getYaw());
                         jsonStorage.updateData("spawn.pitch", player.getLocation().getPitch());
                         dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.main-spawn-selected"));
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+                    }
+                } else if (strings[0].equalsIgnoreCase("genus-gui")) {
+                    if (commandSender instanceof Player) {
+                        Player player = ((Player) commandSender).getPlayer();
+                        GenusGuiLoader.openInventory(player);
+                    } else {
+                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+
                     }
                 } else if (strings[0].equalsIgnoreCase("cancel")) {
                     if (commandSender instanceof Player) {
@@ -371,6 +386,8 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             commands.add("reload");
             commands.add("point");
             commands.add("create");
+            commands.add("genus-gui");
+            commands.add("test");
             commands.add("delete");
             commands.add("update");
             StringUtil.copyPartialMatches(args[0], commands, completions);

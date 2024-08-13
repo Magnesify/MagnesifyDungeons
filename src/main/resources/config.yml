@@ -1,12 +1,52 @@
 settings:
   prefix: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r &8・&r'
+  dungeon-chest-contents:
+    - "APPLE"
+    - "GOLDEN_APPLE"
+  profile:
+    title: '<#4b8eff>Zindan Profilin'
+    custom-gui-texture: mcguis:blank_menu
+    items:
+      player:
+        material: DIAMOND
+        display: "<#4b8eff>Hakkında"
+        slot: 24
+        lore:
+          - ''
+          - '&fPuanın: <#4b8eff>#point'
+          - '&fEn son bulunduğun zindan: <#4b8eff>#last_dungeon'
+          - ''
+      ranks:
+        material: LADDER
+        display: "<#4b8eff>Sıralama"
+        slot: 20
+        lore:
+          - ''
+          - '<#4b8eff>En iyi 10 oyuncu'
+          - '&f#ranks'
+          - ''
+      stats:
+        material: BOOK
+        display: "<#4b8eff>Genel İstatistikler"
+        slot: 13
+        lore:
+          - ''
+          - '&fÖlme: <#4b8eff>#death'
+          - '&fÖldürme: <#4b8eff>#kill'
+          - '&fKazanılan maç: <#4b8eff>#win'
+          - '&fKaybedilen maç: <#4b8eff>#lose'
+          - '&fOynanan maç: <#4b8eff>#total'
+          - ''
   countdown-warnings:
     30:
       warn-at: 30
     10:
       warn-at: 10
+  genus:
+    title: '<#4b8eff>Tür seçim ekranı'
+    custom-gui-texture: mcguis:blank_menu
   market:
-    title: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls'
+    title: '<#4b8eff>Zindan Marketi'
   minimal-options:
     send-damage-title: true
     teleport-delay-for-sending-spawn: 3
@@ -102,6 +142,10 @@ settings:
     countdown-warn:
       title: '&c&lHIZLI OL'
       subtitle: '&fGeriye sadece &c#remain &fsaniye kaldı !'
+    genus:
+      selected:
+        title: '<#4f91fc>&lMagnesify Dungeons'
+        subtitle: '&fTürünü &e#genus &folarak seçtin !'
     reload: '#prefix Eklenti <#4f91fc>#ms &fmilisaniye içerisinde başarıyla yenilendi.'
     no-permission: '#prefix Bu işlem için yeterli yetkiye sahip değilsin.'
     in-game-command: '#prefix Bu komutu konsoldan kullanamazsın.'

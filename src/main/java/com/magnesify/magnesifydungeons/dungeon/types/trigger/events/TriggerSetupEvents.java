@@ -1,7 +1,6 @@
 package com.magnesify.magnesifydungeons.dungeon.types.trigger.events;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
-import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.ChatColor;
@@ -18,11 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 
-import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.TriggerType.inGameHashMap;
-import static com.magnesify.magnesifydungeons.dungeon.TriggerType.level;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
-import static com.magnesify.magnesifydungeons.dungeon.types.trigger.TriggerVector.isInTriggerLocation;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon.new_dungeon;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
 
@@ -44,8 +40,6 @@ public class TriggerSetupEvents implements Listener {
                 event.setCancelled(true);
             } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aFinal Yaratığının Doğum Noktası"))) {
-                event.setCancelled(true);
             } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
                 event.setCancelled(true);
             } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"))) {
@@ -64,8 +58,6 @@ public class TriggerSetupEvents implements Listener {
             if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"))) {
                 event.setCancelled(true);
             } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
-                event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aFinal Yaratığının Doğum Noktası"))) {
                 event.setCancelled(true);
             } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
                 event.setCancelled(true);
@@ -86,8 +78,6 @@ public class TriggerSetupEvents implements Listener {
             if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"))) {
                 event.setCancelled(true);
             } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
-                event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aFinal Yaratığının Doğum Noktası"))) {
                 event.setCancelled(true);
             } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
                 event.setCancelled(true);
@@ -141,13 +131,11 @@ public class TriggerSetupEvents implements Listener {
                 } else {
                     event.getPlayer().sendMessage(parseHexColors(String.format("%s %s adlı zindanın kurulumu zaten bitirilmiş !", TEXT_PREFIX, new_dungeon.get("new"))));
                 }
-            } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aFinal Yaratığının Doğum Noktası"))) {
-                event.getPlayer().sendMessage(parseHexColors(String.format("%s %s adlı zindanın final yaratığı için doğum noktası seçildi ! Koordinat bilgisi: &b%s x:%s, y:%s, z:%s", TEXT_PREFIX, new_dungeon.get("new"), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
-                databaseManager.TriggerTypeDungeons().setBossSpawn(new_dungeon.get("new"), event.getPlayer().getLocation());
             } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
                 event.getPlayer().sendMessage(parseHexColors(String.format("%s %s adlı zindanın kurulumu iptal edildi, zindan silindi !", TEXT_PREFIX, new_dungeon.get("new"))));
                 event.getPlayer().getInventory().clear();
                 new_dungeon.clear();
+                setupDataHolder.clear();
                 if(databaseManager.TriggerTypeDungeons().isDungeonExists(new_dungeon.get("new"))) databaseManager.TriggerTypeDungeons().deleteDungeon(new_dungeon.get("new"));
             }
         }
@@ -163,15 +151,14 @@ public class TriggerSetupEvents implements Listener {
             if(inGameHashMap.get(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
             }
-
-            if(level.get(event.getPlayer().getUniqueId()) != null) {
-                DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
-                if(isInTriggerLocation(location, databaseManager.TriggerTypeDungeons().getCheckpointLocation(playerMethods.getLastDungeon(event.getPlayer()), level.get(event.getPlayer().getUniqueId())))) {
-                    if(databaseManager.TriggerTypeDungeons().getTotalCheckpoints(playerMethods.getLastDungeon(event.getPlayer())) == level.get(event.getPlayer().getUniqueId())) {
-                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.dungeon.last-level.title"), get().getConfig().getString("settings.messages.dungeon.last-level.subtitle").replace("#level", String.valueOf(level.get(event.getPlayer().getUniqueId()))));
-                    }
-                }
-            }
+//
+//            if(level.get(event.getPlayer().getUniqueId()) != null) {
+//                DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
+//                if(isInTriggerLocation(location, databaseManager.TriggerTypeDungeons().getCheckpointLocation(playerMethods.getLastDungeon(event.getPlayer()), level.get(event.getPlayer().getUniqueId())))) {
+//                    if(databaseManager.TriggerTypeDungeons().getTotalCheckpoints(playerMethods.getLastDungeon(event.getPlayer())) == level.get(event.getPlayer().getUniqueId())) {
+//                    }
+//                }
+//            }
         }
     }
 }

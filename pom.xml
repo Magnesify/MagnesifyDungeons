@@ -57,11 +57,23 @@
           <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
       </repository>
       <repository>
+          <id>nexus</id>
+          <name>Lumine Releases</name>
+          <url>https://mvn.lumine.io/repository/maven-public/</url>
+      </repository>
+      <repository>
           <id>sonatype</id>
           <url>https://oss.sonatype.org/content/groups/public/</url>
       </repository>
+      <repository>
+          <id>placeholderapi</id>
+          <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+      </repository>
+      <repository>
+          <id>jitpack-repo</id>
+          <url>https://jitpack.io</url>
+      </repository>
   </repositories>
-
   <dependencies>
       <dependency>
           <groupId>org.spigotmc</groupId>
@@ -72,7 +84,7 @@
       <dependency>
           <groupId>org.json</groupId>
           <artifactId>json</artifactId>
-          <version>20210307</version>
+          <version>20231013</version>
       </dependency>
       <dependency>
           <groupId>com.zaxxer</groupId>
@@ -80,9 +92,28 @@
           <version>5.1.0</version>
       </dependency>
       <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
-          <version>4.0.3</version>
+          <groupId>me.clip</groupId>
+          <artifactId>placeholderapi</artifactId>
+          <version>2.11.6</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>io.lumine</groupId>
+          <artifactId>Mythic-Dist</artifactId>
+          <version>5.6.1</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.github.LoneDev6</groupId>
+          <artifactId>api-itemsadder</artifactId>
+          <version>3.6.1</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+          <version>2.14.1</version>
+          <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>com.fasterxml.jackson.core</groupId>

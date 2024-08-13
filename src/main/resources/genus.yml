@@ -1,0 +1,23 @@
+dungeon-genus:
+  Goblin:
+    display: "<#50C878>Goblin"
+    health-bar: 10.0
+    slot: 0
+    material: GOLD_INGOT
+    lore:
+      - ''
+      - '&7Altın kaçakcısı !'
+    potion-effects:
+      - "SPEED:5"
+      - "REGENERATION:2"
+  Elf:
+    display: "<#4b8eff>Elf"
+    health-bar: 12.0
+    slot: 1
+    material: BOW
+    lore:
+      - ''
+      - '&7Uzman okçu !'
+    potion-effects:
+      - "SPEED:3"
+      - "REGENERATION:2"

@@ -50,6 +50,7 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
 
         if (args.length == 1) {
             commands.add("setup");
+            commands.add("join");
             commands.add("delete");
             commands.add("update");
             StringUtil.copyPartialMatches(args[0], commands, completions);
@@ -211,10 +212,15 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                     String name = strings[1];
                     if(commandSender instanceof Player) {
                         if(databaseManager.TriggerTypeDungeons().isDungeonExists(name)) {
-                            Player player = ((Player) commandSender).getPlayer();
-                            TriggerType triggerType = new TriggerType(player);
-                            triggerType.join(name);
-                            dungeonEntity.EntityChatManager().send(TEXT_PREFIX + " &fZindana giriş yaptın !");
+                            if(databaseManager.TriggerTypeDungeons().getAvailable(name)) {
+                                Player player = ((Player) commandSender).getPlayer();
+                                TriggerType triggerType = new TriggerType(player);
+                                databaseManager.TriggerTypeDungeons().setAvailable(name, false);
+                                triggerType.join(name);
+                                dungeonEntity.EntityChatManager().send(TEXT_PREFIX + " &fZindana giriş yaptın !");
+                            } else {
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.full").replace("#name", name).replace("#countdown", ""));
+                            }
                         } else {
                             dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
                         }

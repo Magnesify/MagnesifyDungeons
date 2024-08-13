@@ -49,6 +49,7 @@ public class DatabaseManager {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS stats (name TEXT,uuid TEXT, kill INTEGER DEFAULT 0, death INTEGER DEFAULT 0, win INTEGER DEFAULT 0, lose INTEGER DEFAULT 0, played_match INTEGER DEFAULT 0, PRIMARY KEY(name, uuid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS checkpoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT ,boss TEXT, PRIMARY KEY(connected_dungeon, checkpoint_queue))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS bosspoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT , PRIMARY KEY(connected_dungeon, checkpoint_queue))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeon_chests (connected_dungeon TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, PRIMARY KEY(connected_dungeon, id))");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,6 +60,26 @@ public class DatabaseManager {
             throw new SQLException("DataSource is not initialized");
         }
         return dataSource.getConnection();
+    }
+
+    public CompletableFuture<Boolean> CreateNewChest(String dungeon_name, Location location) {
+        load();
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO dungeon_chests (connected_dungeon, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+                statement.setString(1, dungeon_name);
+                statement.setString(2, location.getWorld().getName());
+                statement.setDouble(3, location.getX());
+                statement.setDouble(4, location.getY());
+                statement.setDouble(5, location.getZ());
+                statement.setFloat(6, location.getYaw());
+                statement.setFloat(7, location.getPitch());
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
     }
 
     public CompletableFuture<Boolean> CreateNewCheckpoint(String dungeon_name, int queue, Location location, String boss) {
@@ -81,6 +102,51 @@ public class DatabaseManager {
             }
             return false;
         });
+    }
+
+    public Location getChestLocationByID(int id, String dungeon) {
+        String query = "SELECT * FROM dungeon_chests WHERE id = ? AND connected_dungeon = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, id);
+            pstmt.setString(1, dungeon);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String world = rs.getString("world");
+                    double x = rs.getDouble("x");
+                    double y = rs.getDouble("y");
+                    double z = rs.getDouble("z");
+                    float yaw = rs.getFloat("yaw");
+                    float pitch = rs.getFloat("pitch");
+                    return new Location(Bukkit.getWorld(world) == null ? null : Bukkit.getWorld(world), x, y, z, yaw, pitch);
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getChestSize(String dungeon) {
+        String query = "SELECT COUNT(*) FROM dungeon_chests WHERE name LIKE ?";
+        try (Connection connection = getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+            pstmt.setString(1, dungeon + "%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                } else {
+                    return 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public CompletableFuture<Boolean> CreateNewBosspoints(String dungeon_name, int queue, Location location) {
@@ -249,6 +315,25 @@ public class DatabaseManager {
             }
             return false;
         });
+    }
+
+
+    public int getChestAmount() {
+        load();
+        int i = 0;
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            String query = "SELECT name FROM dungeon_chests";
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {i++;}
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        }
+        return i;
     }
 
     public List<String> getAllDungeons() {
@@ -1306,6 +1391,28 @@ public class DatabaseManager {
         return 0;
     }
 
+    public Location getChestLocation(String dungeon) {
+        load();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM dungeon_chests WHERE name = ?")) {
+            statement.setString(1, dungeon);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String world = resultSet.getString("world");
+                double x = resultSet.getDouble("x");
+                double y = resultSet.getDouble("y");
+                double z = resultSet.getDouble("z");
+                float yaw = resultSet.getFloat("yaw");
+                float pitch = resultSet.getFloat("pitch");
+                return new Location(Bukkit.getWorld(world) == null ? null : Bukkit.getWorld(world), x, y, z, yaw, pitch);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public Location getLocation(String dungeon) {
         load();
@@ -1536,20 +1643,18 @@ public class DatabaseManager {
 
 
 
-        public CompletableFuture<Boolean> isDungeonAvailable(String dungeon) {
+        public boolean isDungeonAvailable(String dungeon) {
             load();
-            return CompletableFuture.supplyAsync(() -> {
-                try (Connection connection = getConnection();
-                     PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM trigger_type_dungeons WHERE name = ?")) {
-                    statement.setString(1, dungeon);
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM trigger_type_dungeons WHERE name = ?")) {
+                statement.setString(1, dungeon);
 
-                    ResultSet resultSet = statement.executeQuery();
-                    return resultSet.next();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return false;
-            });
+                ResultSet resultSet = statement.executeQuery();
+                return resultSet.next();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
 
         public int getPoint(String dungeon) {
@@ -1585,6 +1690,23 @@ public class DatabaseManager {
                 e.printStackTrace();
             }
             return "Normal";
+        }
+
+        public boolean getAvailable(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT available FROM trigger_type_dungeons WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    boolean point = resultSet.getBoolean("available");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
 
 
@@ -1955,6 +2077,21 @@ public class DatabaseManager {
                 try (Connection connection = getConnection();
                      PreparedStatement statement = connection.prepareStatement("UPDATE trigger_type_dungeons SET point = ? WHERE name = ?")) {
                     statement.setInt(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> setAvailable(String dungeon, boolean bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE trigger_type_dungeons SET available = ? WHERE name = ?")) {
+                    statement.setBoolean(1, bool);
                     statement.setString(2, dungeon);
                     return statement.executeUpdate() > 0;
                 } catch (SQLException e) {

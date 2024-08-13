@@ -4,6 +4,10 @@ import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.files.Options;
+import com.magnesify.magnesifydungeons.genus.DungeonGenus;
+import com.magnesify.magnesifydungeons.genus.gui.GenusGuiLoader;
+import com.magnesify.magnesifydungeons.genus.gui.IAGenusGuiLoader;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import org.bukkit.Bukkit;
@@ -16,6 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
+import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 
 public class DungeonPlayerEvents implements Listener {
     public DungeonPlayerEvents(MagnesifyDungeons magnesifyDungeons) {}
@@ -32,6 +37,23 @@ public class DungeonPlayerEvents implements Listener {
             DungeonConsole dungeonConsole = new DungeonConsole();
             dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıç henüz ayarlanmamış &d/mgd setmainspawn &fyazarak başlangıcı ayarlayabilirsin.");
         }
+        DungeonGenus dungeonGenus = new DungeonGenus(event.getPlayer());
+        Options options = new Options();
+        if(options.get().getBoolean("options.open-genus-select-gui-if-genus-is-not-set")) {
+            if(!dungeonGenus.isGenusSet()) {
+                boolean textc = get().getConfig().isSet("settings.genus.custom-gui-texture");
+                if(textc) {
+                    if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+                        IAGenusGuiLoader.openInventory(event.getPlayer());
+                    } else {
+                        Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'settings.genus.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."));
+                        GenusGuiLoader.openInventory(event.getPlayer());
+                    }
+                } else {
+                    GenusGuiLoader.openInventory(event.getPlayer());
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -40,7 +62,7 @@ public class DungeonPlayerEvents implements Listener {
         if(dungeonPlayer.inDungeon()) {
             Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(event.getPlayer()));
             dungeon.status(true);
-            dungeon.updateCurrentPlayer("None");
+            dungeon.updateCurrentPlayer("Yok");
             get().getPlayers().setDone(event.getPlayer(), true);
             dungeon.events().stop(event.getPlayer());
             get().getPlayers().updateDungeonStatus(event.getPlayer(), false);

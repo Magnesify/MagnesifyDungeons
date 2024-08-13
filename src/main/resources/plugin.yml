@@ -6,6 +6,8 @@ database: true
 prefix: MagnesifyDungeons
 authors: [hacimertgokhan]
 softdepend:
+  - MythicMobs
+  - PlaceholderAPI
   - ItemsAdder
 description: MagnesifyDungeons, Gelişmiş zindan eklentisi.
 website: documents.magnesify.com

@@ -2,6 +2,7 @@ package com.magnesify.magnesifydungeons.dungeon.entitys;
 
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
+import com.magnesify.magnesifydungeons.dungeon.types.challange.Challange;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
@@ -66,6 +67,23 @@ public class DungeonPlayer {
 
     public boolean done() {
         return get().getPlayers().getDone(player);
+    }
+
+
+    public void leaveChallange(Challange dungeon) {
+        Defaults defaults = new Defaults();
+        dungeon.status(true);
+        String last_dungeon= get().getPlayers().getLastDungeon(player);
+        MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
+        magnesifyBoss.killBoss();
+        if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
+            Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
+            player.teleport(loc);
+        } else {
+            DungeonConsole dungeonConsole = new DungeonConsole();
+            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?");
+        }
+        get().getPlayers().updateDungeonStatus(player, false);
     }
 
     public void leave(Dungeon dungeon) {

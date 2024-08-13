@@ -30,7 +30,7 @@ public class Stats implements CommandExecutor {
                 dungeonPlayer.messageManager().chat("Rank " + (i + 1) + ": " + player.getName() + " - Kills: " + player.getKill());
             }
         }
-
         return false;
     }
+
 }

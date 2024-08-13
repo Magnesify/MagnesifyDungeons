@@ -168,8 +168,8 @@ public class MagnesifyBoss {
                 zombie.getEquipment().setBoots(boots);
                 zombie.getEquipment().setItemInMainHand(weapon);
                 break;
-            case "PIGLIN":
-                Piglin piglin = (Piglin) location.getWorld().spawnEntity(location, EntityType.PIGLIN);
+            case "SKELETON":
+                Skeleton piglin = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
                 piglin.setCustomName(parseHexColors(databaseManager.boss().getDisplay(name)));
                 piglin.setCustomNameVisible(true);
                 String piglin_rstr = generateRandomString();

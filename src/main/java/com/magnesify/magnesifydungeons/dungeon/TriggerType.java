@@ -103,6 +103,8 @@ public class TriggerType {
 
     public void leave(Player player, String dungeon) {
         PlayerMethods playerMethods = new PlayerMethods(player);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.TriggerTypeDungeons().setAvailable(dungeon, true);
         status(dungeon, true);
         playerMethods.updateDungeonStatus(player, false);
         playerMethods.setDone(player, true);

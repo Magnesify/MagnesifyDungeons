@@ -132,6 +132,12 @@ public class BossManager implements CommandExecutor, TabCompleter {
                 }
                 StringUtil.copyPartialMatches(args[2], commands, completions);
             }
+        } else if (args.length == 4) {
+            if (args[0].equalsIgnoreCase("update")) {
+                commands.add("SKELETON");
+                commands.add("ZOMBIE");
+                StringUtil.copyPartialMatches(args[3], commands, completions);
+            }
         }
         Collections.sort(completions);
         return completions;
