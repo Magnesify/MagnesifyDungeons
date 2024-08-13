@@ -71,7 +71,7 @@ public class TriggerSetup {
         inventory.setItem(7, kurulum);
 
         DatabaseManager databaseManager = new DatabaseManager(MagnesifyDungeons.get());
-        databaseManager.CreateNewTriggerTypeDungeon(new_dungeon.get("new"), "Yok", "Yok", 1, 60, 10, location, 1);
+        databaseManager.CreateNewTriggerTypeDungeon(new_dungeon.get("new"), "Yok", "Yok", 1, 60, 3, location, 1);
 
     }
 

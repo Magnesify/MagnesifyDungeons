@@ -1,11 +1,12 @@
 settings:
   prefix: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r &8・&r'
-  dungeon-chest-contents:
-    - "APPLE"
-    - "GOLDEN_APPLE"
+  chest-contents:
+    - "APPLE:5:100"
+    - "GOLDEN_APPLE:5:25"
+    - "PAPER:5:75"
   profile:
     title: '<#4b8eff>Zindan Profilin'
-    custom-gui-texture: mcguis:blank_menu
+    custom-gui-texture: _iainternal:blank_menu
     items:
       player:
         material: DIAMOND
@@ -44,7 +45,7 @@ settings:
       warn-at: 10
   genus:
     title: '<#4b8eff>Tür seçim ekranı'
-    custom-gui-texture: mcguis:blank_menu
+    custom-gui-texture: _iainternal:blank_menu
   market:
     title: '<#4b8eff>Zindan Marketi'
   minimal-options:
@@ -218,6 +219,9 @@ settings:
       unknow-dungeon: '#prefix &d#name &fisminde bir zindan yok.'
       cancelled: '#prefix &fZindan oluşturma işlemi iptal edildi..'
       no-progress-found: '#prefix Bir zindan oluşturmuyorsun.'
+      chest-mode:
+        disabled: '#prefix &fSandık düzenleme modu kapatıldı.'
+        enabled: '#prefix &fSandık düzenleme modu açıldı.'
       last-level:
         title: '&6&lSON SEVİYE'
         subtitle: '&fBitişe çok yaklaştın !'

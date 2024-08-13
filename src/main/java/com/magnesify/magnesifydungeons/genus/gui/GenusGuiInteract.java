@@ -19,14 +19,15 @@ public class GenusGuiInteract implements Listener {
     @EventHandler
     public void onInteract(InventoryClickEvent event) {
         String gui_title = event.getView().getTitle();
-        if(gui_title.equals(parseHexColors(get().getConfig().getString("settings.genus.title")))) {
+        if(gui_title.equalsIgnoreCase(parseHexColors(get().getConfig().getString("settings.genus.title"))) && gui_title.equalsIgnoreCase("IA_CUST_GUI")) {
             event.setCancelled(true);
             GenusFile genusFile = new GenusFile();
             DungeonPlayer dungeonPlayer = new DungeonPlayer((Player) event.getWhoClicked());
             DungeonGenus dungeonGenus = new DungeonGenus((Player) event.getWhoClicked());
             for(String genus : genusFile.getGenusConfig().getConfigurationSection("dungeon-genus").getKeys(false)) {
-                int slot = genusFile.getGenusConfig().getInt("dungeon-genus." + genus + ".slot");
-                if(event.getSlot() == slot) {
+                String display = genusFile.getGenusConfig().getString("dungeon-genus." + genus + ".display");
+                if (event.getCurrentItem() == null) return;
+                if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(parseHexColors(display))) {
                     dungeonGenus.setGenus(genus);
                     event.getWhoClicked().closeInventory();
                     dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.genus.selected.title"),get().getConfig().getString("settings.messages.genus.selected.subtitle").replace("#genus", genus));

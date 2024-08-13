@@ -5,6 +5,7 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.managers.DungeonContentManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -62,6 +63,8 @@ public class TriggerType {
             inGameHashMap.put(player.getUniqueId(), true);
             playerMethods.setDone(player, false);
             events().wait(player, dungeon);
+            DungeonContentManager dungeonContentManager = new DungeonContentManager();
+            dungeonContentManager.SetupDungeonChests(dungeon);
             updateCurrentPlayer(dungeon, player.getName());
             status(dungeon, false);
             return true;
@@ -273,17 +276,9 @@ public class TriggerType {
                                 leave(player, dungeon);
                                 PlayerMethods playerMethods = new PlayerMethods(player);
                                 playerMethods.updateDungeonStatus(player, false);
-                                Defaults defaults = new Defaults();
                                 String last_dungeon= get().getPlayers().getLastDungeon(player);
                                 MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
                                 magnesifyBoss.killBoss();
-                                if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
-                                    Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
-                                    player.teleport(loc);
-                                } else {
-                                    DungeonConsole dungeonConsole = new DungeonConsole();
-                                    dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?");
-                                }
                                 dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
                                 get().getPlayers().updateDungeonStatus(player, false);
                                 countdowns.remove(playerId);

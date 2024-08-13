@@ -2,6 +2,7 @@ package com.magnesify.magnesifydungeons.dungeon.types.trigger.events;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.managers.DungeonContentManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -86,9 +87,12 @@ public class TriggerSetupEvents implements Listener {
             }
         }
     }
+    @Deprecated
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
+        DungeonContentManager dungeonContentManager = new DungeonContentManager();
+        dungeonContentManager.CreateNewDungeonChest(event);
         if (item == null) {
             return;
         }
@@ -126,6 +130,10 @@ public class TriggerSetupEvents implements Listener {
                     event.getPlayer().sendMessage(parseHexColors(String.format("%s %s için toplam checkpoint (seviye) sayısı %s.", TEXT_PREFIX, new_dungeon.get("new"), setupDataHolder.get("level"))));
                     databaseManager.TriggerTypeDungeons().setEnable(new_dungeon.get("new"), "Evet");
                     databaseManager.TriggerTypeDungeons().setTotalCheckpoints(new_dungeon.get("new"), setupDataHolder.get("level"));
+                    new_dungeon.remove("new");
+                    setupDataHolder.remove("level");
+                    setupDataHolder.remove("level_boss");
+                    setupDataHolder.clear();
                     new_dungeon.clear();
                     event.getPlayer().getInventory().clear();
                 } else {
@@ -134,8 +142,11 @@ public class TriggerSetupEvents implements Listener {
             } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
                 event.getPlayer().sendMessage(parseHexColors(String.format("%s %s adlı zindanın kurulumu iptal edildi, zindan silindi !", TEXT_PREFIX, new_dungeon.get("new"))));
                 event.getPlayer().getInventory().clear();
-                new_dungeon.clear();
+                new_dungeon.remove("new");
+                setupDataHolder.remove("level");
                 setupDataHolder.clear();
+                new_dungeon.clear();
+                setupDataHolder.remove("level_boss");
                 if(databaseManager.TriggerTypeDungeons().isDungeonExists(new_dungeon.get("new"))) databaseManager.TriggerTypeDungeons().deleteDungeon(new_dungeon.get("new"));
             }
         }
@@ -151,7 +162,6 @@ public class TriggerSetupEvents implements Listener {
             if(inGameHashMap.get(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
             }
-//
 //            if(level.get(event.getPlayer().getUniqueId()) != null) {
 //                DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
 //                if(isInTriggerLocation(location, databaseManager.TriggerTypeDungeons().getCheckpointLocation(playerMethods.getLastDungeon(event.getPlayer()), level.get(event.getPlayer().getUniqueId())))) {

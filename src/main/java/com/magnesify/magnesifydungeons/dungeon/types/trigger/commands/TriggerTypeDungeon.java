@@ -1,10 +1,10 @@
 package com.magnesify.magnesifydungeons.dungeon.types.trigger.commands;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
+import com.magnesify.magnesifydungeons.dungeon.TriggerType;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
-import com.magnesify.magnesifydungeons.dungeon.TriggerType;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.TriggerSetup;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.command.Command;
@@ -20,7 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
+import static com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents.setupDataHolder;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
+import static com.magnesify.magnesifydungeons.modules.managers.DungeonContentManager.dungeonChestCreation;
 
 public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
 
@@ -52,6 +54,7 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
             commands.add("setup");
             commands.add("join");
             commands.add("delete");
+            commands.add("chest-mode");
             commands.add("update");
             StringUtil.copyPartialMatches(args[0], commands, completions);
         } else if (args.length == 2) {
@@ -73,8 +76,13 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                     commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
                 }
                 StringUtil.copyPartialMatches(args[1], commands, completions);
-            }
-            if (args[0].equalsIgnoreCase("join")) {
+            }else if (args[0].equalsIgnoreCase("chest-mode")) {
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
+                    commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
+                }
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }else if (args[0].equalsIgnoreCase("join")) {
                 DatabaseManager databaseManager = new DatabaseManager(get());
                 for(int i = 0; i<databaseManager.getAllDungeons().size(); i++) {
                     commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
@@ -233,6 +241,26 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.deleted").replace("#name", strings[1]));
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                    }
+                } else if (strings[0].equalsIgnoreCase("chest-mode")) {
+                    if(commandSender instanceof Player) {
+                        if (databaseManager.TriggerTypeDungeons().isDungeonExists(strings[1])) {
+                            Player player = ((Player) commandSender).getPlayer();
+                            if(dungeonChestCreation.get(player.getUniqueId()) == null) {
+                                dungeonChestCreation.put(player.getUniqueId(), true);
+                                new_dungeon.put("chestdata", strings[1]);
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.chest-mode.enabled").replace("#name", strings[1]));
+                            } else {
+                                dungeonChestCreation.remove(player.getUniqueId());
+                                setupDataHolder.remove("chest_level");
+                                setupDataHolder.remove("chestdata");
+                                dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.chest-mode.disabled").replace("#name", strings[1]));
+                            }
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                        }
+                    } else {
+                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                     }
                 } else {
                     help(commandSender);

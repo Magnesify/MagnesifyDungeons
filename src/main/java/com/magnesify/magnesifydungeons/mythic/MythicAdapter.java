@@ -2,6 +2,7 @@ package com.magnesify.magnesifydungeons.mythic;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityDeathEvent;
 
@@ -12,7 +13,11 @@ public class MythicAdapter {
     public MythicAdapter(){}
 
     public boolean isMythicMob(Entity entity) {
-        return MythicBukkit.inst().getMobManager().isMythicMob(entity);
+        if(Bukkit.getPluginManager().getPlugin("MythicMobs") == null) {
+            return false;
+        } else {
+            return MythicBukkit.inst().getMobManager().isMythicMob(entity);
+        }
     }
 
     public void MythicMobDeath(EntityDeathEvent event) {

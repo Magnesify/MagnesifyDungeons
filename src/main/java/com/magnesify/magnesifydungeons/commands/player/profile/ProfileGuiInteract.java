@@ -15,7 +15,7 @@ public class ProfileGuiInteract implements Listener {
     @EventHandler
     public void onInteract(InventoryClickEvent event) {
         String gui_title = event.getView().getTitle();
-        if(gui_title.equals(parseHexColors(get().getConfig().getString("settings.profile.title")))) {
+        if(gui_title.equalsIgnoreCase(parseHexColors(get().getConfig().getString("settings.profile.title")))) {
             event.setCancelled(true);
         }
     }

@@ -49,7 +49,7 @@ public class DatabaseManager {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS stats (name TEXT,uuid TEXT, kill INTEGER DEFAULT 0, death INTEGER DEFAULT 0, win INTEGER DEFAULT 0, lose INTEGER DEFAULT 0, played_match INTEGER DEFAULT 0, PRIMARY KEY(name, uuid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS checkpoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT ,boss TEXT, PRIMARY KEY(connected_dungeon, checkpoint_queue))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS bosspoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT , PRIMARY KEY(connected_dungeon, checkpoint_queue))");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeon_chests (connected_dungeon TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, PRIMARY KEY(connected_dungeon, id))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeon_chests (connected_dungeon TEXT, id INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, PRIMARY KEY(connected_dungeon, id))");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,11 +62,11 @@ public class DatabaseManager {
         return dataSource.getConnection();
     }
 
-    public CompletableFuture<Boolean> CreateNewChest(String dungeon_name, Location location) {
+    public CompletableFuture<Boolean> CreateNewChest(String dungeon_name, Location location, int queue) {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("INSERT INTO dungeon_chests (connected_dungeon, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO dungeon_chests (connected_dungeon, world, x, y, z, yaw, pitch,id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
                 statement.setString(1, dungeon_name);
                 statement.setString(2, location.getWorld().getName());
                 statement.setDouble(3, location.getX());
@@ -74,6 +74,7 @@ public class DatabaseManager {
                 statement.setDouble(5, location.getZ());
                 statement.setFloat(6, location.getYaw());
                 statement.setFloat(7, location.getPitch());
+                statement.setInt(8, queue);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -105,12 +106,13 @@ public class DatabaseManager {
     }
 
     public Location getChestLocationByID(int id, String dungeon) {
+        load();
         String query = "SELECT * FROM dungeon_chests WHERE id = ? AND connected_dungeon = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, id);
-            pstmt.setString(1, dungeon);
+            pstmt.setString(2, dungeon);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -131,7 +133,8 @@ public class DatabaseManager {
     }
 
     public int getChestSize(String dungeon) {
-        String query = "SELECT COUNT(*) FROM dungeon_chests WHERE name LIKE ?";
+        load();
+        String query = "SELECT COUNT(*) FROM dungeon_chests WHERE connected_dungeon LIKE ?";
         try (Connection connection = getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query)) {
 
