@@ -21,7 +21,7 @@ public class GenusGuiLoader {
 
     @Deprecated
     public static void openInventory(Player ent) {
-        inv = Bukkit.createInventory(null,  54, parseHexColors(get().getConfig().getString("settings.genus.title")));
+        inv = Bukkit.createInventory(null,  54, parseHexColors(get().getConfig().getString("settings.challange.title")));
         loadItems(ent);
         ent.openInventory(inv);
     }

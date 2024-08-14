@@ -10,28 +10,32 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiLoader;
+import com.magnesify.magnesifydungeons.genus.gui.IAGenusGuiLoader;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
+import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.data;
 
 public class Administrator implements Arguments, CommandExecutor, TabCompleter {
     public Administrator(MagnesifyDungeons magnesifyDungeons) {}
+
+    public static HashMap<UUID, Boolean> challange = new HashMap<>();
 
     @Override
     public long reload() {
@@ -120,6 +124,26 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                     }
+                } else if (strings[0].equalsIgnoreCase("challange")) {
+                    if (commandSender instanceof Player) {
+                        Player player = ((Player) commandSender).getPlayer();
+                        DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+                        if(jsonStorage.getValue("spawn.world").equals("world")) {
+                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.error.select-spawn-first"));
+                        } else {
+                            if (creationSystemLevel.get(player.getUniqueId()) != null) {
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.already-in-progress"));
+                                return false;
+                            } else {
+                                challange.put(player.getUniqueId(), true);
+                                creationSystemLevel.put(player.getUniqueId(), 1);
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.creation-progress-started"));
+                                return true;
+                            }
+                        }
+                    } else {
+                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+                    }
                 } else if (strings[0].equalsIgnoreCase("setmainspawn")) {
                     if (commandSender instanceof Player) {
                         Player player = ((Player) commandSender).getPlayer();
@@ -136,8 +160,18 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     }
                 } else if (strings[0].equalsIgnoreCase("genus-gui")) {
                     if (commandSender instanceof Player) {
-                        Player player = ((Player) commandSender).getPlayer();
-                        GenusGuiLoader.openInventory(player);
+                        Player player = (Player) commandSender;
+                        boolean textc = get().getConfig().isSet("settings.genus.custom-gui-texture");
+                        if(textc) {
+                            if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+                                IAGenusGuiLoader.openInventory(player);
+                            } else {
+                                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'settings.genus.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."));
+                                GenusGuiLoader.openInventory(player);
+                            }
+                        } else {
+                            GenusGuiLoader.openInventory(player);
+                        }
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
 
@@ -175,6 +209,23 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.deleted").replace("#name", strings[1]));
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                    }
+                }else if (strings[0].equalsIgnoreCase("genus-tools")) {
+                    if (commandSender instanceof Player) {
+                        String tool_name = strings[1];
+                        Player player = ((Player) commandSender).getPlayer();
+                        if (get().getConfig().getString("settings.skill-tools." + tool_name) != null) {
+                            ItemStack a = new ItemStack(Material.getMaterial(get().getConfig().getString("settings.skill-tools." + tool_name + ".material")), 1);
+                            ItemMeta itemMeta = a.getItemMeta();
+                            itemMeta.setDisplayName(parseHexColors(get().getConfig().getString("settings.skill-tools." + tool_name + ".display")));
+                            a.setItemMeta(itemMeta);
+                            player.getInventory().addItem(a);
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.genus.added-skill-tool").replace("#name", strings[1]));
+                        } else {
+                            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.genus.unknow-tool").replace("#name", strings[1]));
+                        }
+                    } else {
+                        dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                     }
                 }else if (strings[0].equalsIgnoreCase("join")) {
                     if (commandSender instanceof Player) {
@@ -386,6 +437,8 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             commands.add("reload");
             commands.add("point");
             commands.add("create");
+            commands.add("challange");
+            commands.add("genus-tools");
             commands.add("genus-gui");
             commands.add("test");
             commands.add("delete");
@@ -402,6 +455,10 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                 commands.add("category");
                 commands.add("play-time");
                 commands.add("start-time");
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+            if (args[0].equalsIgnoreCase("genus-tools")) {
+                commands.add("GHOST");
                 StringUtil.copyPartialMatches(args[1], commands, completions);
             }
             if (args[0].equalsIgnoreCase("point")) {

@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
@@ -27,21 +26,6 @@ public class ProfileGuiLoader {
         inv = Bukkit.createInventory(null,  54, parseHexColors(get().getConfig().getString("settings.profile.title")));
         loadItems(ent);
         ent.openInventory(inv);
-    }
-
-    public static String rank(String name) {
-        DatabaseManager databaseManager = new DatabaseManager(get());
-        List<DatabaseManager.Stats.Sort.Player> sortedPlayers = databaseManager.stats().sort().getSortedPlayersByKill();
-        AtomicReference<String> data = null;
-        sortedPlayers.stream().filter(player1 -> {
-            for (int i = 0; i < Math.min(3, sortedPlayers.size()); i++) {
-                if (player1.getName().equalsIgnoreCase(name)) {
-                    data.set("#" + (i + 1));
-                }
-            }
-            return false;
-        });
-        return String.valueOf(data);
     }
 
     public static String stats() {

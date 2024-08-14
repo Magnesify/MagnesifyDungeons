@@ -55,6 +55,27 @@ public class DatabaseManager {
         }
     }
 
+    public List<String> getChallangeNames() {
+        load();
+        List<String> names = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT name FROM dungeons WHERE name LIKE 'challange_%'";
+                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    ResultSet rs = pstmt.executeQuery();
+                    while (rs.next()) {
+                        String name = rs.getString("name");
+                        names.add(name);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return names;
+    }
+
     public Connection getConnection() throws SQLException {
         if (dataSource == null) {
             throw new SQLException("DataSource is not initialized");

@@ -57,7 +57,7 @@ public class Challange {
 
     public boolean create() {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        if(!databaseManager.isDungeonExists(name)) {
+        if(!databaseManager.isDungeonExists("challange_"+name)) {
             databaseManager.CreateNewDungeon("challange_" + name, category, boss_id, level, PlayTime, StartTime, location);
             return true;
         } else {
@@ -67,7 +67,7 @@ public class Challange {
 
     public boolean delete() {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        databaseManager.deleteDungeon(name);
+        databaseManager.deleteDungeon("challange_"+name);
         return false;
     }
 
@@ -81,17 +81,17 @@ public class Challange {
 
     public void status(boolean bool) {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        databaseManager.setStatus(name, bool);
+        databaseManager.setStatus("challange_"+name, bool);
     }
 
     public boolean getStatus() {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        return databaseManager.getStatus(name);
+        return databaseManager.getStatus("challange_"+name);
     }
 
     public int countdown() {
-        if(countdownTime.get(name) != null) {
-            return countdownTime.get(name);
+        if(countdownTime.get("challange_"+name) != null) {
+            return countdownTime.get("challange_"+name);
         }
         return 0;
     }
@@ -99,17 +99,17 @@ public class Challange {
 
     public int point() {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        return databaseManager.getPoint(name);
+        return databaseManager.getPoint("challange_"+name);
     }
 
     public String currentPlayer() {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        return databaseManager.getCurrentPlayer(name);
+        return databaseManager.getCurrentPlayer("challange_"+name);
     }
 
     public void updateCurrentPlayer(String player) {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        databaseManager.setCurrentPlayer(name, player);
+        databaseManager.setCurrentPlayer("challange_"+name, player);
     }
 
     public static Location location(String name) {
@@ -123,56 +123,56 @@ public class Challange {
 
     public boolean exists() {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        return databaseManager.isDungeonExists(name);
+        return databaseManager.isDungeonExists("challange_"+name);
     }
 
     public static class Parameters {
         DatabaseManager databaseManager = new DatabaseManager(get());
         public String name() {
-            return databaseManager.getName(name);
+            return databaseManager.getName("challange_"+name);
         }
         public String boss() {
-            return databaseManager.getBoss(name);
+            return databaseManager.getBoss("challange_"+name);
         }
         public String category() {
-            return databaseManager.getCategory(name);
+            return databaseManager.getCategory("challange_"+name);
         }
         public boolean status() {
-            return databaseManager.getStatus(name);
+            return databaseManager.getStatus("challange_"+name);
         }
         public int next() {
-            return databaseManager.getNextLevel(name);
+            return databaseManager.getNextLevel("challange_"+name);
         }
         public int point() {
-            return databaseManager.getPoint(name);
+            return databaseManager.getPoint("challange_"+name);
         }
         public int level() {
-            return databaseManager.getLevel(name);
+            return databaseManager.getLevel("challange_"+name);
         }
         public int play() {
-            return databaseManager.getPlayTime(name);
+            return databaseManager.getPlayTime("challange_"+name);
         }
         int start() {
-            return databaseManager.getStartTime(name);
+            return databaseManager.getStartTime("challange_"+name);
         }
     }
 
     public static class Types {
         DatabaseManager databaseManager = new DatabaseManager(get());
         void name(String new_data) {
-            databaseManager.setName(name, new_data);
+            databaseManager.setName("challange_"+name, new_data);
         }
 
         void category(String new_data) {
-            databaseManager.setCategory(name, new_data);
+            databaseManager.setCategory("challange_"+name, new_data);
         }
 
         void level(int new_data) {
-            databaseManager.setLevel(name, new_data);
+            databaseManager.setLevel("challange_"+name, new_data);
         }
 
         void bossId(String new_data) {
-            databaseManager.setBossID(name, new_data);
+            databaseManager.setBossID("challange_"+name, new_data);
         }
 
     }

@@ -57,9 +57,20 @@ public class DungeonPlayer {
             player.sendTitle(parseHexColors(title), parseHexColors(subtitle), 20, 40, 20);
         }
 
+        public void stay(String title, String subtitle) {
+            player.sendTitle(parseHexColors(title), parseHexColors(subtitle), 20, 100, 20);
+        }
+
+
     }
 
     public void join(Dungeon dungeon) {
+        get().getPlayers().setDone(player, false);
+        get().getPlayers().updateDungeonStatus(player, true);
+        get().getPlayers().updateLastDungeon(player, dungeon.parameters().name());
+    }
+
+    public void challange(Challange dungeon) {
         get().getPlayers().setDone(player, false);
         get().getPlayers().updateDungeonStatus(player, true);
         get().getPlayers().updateLastDungeon(player, dungeon.parameters().name());

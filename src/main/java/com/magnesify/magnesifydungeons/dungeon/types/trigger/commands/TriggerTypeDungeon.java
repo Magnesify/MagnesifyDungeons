@@ -282,7 +282,7 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                     }
-                } if (strings[0].equalsIgnoreCase("update")) {
+                } else if (strings[0].equalsIgnoreCase("update")) {
                     if (strings[1].equalsIgnoreCase("spawn")) {
                         if (commandSender instanceof Player) {
                             String name = strings[1];

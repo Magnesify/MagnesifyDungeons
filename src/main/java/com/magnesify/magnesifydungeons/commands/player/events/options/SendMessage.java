@@ -20,17 +20,6 @@ public class SendMessage implements Listener {
                 event.setCancelled(true);
             }
         }
-        if(options.get().getBoolean("options.players-can-see-chat-while-in-dungeon")) {
-            event.getRecipients().removeIf(players -> {
-                PlayerMethods playerMethods = new PlayerMethods();
-                if(playerMethods.inDungeon(players)) {
-                    event.setCancelled(true);
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-        }
     }
 
 }

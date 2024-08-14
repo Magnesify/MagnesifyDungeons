@@ -12,6 +12,8 @@ import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.options.SendMessage;
 import com.magnesify.magnesifydungeons.commands.player.profile.ProfileGuiInteract;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.dungeon.types.challange.gui.ChallangeGuiInteract;
+import com.magnesify.magnesifydungeons.dungeon.types.challange.gui.ChallangeGuiOpen;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import static com.magnesify.magnesifydungeons.commands.Administrator.challange;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.data;
@@ -141,6 +144,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
         getCommand("MagnesifyDungeonsBoss").setTabCompleter(new BossManager(this));
         getCommand("MagnesifyDungeonsMarket").setExecutor(new MarketManager(this));
+        getCommand("Challanges").setExecutor(new ChallangeGuiOpen(this));
         getCommand("DungeonProfile").setExecutor(new Profile(this));
         getCommand("Stats").setExecutor(new Stats(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
@@ -151,6 +155,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ProfileGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
+        Bukkit.getPluginManager().registerEvents(new ChallangeGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new MarketGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new SendMessage(this), this);
@@ -177,12 +182,15 @@ public final class MagnesifyDungeons extends JavaPlugin {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if(creationSystemLevel.get(player.getUniqueId()) != null) {
                         DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-                        dungeonPlayer.messageManager().actionbar(String.format("&fZindan Adı: &d&l%s" +
-                                "&e| &fKategori: &d&l%s " +
-                                "&e| &fBoss Kimliği: &d&l%s " +
-                                "&e| &fOynama Süresi: &d&l%s " +
-                                "&e| &fBekleme Süresi: &d&l%s " +
-                                "&e| &fSeviye: &d&l%s", data.get("Name") == null ? "Seçilmemiş" : data.get("Name"),data.get("Category") == null ? "Seçilmemiş" : data.get("Category"),data.get("BossID") == null ? "Seçilmemiş" : data.get("BossID"),data.get("PT") == null ? "Seçilmemiş" : data.get("PT"),data.get("ST") == null ? "Seçilmemiş" : data.get("ST"),data.get("lvl") == null ? "Seçilmemiş" : data.get("lvl")));
+                        if(challange.get(player.getUniqueId()) != null) {
+                            dungeonPlayer.messageManager().stay("<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r", "<#4b8eff>Şu an Meydan Okuma modunda zindan oluşturuyorsun !");
+                        }
+                        dungeonPlayer.messageManager().actionbar(String.format("&fZindan Adı: <#4b8eff>%s " +
+                                "&b| &fKategori: <#4b8eff>%s " +
+                                "&b| &fBoss Kimliği: <#4b8eff>%s " +
+                                "&b| &fOynama Süresi: <#4b8eff>%s " +
+                                "&b| &fBekleme Süresi: <#4b8eff>%s " +
+                                "&b| &fSeviye: <#4b8eff>%s", data.get("Name") == null ? getConfig().getString("settings.holders.not-selected") : data.get("Name"),data.get("Category") == null ? getConfig().getString("settings.holders.not-selected") : data.get("Category"),data.get("BossID") == null ? getConfig().getString("settings.holders.not-selected") : data.get("BossID"),data.get("PT") == null ? getConfig().getString("settings.holders.not-selected") : data.get("PT"),data.get("ST") == null ? getConfig().getString("settings.holders.not-selected") : data.get("ST"),data.get("lvl") == null ? getConfig().getString("settings.holders.not-selected") : data.get("lvl")));
                     }
                 }
             }

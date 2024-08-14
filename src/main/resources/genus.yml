@@ -2,22 +2,48 @@ dungeon-genus:
   Goblin:
     display: "<#50C878>Goblin"
     health-bar: 10.0
+    walk-speed: 0.5
     slot: 0
     material: GOLD_INGOT
+    skills:
+      ghost:
+        enable: false
+        countdown: 5
+        delay: 30
     lore:
       - ''
       - '&7Altın kaçakcısı !'
     potion-effects:
-      - "SPEED:5"
       - "REGENERATION:2"
   Elf:
     display: "<#4b8eff>Elf"
     health-bar: 12.0
+    walk-speed: 0.5
     slot: 1
     material: BOW
+    skills:
+      ghost:
+        enable: false
+        countdown: 5
+        delay: 30
     lore:
       - ''
       - '&7Uzman okçu !'
     potion-effects:
-      - "SPEED:3"
+      - "REGENERATION:2"
+  Hayalet:
+    display: "<#4b8eff>Hayalet"
+    health-bar: 5.0
+    walk-speed: 0.8
+    slot: 2
+    material: PAPER
+    skills:
+      ghost:
+        enable: true
+        countdown: 5
+        delay: 30
+    lore:
+      - ''
+      - '&7Görünmez hayalet !'
+    potion-effects:
       - "REGENERATION:2"

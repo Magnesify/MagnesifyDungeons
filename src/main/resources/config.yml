@@ -4,6 +4,24 @@ settings:
     - "APPLE:5:100"
     - "GOLDEN_APPLE:5:25"
     - "PAPER:5:75"
+  skill-tools:
+    GHOST:
+      display: '<#4b8eff>Paralel Ruh'
+      material: BOOK
+  challange:
+    title: '<#4b8eff>Meydan Okumalar'
+    custom-gui-texture: _iainternal:blank_menu
+    defaults:
+      display: '<#4b8eff>&l#dungeon'
+      material: DIAMOND_AXE
+      lore:
+        - ''
+        - '&fYaratık: <#4b8eff>#boss_name'
+        - '&fCanı: <#4b8eff>#boss_health'
+        - '&fSüre: <#4b8eff>#play_time'
+        - ''
+        - '&fMeydan okumalarda herhangi bir puan kazanmaz ya da kaybetmezsin !'
+        - ''
   profile:
     title: '<#4b8eff>Zindan Profilin'
     custom-gui-texture: _iainternal:blank_menu
@@ -65,6 +83,7 @@ settings:
     stats: istatistikler
     profile: profil
   holders:
+    not-selected: "Seçilmemiş"
     name: "İsim"
     category: "Kategori"
     boss_id: "Boss kimliği"
@@ -144,6 +163,8 @@ settings:
       title: '&c&lHIZLI OL'
       subtitle: '&fGeriye sadece &c#remain &fsaniye kaldı !'
     genus:
+      unknow-tool: '#prefix &d#name &fisminde bir eşya yok.'
+      added-skill-tool: '#prefix &d#name &ftürünün özel eşyası envanterine eklendi !'
       selected:
         title: '<#4f91fc>&lMagnesify Dungeons'
         subtitle: '&fTürünü &e#genus &folarak seçtin !'

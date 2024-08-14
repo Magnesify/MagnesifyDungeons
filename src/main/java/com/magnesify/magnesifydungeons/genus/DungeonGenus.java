@@ -1,20 +1,27 @@
 package com.magnesify.magnesifydungeons.genus;
 
+import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
 public class DungeonGenus {
 
     private Player player;
+
+    public HashMap<UUID, Integer> gerisayin = new HashMap<>();
+    public Map<UUID, Integer> ghost = new HashMap<>();
+
+
 
     public JsonStorage load() {
         JsonStorage stats = new JsonStorage(get().getDataFolder() + "/caches/genus.json");
@@ -54,9 +61,13 @@ public class DungeonGenus {
     public void setGenusSkills() {
         GenusFile genusFile = new GenusFile();
         boolean health = genusFile.getGenusConfig().isSet("dungeon-genus." + getGenus() + ".health-bar");
+        boolean walk = genusFile.getGenusConfig().isSet("dungeon-genus." + getGenus() + ".walk-speed");
         boolean potion = genusFile.getGenusConfig().isSet("dungeon-genus." + getGenus() + ".potion-effects");
         if(health) {
             player.setMaxHealth(genusFile.getGenusConfig().getDouble("dungeon-genus." + getGenus() + ".health-bar"));
+        }
+        if(walk) {
+            player.setWalkSpeed((float) genusFile.getGenusConfig().getDouble("dungeon-genus." + getGenus() + ".walk-speed"));
         }
         if(potion) {
             for(String effects : genusFile.getGenusConfig().getStringList("dungeon-genus." + getGenus() + ".potion-effects")) {
@@ -67,6 +78,80 @@ public class DungeonGenus {
                 player.addPotionEffect(speedEffect);
             }
         }
+    }
+
+    public Skills skills() {
+        return new Skills();
+    }
+
+    public class Skills {
+
+        public Skills(){}
+
+        public void waitChange(Player player, int wait, int a) {
+            gerisayin.put(player.getUniqueId(), wait);
+            change(player,a );
+            DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+            UUID playerId = player.getUniqueId();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (gerisayin.containsKey(playerId)) {
+                        int remainingTime = gerisayin.get(playerId);
+                        if (remainingTime > 0) {
+                            gerisayin.put(playerId, remainingTime - 1);
+                            dungeonPlayer.messageManager().actionbar("&a&l" + gerisayin.get(playerId) + " &fsaniye sonra tekrardan hayalet özelliğini kullanabilirsin.");
+                        } else {
+                            gerisayin.remove(playerId);
+                            this.cancel();
+                        }
+                    } else {
+                        this.cancel();
+                    }
+                }
+            }.runTaskTimer(get(), 0, 20);
+        }
+
+        public void change(Player player, int wait) {
+            ghost.put(player.getUniqueId(), wait);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    UUID playerId = player.getUniqueId();
+                    if (ghost.containsKey(playerId)) {
+                        int remainingTime = ghost.get(playerId);
+                        if (remainingTime > 0) {
+                            if(player.getGameMode() != GameMode.SPECTATOR) {
+                                player.setGameMode(GameMode.SPECTATOR);
+                            }
+                            ghost.put(playerId, remainingTime - 1);
+                        } else {
+                            player.setGameMode(GameMode.SURVIVAL);
+                            ghost.remove(playerId);
+                            this.cancel();
+                        }
+                    } else {
+                        this.cancel();
+                    }
+                }
+            }.runTaskTimer(get(), 0, 20);
+        }
+
+        public void Ghost(Player player) {
+            GenusFile genusFile = new GenusFile();
+            DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+            boolean ghost = genusFile.getGenusConfig().getBoolean("dungeon-genus." + getGenus() + ".skills.ghost.enable");
+            if(ghost) {
+                if(gerisayin.get(player.getUniqueId()) != null) {
+                    dungeonPlayer.messageManager().title("&c&lHATA", "&fHayalet moduna tekrar geçmek için " + gerisayin.get(player.getUniqueId()) + " saniye beklemen gerek.");
+                } else {
+                    waitChange(player, genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.delay"), genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.countdown"));
+                }
+            } else {
+                dungeonPlayer.messageManager().title("&c&lHATA", "&fTürün bu özelliğe sahip değil !");
+            }
+        }
+
     }
 
     public boolean setGenus(String genus) {

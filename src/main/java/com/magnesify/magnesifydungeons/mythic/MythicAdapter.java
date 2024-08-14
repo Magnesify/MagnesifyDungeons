@@ -27,10 +27,8 @@ public class MythicAdapter {
             optActiveMob.ifPresent(activeMob -> {
                 if (activeMob.getEntity().hasMetadata("name")) {
                     String metadataValue = bukkitEntity.getMetadata("name").get(0).asString();
-
                 }
             });
         }
     }
-
 }

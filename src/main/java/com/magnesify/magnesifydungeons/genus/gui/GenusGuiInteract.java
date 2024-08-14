@@ -19,7 +19,7 @@ public class GenusGuiInteract implements Listener {
     @EventHandler
     public void onInteract(InventoryClickEvent event) {
         String gui_title = event.getView().getTitle();
-        if(gui_title.equalsIgnoreCase(parseHexColors(get().getConfig().getString("settings.genus.title"))) && gui_title.equalsIgnoreCase("IA_CUST_GUI")) {
+        if(gui_title.equalsIgnoreCase(parseHexColors(get().getConfig().getString("settings.genus.title"))) || gui_title.contains("IA_CUST_GUI")) {
             event.setCancelled(true);
             GenusFile genusFile = new GenusFile();
             DungeonPlayer dungeonPlayer = new DungeonPlayer((Player) event.getWhoClicked());
