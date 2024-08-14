@@ -7,62 +7,84 @@ format:
     suffix: ''
 
 market:
-  Viking:
-    display: '&6&lViking'
+  next:
+    display: '&aSonraki sayfa'
     material: IRON_AXE
-    slot: 0
-    price:
-      type: dungeon_point
-      value: 10.0
+    custom-material: _iainternal:icon_right_blue
+    slot: 53
     lore:
       - ''
-      - '&7Mistik bir savaş sonrasında savaş bölgesine kalan silahlar...'
-      - '&7Hepsi, birer ruhu taşıyor.'
+      - '&7Sonraki sayfaya geçiş yap.'
+  prev:
+    display: '&cÖnceki sayfa'
+    material: IRON_AXE
+    custom-material: _iainternal:icon_left_blue
+    slot: 45
+    lore:
       - ''
-      - '&7#price karşılığında baltayı satın al !'
-    items:
-      1:
+      - '&7Önceki sayfaya geçiş yap.'
+  1:
+    size: 54
+    products:
+      Viking:
+        display: '&6&lViking'
         material: IRON_AXE
-        display: "&6Balta"
-        amount: 1
-  Sovalye:
-    display: '&6&lŞövalye'
-    material: IRON_SWORD
-    slot: 1
-    price:
-      type: vault
-      value: 10.0
-    lore:
-      - ''
-      - '&7Bir şövalyenin savaş alanında terk ettiği kılıç.'
-      - '&7Bir dakika, şövalyeler savaş alaınını terk etmezler ?'
-      - ''
-      - '&7#price karşılığında kılıcı satın al !'
-    items:
-      1:
-        material: IRON_SWORD
-        name: "&6Kılıç"
-        amount: 2
+        slot: 0
+        price:
+          type: dungeon_point
+          value: 10.0
         lore:
           - ''
-        enchants:
-          - "mending:1"
-  Yeni:
-    display: '&a&lYeni !'
-    material: PAPER
-    slot: 2
-    price:
-      type: vault
-      value: 5.0
-    lore:
-      - ''
-      - '&7Buralarda yenisin sanırım.'
-      - '&7Bu eşyaya ihtiyacın olabilir.'
-      - ''
-      - '&7#price karşılığında satın al !'
-    items:
-      1:
-        commands:
-          - "[command:console] say Merhaba <player> !"
-          - "[actionbar] &a&lSeni gördüğüme sevindim !"
-          - "[give] APPLE 16"
+          - '&7Mistik bir savaş sonrasında savaş bölgesine kalan silahlar...'
+          - '&7Hepsi, birer ruhu taşıyor.'
+          - ''
+          - '&7#price karşılığında baltayı satın al !'
+        items:
+          1:
+            material: IRON_AXE
+            display: "&6Balta"
+            amount: 1
+  2:
+    size: 54
+    products:
+      Sovalye:
+        display: '&6&lŞövalye'
+        material: IRON_SWORD
+        slot: 0
+        price:
+          type: vault
+          value: 10.0
+        lore:
+          - ''
+          - '&7Bir şövalyenin savaş alanında terk ettiği kılıç.'
+          - '&7Bir dakika, şövalyeler savaş alaınını terk etmezler ?'
+          - ''
+          - '&7#price karşılığında kılıcı satın al !'
+        items:
+          1:
+            material: IRON_SWORD
+            name: "&6Kılıç"
+            amount: 2
+            lore:
+              - ''
+            enchants:
+              - "mending:1"
+      Yeni:
+        display: '&a&lYeni !'
+        material: PAPER
+        slot: 1
+        price:
+          type: vault
+          value: 5.0
+        lore:
+          - ''
+          - '&7Buralarda yenisin sanırım.'
+          - '&7Bu eşyaya ihtiyacın olabilir.'
+          - ''
+          - '&7#price karşılığında satın al !'
+        items:
+          1:
+            commands:
+              - "[command:console] say Merhaba <player> !"
+              - "[actionbar] &a&lSeni gördüğüme sevindim !"
+              - "[give] APPLE 16"

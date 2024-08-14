@@ -290,6 +290,68 @@ public class DatabaseManager {
         }
     }
 
+    public void deleteBosspointRecordsContainingParameter(String name)  {
+        load();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            conn = getConnection();
+            String sql = "DELETE FROM bosspoints WHERE connected_dungeon LIKE ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%"+name+"%");
+            int rowsAffected = pstmt.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            System.err.println("SQLite JDBC sürücüsü bulunamadı: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("SQL hata: " + e.getMessage());
+            try {
+                throw e;
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("Kapatma hatası: " + e.getMessage());
+            }
+        }
+    }
+
+    public void deleteCheckpointRecordsContainingParameter(String name)  {
+        load();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            conn = getConnection();
+            String sql = "DELETE FROM checkpoints WHERE connected_dungeon LIKE ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%"+name+"%");
+            int rowsAffected = pstmt.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            System.err.println("SQLite JDBC sürücüsü bulunamadı: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("SQL hata: " + e.getMessage());
+            try {
+                throw e;
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("Kapatma hatası: " + e.getMessage());
+            }
+        }
+    }
+
 
 
     public CompletableFuture<Boolean> CreateTestStats(String player, String uuid) {

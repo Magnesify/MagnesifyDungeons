@@ -4,7 +4,11 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -142,10 +146,32 @@ public class DungeonGenus {
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
             boolean ghost = genusFile.getGenusConfig().getBoolean("dungeon-genus." + getGenus() + ".skills.ghost.enable");
             if(ghost) {
-                if(gerisayin.get(player.getUniqueId()) != null) {
+                if(gerisayin.containsKey(player.getUniqueId()) || gerisayin.containsKey(player.getUniqueId()) || gerisayin.containsKey(player.getUniqueId())) {
                     dungeonPlayer.messageManager().title("&c&lHATA", "&fHayalet moduna tekrar geçmek için " + gerisayin.get(player.getUniqueId()) + " saniye beklemen gerek.");
                 } else {
                     waitChange(player, genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.delay"), genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.countdown"));
+                }
+            } else {
+                dungeonPlayer.messageManager().title("&c&lHATA", "&fTürün bu özelliğe sahip değil !");
+            }
+        }
+
+        public void MineBoost(Player player, BlockBreakEvent event) {
+            Block block = event.getBlock();
+            GenusFile genusFile = new GenusFile();
+            DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+            boolean ghost = genusFile.getGenusConfig().getBoolean("dungeon-genus." + getGenus() + ".skills.mine-boost.enable");
+            if(ghost) {
+                for(String blocks : genusFile.getGenusConfig().getConfigurationSection("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks").getKeys(false)) {
+                    if(block.getType() == Material.getMaterial(genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".block"))) {
+                        ItemStack[] drops = event.getBlock().getDrops().toArray(new ItemStack[0]);
+                        for (ItemStack drop : drops) {
+                            drop.setAmount(drop.getAmount() * genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".multiple"));
+                        }
+                        event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), drops[0]);
+                        event.setDropItems(false);
+                        return;
+                    }
                 }
             } else {
                 dungeonPlayer.messageManager().title("&c&lHATA", "&fTürün bu özelliğe sahip değil !");

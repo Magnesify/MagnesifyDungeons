@@ -21,6 +21,7 @@ import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
+import com.magnesify.magnesifydungeons.genus.events.PlayerBlockBreakEvent;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiInteract;
 import com.magnesify.magnesifydungeons.market.MarketManager;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
@@ -68,7 +69,11 @@ public final class MagnesifyDungeons extends JavaPlugin {
                     "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
                     "                /____/                      /____/   \n" +
                     "\n\n<#4b8eff>Magnesify Dungeons&f, Hacı Mert Gökhan tarafından geliştirildi."));
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fMarkette mevcut olarak <#4b8eff>" + marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false).size() + "&f adet ürün bulunuyor."));
+            int a=0;
+            for(int i = 1; i<=marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false).size() - 2;i++) {
+                a +=marketFile.getMarketConfig().getConfigurationSection("market." + i).getKeys(false).size();
+            }
+            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fMarkette mevcut olarak <#4b8eff>" + a + "&f adet ürün bulunuyor."));
             if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
                 Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'ItemsAdder' tespit edildi. Markete uyarlanıyor..."));
             } else {
@@ -157,6 +162,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallangeGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerBlockBreakEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new MarketGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new SendMessage(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonCreateEvent(this), this);

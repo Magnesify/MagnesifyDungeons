@@ -6,7 +6,7 @@
 
   <groupId>com.magnesify</groupId>
   <artifactId>MagnesifyDungeons</artifactId>
-  <version>0.01</version>
+  <version>stable</version>
   <packaging>jar</packaging>
 
   <name>MagnesifyDungeons</name>

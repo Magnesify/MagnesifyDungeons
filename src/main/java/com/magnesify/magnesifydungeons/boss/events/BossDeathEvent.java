@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +24,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -87,40 +89,57 @@ public class BossDeathEvent implements Listener {
     }
 
     @EventHandler
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if (event.getDamager() instanceof LivingEntity) {
+                LivingEntity damager = (LivingEntity) event.getDamager();
+                player.setMetadata("last_damager", new FixedMetadataValue(get(), damager));
+            }
+        }
+    }
+
+    @EventHandler
     public void onKill(PlayerDeathEvent event) {
         Player entity = event.getEntity().getPlayer();
-        Entity killer = entity.getKiller();
         DungeonGenus dungeonGenus = new DungeonGenus(entity);
         dungeonGenus.setGenusSkills();
-        if (killer != null) {
-            DungeonPlayer dungeonPlayer = new DungeonPlayer(entity);
-            if (dungeonPlayer.inDungeon()) {
-                if (killer.hasMetadata("name")) {
-                    Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(entity));
-                    DatabaseManager databaseManager = new DatabaseManager(get());
-                    if (databaseManager.getType(get().getPlayers().getLastDungeon(entity)).equalsIgnoreCase("Normal")) {
-                        dungeon.status(true);
-                        killer.remove();
-                        get().getPlayers().setDone(entity, true);
-                        dungeon.events().stop(entity);
-                        get().getPlayers().updateDungeonStatus(entity, false);
-                        get().getPlayers().updateDeath(entity, 1);
-                        StatsManager statsManager = new StatsManager();
-                        statsManager.updateMatch(entity.getUniqueId().toString(), 1);
-                        statsManager.updateDeath(entity.getUniqueId().toString(), 1);
-                        statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
-                    } else {
-                        killer.remove();
-                        get().getPlayers().updateDungeonStatus(entity, false);
-                        get().getPlayers().updateDeath(entity, 1);
-                        StatsManager statsManager = new StatsManager();
-                        statsManager.updateMatch(entity.getUniqueId().toString(), 1);
-                        statsManager.updateDeath(entity.getUniqueId().toString(), 1);
-                        statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
-                    }
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
-                    dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+        DungeonPlayer dungeonPlayer = new DungeonPlayer(entity);
+        if (dungeonPlayer.inDungeon()) {
+            if (entity.hasMetadata("last_damager")) {
+                LivingEntity lastDamager = (LivingEntity) entity.getMetadata("last_damager").get(0).value();
+                Dungeon dungeon = new Dungeon(get().getPlayers().getLastDungeon(entity));
+                TriggerType triggerType = new TriggerType(entity);
+                DatabaseManager databaseManager = new DatabaseManager(get());
+                if (databaseManager.getType(get().getPlayers().getLastDungeon(entity)).equalsIgnoreCase("Normal")) {
+                    dungeon.status(true);
+                    lastDamager.remove();
+                    get().getPlayers().setDone(entity, true);
+                    dungeon.events().stop(entity);
+                    triggerType.events().stop(entity);
+                    get().getPlayers().updateDungeonStatus(entity, false);
+                    get().getPlayers().updateDeath(entity, 1);
+                    StatsManager statsManager = new StatsManager();
+                    statsManager.updateMatch(entity.getUniqueId().toString(), 1);
+                    statsManager.updateDeath(entity.getUniqueId().toString(), 1);
+                    statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
+                } else {
+                    lastDamager.remove();
+                    dungeon.events().stop(entity);
+                    triggerType.events().stop(entity);
+                    get().getPlayers().updateDungeonStatus(entity, false);
+                    get().getPlayers().updateDeath(entity, 1);
+                    StatsManager statsManager = new StatsManager();
+                    statsManager.updateMatch(entity.getUniqueId().toString(), 1);
+                    statsManager.updateDeath(entity.getUniqueId().toString(), 1);
+                    statsManager.updateLose(entity.getPlayer().getUniqueId().toString(), 1);
+                    PlayerMethods playerMethods = new PlayerMethods(entity);
+                    playerMethods.updateDungeonStatus(entity, false);
+                    playerMethods.setDone(entity, true);
+                    triggerType.events().stop(entity);
                 }
+                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
+                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
             }
         }
     }

@@ -6,6 +6,12 @@ dungeon-genus:
     slot: 0
     material: GOLD_INGOT
     skills:
+      mine-boost:
+        enable: true
+        blocks:
+          GOLD_ORE:
+            block: GOLD_ORE
+            multiple: 2
       ghost:
         enable: false
         countdown: 5
@@ -22,6 +28,12 @@ dungeon-genus:
     slot: 1
     material: BOW
     skills:
+      mine-boost:
+        enable: true
+        blocks:
+          GOLD_ORE:
+            block: GOLD_ORE
+            multiple: 2
       ghost:
         enable: false
         countdown: 5
@@ -38,6 +50,12 @@ dungeon-genus:
     slot: 2
     material: PAPER
     skills:
+      mine-boost:
+        enable: true
+        blocks:
+          GOLD_ORE:
+            block: GOLD_ORE
+            multiple: 2
       ghost:
         enable: true
         countdown: 5

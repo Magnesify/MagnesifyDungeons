@@ -41,7 +41,7 @@ public class MarketManager implements CommandExecutor {
             if(strings.length == 0) {
                 if(commandSender instanceof Player) {
                     Player player = (Player) commandSender;
-                    MarketGuiLoader.openInventory(player);
+                    MarketGuiLoader.openInventory(player, 1);
                 } else {
                     dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                 }
@@ -53,7 +53,7 @@ public class MarketManager implements CommandExecutor {
                 } else {
                     if(commandSender instanceof Player) {
                         Player player = (Player) commandSender;
-                        MarketGuiLoader.openInventory(player);
+                        MarketGuiLoader.openInventory(player, 1);
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
                     }

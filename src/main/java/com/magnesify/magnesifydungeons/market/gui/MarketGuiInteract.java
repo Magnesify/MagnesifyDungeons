@@ -35,41 +35,50 @@ public class MarketGuiInteract implements Listener {
             MarketFile marketFile = new MarketFile();
             event.setCancelled(true);
             PlayerMethods playerMethods = new PlayerMethods();
-            for (String ranks : marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false)) {
-                int price = marketFile.getMarketConfig().getInt("market." + ranks + ".price.value");
-                int slot = marketFile.getMarketConfig().getInt("market." + ranks + ".slot");
-                for (String items : marketFile.getMarketConfig().getConfigurationSection("market." + ranks + ".items").getKeys(false)) {
-                    boolean commands = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".commands");
-                    boolean material = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".material");
-                    boolean enchants = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".enchants");
-                    boolean display = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".display");
-                    boolean lore = marketFile.getMarketConfig().isSet("market." + ranks + ".items." + items + ".lore");
+            if (event.getCurrentItem() != null) {
+               if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(parseHexColors(marketFile.getMarketConfig().getString("market.next.display")))) {
+                    player.closeInventory();
+                    MarketGuiLoader.openInventory(player, MarketGuiLoader.current_page.get(player.getUniqueId())+1);
+               } else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(parseHexColors(marketFile.getMarketConfig().getString("market.prev.display")))) {
+                   player.closeInventory();
+                   MarketGuiLoader.openInventory(player, MarketGuiLoader.current_page.get(player.getUniqueId())-1);
+               }
+            }
+            for (String ranks : marketFile.getMarketConfig().getConfigurationSection("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products").getKeys(false)) {
+                int price = marketFile.getMarketConfig().getInt("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".price.value");
+                int slot = marketFile.getMarketConfig().getInt("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".slot");
+                for (String items : marketFile.getMarketConfig().getConfigurationSection("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items").getKeys(false)) {
+                    boolean commands = marketFile.getMarketConfig().isSet("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".commands");
+                    boolean material = marketFile.getMarketConfig().isSet("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".material");
+                    boolean enchants = marketFile.getMarketConfig().isSet("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".enchants");
+                    boolean display = marketFile.getMarketConfig().isSet("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".display");
+                    boolean lore = marketFile.getMarketConfig().isSet("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".lore");
                     if (event.getSlot() == slot) {
                         DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-                        if (getProductType(ranks).equalsIgnoreCase("dungeon_point")) {
+                        if (getProductType(ranks, player).equalsIgnoreCase("dungeon_point")) {
                             if (playerMethods.getPoints(player) >= price) {
                                 playerMethods.removePoint(player, price);
-                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.buy").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + ranks + ".display"))).replace("#price", format(ranks, price)));
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.buy").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
                                 if(commands) {
-                                    for(String cmds : marketFile.getMarketConfig().getStringList("market." + ranks + ".items." + items + ".commands")) {
+                                    for(String cmds : marketFile.getMarketConfig().getStringList("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".commands")) {
                                         StringFunctionReader.RunFunction(player, cmds);
                                     }
                                 }
                                 if (material) {
                                     if(enchants) {
-                                        int amount = marketFile.getMarketConfig().getInt("market." + ranks + ".items." + items + ".amount");
-                                        ItemStack itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".material")), amount);
+                                        int amount = marketFile.getMarketConfig().getInt("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".amount");
+                                        ItemStack itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".material")), amount);
                                         ItemMeta meta = itemStack.getItemMeta();
-                                        if(display) meta.setDisplayName(parseHexColors(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".display") ));
+                                        if(display) meta.setDisplayName(parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".display") ));
                                         if(lore) {
-                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + ranks + ".items." + items + ".lore");
+                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".lore");
                                             List<String> sub_lore = new ArrayList<>();
                                             for(int a = 0; a<main_lores.size();a++) {
                                                 sub_lore.add(parseHexColors(main_lores.get(a)));
                                             }
                                             meta.setLore(sub_lore);
                                         }
-                                        for(String ench : marketFile.getMarketConfig().getStringList("market." + ranks + ".items." + items + ".enchants")) {
+                                        for(String ench : marketFile.getMarketConfig().getStringList("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".enchants")) {
                                             String[] spl = ench.split(":");
                                             NamespacedKey key = new NamespacedKey("minecraft", spl[0]);
                                             meta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(spl[1]), true);
@@ -78,12 +87,12 @@ public class MarketGuiInteract implements Listener {
                                         itemStack.setItemMeta(meta);
                                         player.getInventory().addItem(itemStack);
                                     } else {
-                                        int amount = marketFile.getMarketConfig().getInt("market." + ranks + ".items." + items + ".amount");
-                                        ItemStack itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".material")), amount);
+                                        int amount = marketFile.getMarketConfig().getInt("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".amount");
+                                        ItemStack itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".material")), amount);
                                         ItemMeta meta = itemStack.getItemMeta();
-                                        if(display) meta.setDisplayName(parseHexColors(marketFile.getMarketConfig().getString("market." + ranks + ".items." + items + ".display") ));
+                                        if(display) meta.setDisplayName(parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".display") ));
                                         if(lore) {
-                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + ranks + ".items." + items + ".lore");
+                                            List<String> main_lores = marketFile.getMarketConfig().getStringList("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".lore");
                                             List<String> sub_lore = new ArrayList<>();
                                             for(int a = 0; a<main_lores.size();a++) {
                                                 sub_lore.add(parseHexColors(main_lores.get(a)));
@@ -95,7 +104,7 @@ public class MarketGuiInteract implements Listener {
                                     }
                                 }
                             } else {
-                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.not-enough-balance").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + ranks + ".display"))).replace("#price", format(ranks, price)));
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.not-enough-balance").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
                             }
                             return;
                         }

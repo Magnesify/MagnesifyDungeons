@@ -238,6 +238,8 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                 } else if (strings[0].equalsIgnoreCase("delete")) {
                     if (databaseManager.TriggerTypeDungeons().isDungeonExists(strings[1])) {
                         databaseManager.TriggerTypeDungeons().deleteDungeon(strings[1]);
+                        databaseManager.deleteBosspointRecordsContainingParameter(strings[1]);
+                        databaseManager.deleteCheckpointRecordsContainingParameter(strings[1]);
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.deleted").replace("#name", strings[1]));
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
