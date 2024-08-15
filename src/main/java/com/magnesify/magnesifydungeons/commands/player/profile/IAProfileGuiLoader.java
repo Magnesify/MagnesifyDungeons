@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
+import static dev.lone.itemsadder.api.ItemsAdder.getCustomItem;
 
 public class IAProfileGuiLoader {
 
@@ -52,14 +53,15 @@ public class IAProfileGuiLoader {
         while (var0.hasNext()) {
             String ranks = (String) var0.next();
             boolean is_material_set = get().getConfig().isSet("settings.profile.items." + ranks + ".material");
+            boolean is_custom_material_set = get().getConfig().isSet("settings.profile.items." + ranks + ".custom-material");
             boolean is_display_set = get().getConfig().isSet("settings.profile.items." + ranks + ".display");
             boolean is_lore_set = get().getConfig().isSet("settings.profile.items." + ranks + ".lore");
             ItemStack itemStack;
-            if (is_material_set) {
+            if(is_custom_material_set) {
+                itemStack = getCustomItem(get().getConfig().getString("settings.profile.items." + ranks + ".custom-material"));
+            } else if(is_material_set) {
                 itemStack = new ItemStack(Material.getMaterial(get().getConfig().getString("settings.profile.items." + ranks + ".material")));
-            } else {
-                itemStack = new ItemStack(Material.PAPER);
-            }
+            } else {itemStack = new ItemStack(Material.PAPER);}
             ItemMeta meta = itemStack.getItemMeta();
             if (is_lore_set) {
                 List<String> main_lores = get().getConfig().getStringList("settings.profile.items." + ranks + ".lore");

@@ -4,13 +4,15 @@ import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.Options;
 import com.magnesify.magnesifydungeons.genus.DungeonGenus;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiLoader;
 import com.magnesify.magnesifydungeons.genus.gui.IAGenusGuiLoader;
-import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.Defaults;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
@@ -30,6 +32,14 @@ public class DungeonPlayerEvents implements Listener {
         DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
         dungeonPlayer.createDungeonAccount(event);
         Defaults defaults = new Defaults();
+        DungeonGenus genus = new DungeonGenus(event.getPlayer());
+        if(genus.isGenusSet()) {
+            GenusFile genusFile = new GenusFile();
+            boolean ghost = genusFile.getGenusConfig().getBoolean("dungeon-genus." + genus.getGenus() + ".skills.ghost.enable");
+            if(ghost) {
+                event.getPlayer().setGameMode(GameMode.SURVIVAL);
+            }
+        }
         if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
             Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
             event.getPlayer().teleport(loc);

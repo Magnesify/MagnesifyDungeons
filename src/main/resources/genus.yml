@@ -6,19 +6,33 @@ dungeon-genus:
     slot: 0
     material: GOLD_INGOT
     skills:
+      more-damage:
+        enable: true
+        value: 2
+        mode: multiple
+        tools:
+          - "IRON_SWORD"
       mine-boost:
         enable: true
         blocks:
           GOLD_ORE:
             block: GOLD_ORE
             multiple: 2
+            mode: multiple
+          DIAMOND_ORE:
+            block: DIAMOND_ORE
+            mode: drop_other
+            item: APPLE
       ghost:
         enable: false
         countdown: 5
         delay: 30
     lore:
       - ''
-      - '&7Altın kaçakcısı !'
+      - '&7Goblinler hızlı ancak çok güçsüz canlılardır.'
+      - '&7Altınları çok severler, geçmiş zamanlardan gelen bir büyü nedeni ile çevredeki canlılar'
+      - '&7Goblinlerin kırdığı her altın & elmas madeni başına bir ödül verdiğini söyler.'
+      - ''
     potion-effects:
       - "REGENERATION:2"
   Elf:
@@ -28,10 +42,17 @@ dungeon-genus:
     slot: 1
     material: BOW
     skills:
+      more-damage:
+        enable: true
+        value: 2
+        mode: plus
+        tools:
+          - "IRON_SWORD"
       mine-boost:
         enable: true
         blocks:
           GOLD_ORE:
+            mode: multiple
             block: GOLD_ORE
             multiple: 2
       ghost:
@@ -40,7 +61,10 @@ dungeon-genus:
         delay: 30
     lore:
       - ''
-      - '&7Uzman okçu !'
+      - '&7Elfler çok gelişmiş savaşçılardır, türleri gereği silahları çok iyi kullanırlar.'
+      - '&7Özellikle silahlarına bakımları, silah hasarlarının daha fazla olmasını sağlar.'
+      - '&7Elfler goblinler kadar şanslı olmasalarda kırdıkları altın başına ödül kazanabilirler.'
+      - ''
     potion-effects:
       - "REGENERATION:2"
   Hayalet:
@@ -50,18 +74,29 @@ dungeon-genus:
     slot: 2
     material: PAPER
     skills:
+      more-damage:
+        enable: true
+        value: 2
+        mode: multiple
+        tools:
+          - "IRON_SWORD"
       mine-boost:
         enable: true
         blocks:
           GOLD_ORE:
+            mode: multiple
             block: GOLD_ORE
             multiple: 2
       ghost:
         enable: true
-        countdown: 5
+        countdown: 2
         delay: 30
     lore:
       - ''
-      - '&7Görünmez hayalet !'
+      - '&7Paralel evrenlerden gelen büyücüler ile savaşan şövalyelerin ruhları, artık sadece birer hayelet.'
+      - '&7Kısa süreliğine görünmez olabilen hayaletler. Savaş anında taktiksel açıdan yeni bir yer edinmek için kullanılabilir.'
+      - ''
+      - '&dParalel Ruh &7kitabı okunmadan görünmez olunamaz...'
+      - ''
     potion-effects:
       - "REGENERATION:2"

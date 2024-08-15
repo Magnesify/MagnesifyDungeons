@@ -21,7 +21,7 @@ import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
-import com.magnesify.magnesifydungeons.genus.events.PlayerBlockBreakEvent;
+import com.magnesify.magnesifydungeons.genus.events.PlayerGenusEvents;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiInteract;
 import com.magnesify.magnesifydungeons.market.MarketManager;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
@@ -162,7 +162,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallangeGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerBlockBreakEvent(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerGenusEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new MarketGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new SendMessage(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonCreateEvent(this), this);

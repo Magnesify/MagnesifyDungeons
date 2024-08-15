@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
+import static dev.lone.itemsadder.api.ItemsAdder.getCustomItem;
 
 public class GenusGuiLoader {
 
@@ -32,13 +33,18 @@ public class GenusGuiLoader {
         Iterator var0 = genusFile.getGenusConfig().getConfigurationSection("dungeon-genus").getKeys(false).iterator();
         while (var0.hasNext()) {
             String ranks = (String) var0.next();
-            boolean is_material_set = genusFile.getGenusConfig().isSet("dungeon-genus." + ranks + ".material");
             boolean is_display_set = genusFile.getGenusConfig().isSet("dungeon-genus." + ranks + ".display");
             boolean is_lore_set = genusFile.getGenusConfig().isSet("dungeon-genus." + ranks + ".lore");
+            boolean is_custom_material_set = get().getConfig().isSet("dungeon-genus." + ranks + ".custom-material");
+            boolean is_material_set = genusFile.getGenusConfig().isSet("dungeon-genus." + ranks + ".material");
             ItemStack itemStack;
             if(is_material_set) {
                 itemStack = new ItemStack(Material.getMaterial(genusFile.getGenusConfig().getString("dungeon-genus." + ranks + ".material")));
-            } else {itemStack = new ItemStack(Material.PAPER);}
+            } else if(is_custom_material_set) {
+                itemStack = getCustomItem(genusFile.getGenusConfig().getString("dungeon-genus." + ranks + ".custom-material"));
+            } else {
+                itemStack = new ItemStack(Material.PAPER);
+            }
             ItemMeta meta = itemStack.getItemMeta();
             if(is_lore_set) {
                 List<String> main_lores = genusFile.getGenusConfig().getStringList("dungeon-genus." + ranks + ".lore");

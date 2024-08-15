@@ -3,11 +3,12 @@ package com.magnesify.magnesifydungeons.genus;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -21,7 +22,7 @@ import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 public class DungeonGenus {
 
     private Player player;
-
+    final Map<String, Long> lastUseMap = new HashMap<>();
     public HashMap<UUID, Integer> gerisayin = new HashMap<>();
     public Map<UUID, Integer> ghost = new HashMap<>();
 
@@ -73,6 +74,11 @@ public class DungeonGenus {
         if(walk) {
             player.setWalkSpeed((float) genusFile.getGenusConfig().getDouble("dungeon-genus." + getGenus() + ".walk-speed"));
         }
+        if(player.getActivePotionEffects().size() > 0) {
+            for(PotionEffect potionEffect : player.getActivePotionEffects()) {
+                player.removePotionEffect(potionEffect.getType());
+            }
+        }
         if(potion) {
             for(String effects : genusFile.getGenusConfig().getStringList("dungeon-genus." + getGenus() + ".potion-effects")) {
                 String[] spl = effects.split(":");
@@ -92,67 +98,56 @@ public class DungeonGenus {
 
         public Skills(){}
 
-        public void waitChange(Player player, int wait, int a) {
-            gerisayin.put(player.getUniqueId(), wait);
-            change(player,a );
-            DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            UUID playerId = player.getUniqueId();
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (gerisayin.containsKey(playerId)) {
-                        int remainingTime = gerisayin.get(playerId);
-                        if (remainingTime > 0) {
-                            gerisayin.put(playerId, remainingTime - 1);
-                            dungeonPlayer.messageManager().actionbar("&a&l" + gerisayin.get(playerId) + " &fsaniye sonra tekrardan hayalet özelliğini kullanabilirsin.");
-                        } else {
-                            gerisayin.remove(playerId);
-                            this.cancel();
-                        }
-                    } else {
-                        this.cancel();
-                    }
-                }
-            }.runTaskTimer(get(), 0, 20);
-        }
-
-        public void change(Player player, int wait) {
-            ghost.put(player.getUniqueId(), wait);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    UUID playerId = player.getUniqueId();
-                    if (ghost.containsKey(playerId)) {
-                        int remainingTime = ghost.get(playerId);
-                        if (remainingTime > 0) {
-                            if(player.getGameMode() != GameMode.SPECTATOR) {
-                                player.setGameMode(GameMode.SPECTATOR);
-                            }
-                            ghost.put(playerId, remainingTime - 1);
-                        } else {
-                            player.setGameMode(GameMode.SURVIVAL);
-                            ghost.remove(playerId);
-                            this.cancel();
-                        }
-                    } else {
-                        this.cancel();
-                    }
-                }
-            }.runTaskTimer(get(), 0, 20);
-        }
-
         public void Ghost(Player player) {
             GenusFile genusFile = new GenusFile();
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
             boolean ghost = genusFile.getGenusConfig().getBoolean("dungeon-genus." + getGenus() + ".skills.ghost.enable");
+            int time = genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.delay");
+            int countdown = genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.countdown");
             if(ghost) {
-                if(gerisayin.containsKey(player.getUniqueId()) || gerisayin.containsKey(player.getUniqueId()) || gerisayin.containsKey(player.getUniqueId())) {
-                    dungeonPlayer.messageManager().title("&c&lHATA", "&fHayalet moduna tekrar geçmek için " + gerisayin.get(player.getUniqueId()) + " saniye beklemen gerek.");
-                } else {
-                    waitChange(player, genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.delay"), genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.ghost.countdown"));
+                long currentTime = System.currentTimeMillis();
+                String playerName = player.getName();
+
+                if (lastUseMap.containsKey(playerName)) {
+                    long lastUseTime = lastUseMap.get(playerName);
+                    if (currentTime - lastUseTime < time*1000) { // 30 saniye bekleme süresi
+                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.error.title"), get().getConfig().getString("settings.messages.error.wait").replace("#countdown", String.valueOf(currentTime - lastUseTime)));
+                        return;
+                    }
                 }
+                lastUseMap.put(playerName, currentTime);
+                player.setGameMode(org.bukkit.GameMode.SPECTATOR);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (player.isOnline()) {
+                            player.setGameMode(org.bukkit.GameMode.SURVIVAL);
+                        }
+                    }
+                }.runTaskLater(get(), 20*countdown);
             } else {
-                dungeonPlayer.messageManager().title("&c&lHATA", "&fTürün bu özelliğe sahip değil !");
+                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.error.title"), get().getConfig().getString("settings.messages.error.not-your-genus-skill"));
+            }
+        }
+
+        public void MoreDamage(EntityDamageByEntityEvent event) {
+            GenusFile genusFile = new GenusFile();
+            if (event.getDamager() instanceof Player) {
+                Player player = (Player) event.getDamager();
+                boolean ghost = genusFile.getGenusConfig().getBoolean("dungeon-genus." + getGenus() + ".skills.more-damage.enable");
+                if (ghost) {
+                    if (event.getEntity() instanceof LivingEntity) {
+                        ItemStack item = player.getInventory().getItemInMainHand();
+                        for(String items : genusFile.getGenusConfig().getStringList("dungeon-genus." + getGenus() + ".skills.more-damage.tools"))
+                        if (item.getType() == Material.getMaterial(items, true)) {
+                            if(genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.more-damage.mode").equalsIgnoreCase("multiple")) {
+                                event.setDamage(event.getDamage()*genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.more-damage.value"));
+                            } else if (genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.more-damage.mode").equalsIgnoreCase("plus")) {
+                                event.setDamage(event.getDamage()+genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.more-damage.value"));
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -162,19 +157,33 @@ public class DungeonGenus {
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
             boolean ghost = genusFile.getGenusConfig().getBoolean("dungeon-genus." + getGenus() + ".skills.mine-boost.enable");
             if(ghost) {
-                for(String blocks : genusFile.getGenusConfig().getConfigurationSection("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks").getKeys(false)) {
-                    if(block.getType() == Material.getMaterial(genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".block"))) {
-                        ItemStack[] drops = event.getBlock().getDrops().toArray(new ItemStack[0]);
-                        for (ItemStack drop : drops) {
-                            drop.setAmount(drop.getAmount() * genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".multiple"));
+                for (String blocks : genusFile.getGenusConfig().getConfigurationSection("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks").getKeys(false)) {
+                    if (genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".mode").equalsIgnoreCase("multiple")) {
+                        if (block.getType() == Material.getMaterial(genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".block"))) {
+                            ItemStack[] drops = event.getBlock().getDrops().toArray(new ItemStack[0]);
+                            for (ItemStack drop : drops) {
+                                drop.setAmount(drop.getAmount() * genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".multiple"));
+                            }
+                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), drops[0]);
+                            return;
                         }
-                        event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), drops[0]);
-                        event.setDropItems(false);
-                        return;
+                    }
+                    if (genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".mode").equalsIgnoreCase("drop_other")) {
+                        if (block.getType() == Material.getMaterial(genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".block"))) {
+                            ItemStack[] drops = event.getBlock().getDrops().toArray(new ItemStack[0]);
+                            for (ItemStack drop : drops) {
+                                drop.setAmount(drop.getAmount() * genusFile.getGenusConfig().getInt("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".multiple"));
+                            }
+                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), drops[0]);
+
+                            ItemStack itemStack = new ItemStack(Material.getMaterial(genusFile.getGenusConfig().getString("dungeon-genus." + getGenus() + ".skills.mine-boost.blocks." + blocks + ".item")), 1);
+                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), itemStack);
+                            return;
+                        }
                     }
                 }
             } else {
-                dungeonPlayer.messageManager().title("&c&lHATA", "&fTürün bu özelliğe sahip değil !");
+                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.error.title"), get().getConfig().getString("settings.messages.error.not-your-genus-skill"));
             }
         }
 

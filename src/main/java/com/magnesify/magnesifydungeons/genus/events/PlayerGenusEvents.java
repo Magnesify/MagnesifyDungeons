@@ -6,8 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-public class PlayerBlockBreakEvent implements Listener {
-    public PlayerBlockBreakEvent(MagnesifyDungeons magnesifyDungeons) {}
+public class PlayerGenusEvents implements Listener {
+    public PlayerGenusEvents(MagnesifyDungeons magnesifyDungeons) {}
 
     @EventHandler
     public void BreakEvent(BlockBreakEvent event) {

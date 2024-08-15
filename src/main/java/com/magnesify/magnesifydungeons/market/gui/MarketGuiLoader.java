@@ -39,11 +39,10 @@ public class MarketGuiLoader {
         ItemStack itemStack;
         if(is_material_set) {
             itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market.next.material")));
+        } else if(is_custom_material_set) {
+            itemStack = getCustomItem(marketFile.getMarketConfig().getString("market.next.custom-material"));
         } else {
             itemStack = new ItemStack(Material.PAPER);
-        }
-        if(is_custom_material_set) {
-            itemStack = getCustomItem(marketFile.getMarketConfig().getString("market.next.custom-material"));
         }
         ItemMeta meta = itemStack.getItemMeta();
         if(is_lore_set) {
@@ -69,11 +68,10 @@ public class MarketGuiLoader {
         ItemStack itemStack;
         if(is_material_set) {
             itemStack = new ItemStack(Material.getMaterial(marketFile.getMarketConfig().getString("market.prev.material")));
+        } else if(is_custom_material_set) {
+            itemStack = getCustomItem(marketFile.getMarketConfig().getString("market.prev.custom-material"));
         } else {
             itemStack = new ItemStack(Material.PAPER);
-        }
-        if(is_custom_material_set) {
-            itemStack = getCustomItem(marketFile.getMarketConfig().getString("market.prev.custom-material"));
         }
         ItemMeta meta = itemStack.getItemMeta();
         if(is_lore_set) {

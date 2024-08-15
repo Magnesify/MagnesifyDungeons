@@ -45,9 +45,13 @@ public class BossDeathEvent implements Listener {
             if(entity.hasMetadata("name")) {
                 String metadataValue = entity.getMetadata("name").get(0).asString();
                 DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
+                DungeonGenus genus = new DungeonGenus(player);
                 if(dungeonPlayer.inDungeon()) {
                     if (get().getPlayers().getLastBoss(player).equalsIgnoreCase(metadataValue)) {
                         if (get().getConfig().getBoolean("settings.minimal-options.send-damage-title")) {
+                            if(genus.isGenusSet()) {
+                                genus.skills().MoreDamage(event);
+                            }
                             dungeonPlayer.messageManager().title("&f", "&c&l-" + String.valueOf(event.getDamage()).substring(0, 2));
                         }
                     }

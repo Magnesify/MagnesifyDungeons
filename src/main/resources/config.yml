@@ -16,11 +16,13 @@ settings:
       material: DIAMOND_AXE
       lore:
         - ''
+        - '&fDurum: &e#status'
+        - ''
         - '&fYaratık: <#4b8eff>#boss_name'
         - '&fCanı: <#4b8eff>#boss_health'
         - '&fSüre: <#4b8eff>#play_time'
         - ''
-        - '&fMeydan okumalarda herhangi bir puan kazanmaz ya da kaybetmezsin !'
+        - '&fMeydan okumalarda herhangi bir puan kazanmaz ya da kaybetmezsin.'
         - ''
   profile:
     title: '<#4b8eff>Zindan Profilin'
@@ -83,6 +85,8 @@ settings:
     stats: istatistikler
     profile: profil
   holders:
+    full: "Dolu"
+    empty: "Boş"
     not-selected: "Seçilmemiş"
     name: "İsim"
     category: "Kategori"
@@ -155,6 +159,9 @@ settings:
           - ' &b・ &fSeviyeli zindan yönetimi için: &d/Mgd'
           - ''
     error:
+      title: "&c&lHATA"
+      wait: "&c#countdown &fsaniye beklemen gerek !"
+      not-your-genus-skill: '&fTürün bu özelliği kullanamaz !'
       player-not-online: '#prefix Oyuncu aktif değil !'
       select-spawn-first: '#prefix İlk önce bir başlangıç seçmelisin ! &d/Mgd setmainspawn'
       cannot-created: '#prefix İşlem &d#name &fadında bir zindan oluşturulamadı, bilgiler başka bir zindana ait olabilirmi ?'

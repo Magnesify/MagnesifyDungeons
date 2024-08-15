@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
+import static dev.lone.itemsadder.api.ItemsAdder.getCustomItem;
 
 public class IAChallangeGuiLoader {
 
@@ -36,19 +37,28 @@ public class IAChallangeGuiLoader {
         DatabaseManager databaseManager = new DatabaseManager(get());
         int i = 0;
         for(String ranks : databaseManager.getChallangeNames()) {
-            String boss = databaseManager.getBoss(ranks);
+            String boss = databaseManager.getBoss(ranks.replace("challange_", ""));
             MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss);
-            ItemStack itemStack = new ItemStack(Material.getMaterial(get().getConfig().getString("settings.challange.defaults.material")), 1);
+            boolean is_material_set = get().getConfig().isSet("settings.challange.defaults.material");
+            boolean is_custom_material_set = get().getConfig().isSet("settings.challange.defaults.custom-material");
+            ItemStack itemStack;
+            if(is_material_set) {
+                itemStack = new ItemStack(Material.getMaterial(get().getConfig().getString("settings.challange.defaults.material")));
+            } else if(is_custom_material_set) {
+                itemStack = getCustomItem(get().getConfig().getString("settings.challange.defaults.custom-material"));
+            } else {
+                itemStack = new ItemStack(Material.PAPER);
+            }
             ItemMeta meta = itemStack.getItemMeta();
+            boolean stats= databaseManager.getStatus(ranks);
             meta.setDisplayName(parseHexColors(get().getConfig().getString("settings.challange.defaults.display").replace("#dungeon", ranks.replace("challange_", ""))));
             List<String> main_lores = get().getConfig().getStringList("settings.challange.defaults.lore");
             List<String> sub_lore = new ArrayList<>();
             for(int a = 0; a<main_lores.size();a++) {
-                if(magnesifyBoss.exists()) {
                     sub_lore.add(parseHexColors(main_lores.get(a).replace("#boss_name", magnesifyBoss.name())
                             .replace("#boss_health", String.valueOf(magnesifyBoss.health()))
-                            .replace("#play_time", String.valueOf(databaseManager.getPlayTime(ranks)))));
-                }
+                            .replace("#play_time", String.valueOf(databaseManager.getPlayTime(ranks)))
+                            .replace("#status",stats == false ? get().getConfig().getString("settings.holders.full") : get().getConfig().getString("settings.holders.empty"))));
             }
             meta.setLore(sub_lore);
             itemStack.setItemMeta(meta);
