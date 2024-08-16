@@ -4,6 +4,7 @@ import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,15 +28,15 @@ public class LeaveDungeon implements CommandExecutor {
                     dungeon.status(true);
                     dungeonPlayer.leave(dungeon);
                     dungeon.events().stop(player);
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.leave-success"));
+                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.leave-success"));
                 } else {
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon"));
+                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon"));
                 }
             } else {
-                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.not-in-dungeon"));
+                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.not-in-dungeon"));
             }
         } else {
-            dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
 
         }
         return false;

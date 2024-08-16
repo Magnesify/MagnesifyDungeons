@@ -4,6 +4,7 @@ import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.genus.DungeonGenus;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,7 +31,7 @@ public class GenusGuiInteract implements Listener {
                 if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(parseHexColors(display))) {
                     dungeonGenus.setGenus(genus);
                     event.getWhoClicked().closeInventory();
-                    dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.genus.selected.title"),get().getConfig().getString("settings.messages.genus.selected.subtitle").replace("#genus", genus));
+                    dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.genus.selected.title"),new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.genus.selected.subtitle").replace("#genus", genus));
                     return;
                 }
             }

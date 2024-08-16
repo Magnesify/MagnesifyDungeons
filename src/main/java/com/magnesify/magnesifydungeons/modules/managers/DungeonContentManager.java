@@ -18,7 +18,6 @@ import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon.new_dungeon;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents.setupDataHolder;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
-import static org.bukkit.Bukkit.getLogger;
 
 public class DungeonContentManager {
 
@@ -39,9 +38,6 @@ public class DungeonContentManager {
                     chest.getInventory().addItem(a);
                 }
             }
-            getLogger().info("Chest at (" + location.getX() + ", " + location.getY() + ", " + location.getZ() + ") has been updated!");
-        } else {
-            getLogger().info("Chest no found at (" + location.getX() + ", " + location.getY() + ", " + location.getZ() + ")");
         }
     }
 

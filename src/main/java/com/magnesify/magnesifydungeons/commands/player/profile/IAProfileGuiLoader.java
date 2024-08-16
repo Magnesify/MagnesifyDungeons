@@ -1,5 +1,6 @@
 package com.magnesify.magnesifydungeons.commands.player.profile;
 
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.managers.StatsManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
@@ -32,7 +33,7 @@ public class IAProfileGuiLoader {
             loadItems(ent);
             inv.showInventory(ent);
         } else {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'settings.profile.custom-gui-texture' parametresinde ayarlı olan menü itemsadderda mevcut değil."));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.error.ia.profile")));
         }
     }
     public static String stats() {

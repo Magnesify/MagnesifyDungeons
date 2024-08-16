@@ -4,6 +4,7 @@ import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.types.challange.Challange;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,16 +43,16 @@ public class ChallangeGuiInteract implements Listener {
                                     }
                                     return;
                                 } else {
-                                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.boss-not-exists").replace("#name", ranks));
+                                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.boss-not-exists").replace("#name", ranks));
                                 }
                             } else {
-                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.full").replace("#countdown", String.valueOf(dungeon.countdown())).replace("#name", ranks));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.full").replace("#countdown", String.valueOf(dungeon.countdown())).replace("#name", ranks));
                             }
                         } else {
-                            dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.unknow-dungeon").replace("#name", ranks));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", ranks));
                         }
                     } else {
-                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.dungeon.already-in-dungeon").replace("#name", ranks));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.already-in-dungeon").replace("#name", ranks));
                     }
                 }
             }

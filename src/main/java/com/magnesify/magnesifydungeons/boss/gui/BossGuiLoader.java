@@ -1,6 +1,7 @@
 package com.magnesify.magnesifydungeons.boss.gui;
 
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -48,50 +49,50 @@ public class BossGuiLoader {
         DatabaseManager databaseManager = new DatabaseManager(get());
         ItemStack itemStack = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(parseHexColors(String.format("&fDüzenleniyor: <#4b8eff>&l%s", magnesifyBoss.name())));
+        meta.setDisplayName(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.name"),magnesifyBoss.name())));
         itemStack.setItemMeta(meta);
         inv.setItem(13, itemStack);
 
 
         ItemStack new_wep = new ItemStack(Material.WOODEN_SWORD);
         ItemMeta metanew_wep = new_wep.getItemMeta();
-        metanew_wep.setDisplayName(parseHexColors("&7Yeni Silah İle Birlikte Buraya Tıklayınız"));
+        metanew_wep.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.click-with-new-item")));
         new_wep.setItemMeta(metanew_wep);
         inv.setItem(15, new_wep);
 
         ItemStack new_wep_hel = new ItemStack(Material.LEATHER_HELMET);
         ItemMeta metanew_wep_hel = new_wep_hel.getItemMeta();
-        metanew_wep_hel.setDisplayName(parseHexColors("&7Yeni Kask İle Birlikte Buraya Tıklayınız"));
+        metanew_wep_hel.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.click-with-new-item")));
         new_wep_hel.setItemMeta(metanew_wep_hel);
         inv.setItem(16, new_wep_hel);
 
         ItemStack new_wep_ch = new ItemStack(Material.LEATHER_CHESTPLATE);
         ItemMeta metanew_wep_ch = new_wep_ch.getItemMeta();
-        metanew_wep_ch.setDisplayName(parseHexColors("&7Yeni Göğüslük İle Birlikte Buraya Tıklayınız"));
+        metanew_wep_ch.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.click-with-new-item")));
         new_wep_ch.setItemMeta(metanew_wep_ch);
         inv.setItem(25, new_wep_ch);
 
         ItemStack new_wep_ch_lg = new ItemStack(Material.LEATHER_LEGGINGS);
         ItemMeta metanew_wep_ch_lg = new_wep_ch_lg.getItemMeta();
-        metanew_wep_ch_lg.setDisplayName(parseHexColors("&7Yeni Ayaklıklar İle Birlikte Buraya Tıklayınız"));
+        metanew_wep_ch_lg.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.click-with-new-item")));
         new_wep_ch_lg.setItemMeta(metanew_wep_ch_lg);
         inv.setItem(34, new_wep_ch_lg);
 
         ItemStack new_wep_ch_lg_b = new ItemStack(Material.LEATHER_BOOTS);
         ItemMeta metanew_wep_ch_lg_b = new_wep_ch_lg_b.getItemMeta();
-        metanew_wep_ch_lg_b.setDisplayName(parseHexColors("&7Yeni Botlar İle Birlikte Buraya Tıklayınız"));
+        metanew_wep_ch_lg_b.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.click-with-new-item")));
         new_wep_ch_lg_b.setItemMeta(metanew_wep_ch_lg_b);
         inv.setItem(43, new_wep_ch_lg_b);
 
         ItemStack new_wep_ch_lg_b_d = new ItemStack(Material.EMERALD);
         ItemMeta metanew_wep_ch_lg_b_d = new_wep_ch_lg_b_d.getItemMeta();
-        metanew_wep_ch_lg_b_d.setDisplayName(parseHexColors("&eYaratığın Düşürdüğü Eşyaları Güncelle"));
+        metanew_wep_ch_lg_b_d.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.drops")));
         new_wep_ch_lg_b_d.setItemMeta(metanew_wep_ch_lg_b_d);
         inv.setItem(40, new_wep_ch_lg_b_d);
 
         ItemStack new_wep_ch_lg_b_d_s = new ItemStack(Material.REDSTONE_TORCH);
         ItemMeta metanew_wep_ch_lg_b_d_s = new_wep_ch_lg_b_d_s.getItemMeta();
-        metanew_wep_ch_lg_b_d_s.setDisplayName(parseHexColors("&eYaratık Ayarları"));
+        metanew_wep_ch_lg_b_d_s.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.settings")));
         new_wep_ch_lg_b_d_s.setItemMeta(metanew_wep_ch_lg_b_d_s);
         inv.setItem(31, new_wep_ch_lg_b_d_s);
 
@@ -150,16 +151,16 @@ public class BossGuiLoader {
 
         ItemStack info = new ItemStack(Material.ORANGE_STAINED_GLASS_PANE);
         ItemMeta infometa = info.getItemMeta();
-        infometa.setDisplayName(parseHexColors("<#4b8eff>&lDetaylar"));
+        infometa.setDisplayName(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.details")));
         List<String> sub_lore = new ArrayList<>();
         sub_lore.add(parseHexColors("&f"));
-        sub_lore.add(parseHexColors("&fYaratık canı: <#4b8eff>" + databaseManager.boss().getHealth(name)));
-        sub_lore.add(parseHexColors("&fYaratık adı: <#4b8eff>" + databaseManager.boss().getDisplay(name)));
-        sub_lore.add(parseHexColors("&fSaldırı hasarı: <#4b8eff>" + databaseManager.boss().getAttack(name)));
-        sub_lore.add(parseHexColors("&fSaldırı tepmesi: <#4b8eff>" + databaseManager.boss().getKnockback(name)));
-        sub_lore.add(parseHexColors("&fYaratık tipi: <#4b8eff>" + databaseManager.boss().getType(name)));
+        sub_lore.add(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.health"), databaseManager.boss().getHealth(name))));
+        sub_lore.add(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.boss-name"), databaseManager.boss().getDisplay(name))));
+        sub_lore.add(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.attack"), databaseManager.boss().getAttack(name))));
+        sub_lore.add(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.knockback"), databaseManager.boss().getKnockback(name))));
+        sub_lore.add(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.type"), databaseManager.boss().getType(name))));
         sub_lore.add(parseHexColors("&f"));
-        sub_lore.add(parseHexColors("&fDüşürdüğü eşyalar:"));
+        sub_lore.add(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.boss-gui.items")));
         for (String a : magnesifyBoss.drops()) {
             String[] split = a.split(":");
             sub_lore.add(parseHexColors("&f - &e" + split[1] + "x " + split[0]));

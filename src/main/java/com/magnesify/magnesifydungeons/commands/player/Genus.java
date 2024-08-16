@@ -3,6 +3,7 @@ package com.magnesify.magnesifydungeons.commands.player;
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiLoader;
 import com.magnesify.magnesifydungeons.genus.gui.IAGenusGuiLoader;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +25,7 @@ public class Genus implements CommandExecutor {
                 if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
                     IAGenusGuiLoader.openInventory(player);
                 } else {
-                    Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'settings.genus.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."));
+                    Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.error.ia.genus")));
                     GenusGuiLoader.openInventory(player);
                 }
             } else {

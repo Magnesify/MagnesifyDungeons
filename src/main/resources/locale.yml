@@ -1,0 +1,223 @@
+
+messages:
+  events:
+    joined:
+      - ''
+      - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fZindana giriş yaptın !'
+      - ' &fBossu &d#playtime &fsaniye içinde öldürmen gerek.'
+      - ' &fSonraki zindan seviyesi &d#next_level.'
+      - ' &fZindan kategorisi &d#category.'
+      - ' &fSavaş birazdan başlayacak...'
+      - ''
+      - '<#4f91fc>&lMagnesify Dungeons &8・ &fBoss Hakkında'
+      - ' &fBoss adı: &d#boss_name'
+      - ' &fCanı: &d#boss_health'
+      - ''
+  helps:
+    kits:
+      admin:
+        - ''
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fKitler'
+        - ' &b/Mgdk reload &f: market.yml dosyasını kaydeder.'
+        - ' &b/Mgdk &f: Kit menüsünü açar.'
+        - ''
+    boss:
+      - ''
+      - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fYaratık Oluşturma'
+      - ' &b/Mgdb create &f: Yeni yaratık oluşturur.'
+      - ' &b/Mgdb delete <yaratık> &f: Seçili yaratığı siler.'
+      - ' &b/Mgdb list &f: Yaratık listesini döndürür.'
+      - ' &b/Mgdb cancel &f: Yaratık oluşturmasını iptal et.'
+      - ''
+    player:
+      join:
+        - ''
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fEtkinlik Komutları'
+        - ' &b/join <zindan>&f: &7Seçilen zindana katılırsınız.'
+        - ' &b/join menu&f: &7Zindan kategorilerini gösterir.'
+        - ''
+    admin:
+      - ''
+      - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fYönetim Komutları'
+      - ' &b/Mgd reload &f: Eklentiyi yeniler.'
+      - ' &b/Mgd create &f: Yeni zindan oluşturur.'
+      - ' &b/Mgd point <give, take, reset, set> <oyuncu> <miktar> &f: Oyuncu hesabına puan ekler.'
+      - ' &b/Mgd join <Zindan> &f: Zindana direkt giriş yaparsınız (Sunucu geliştirme modunda iken kullanınız).'
+      - ' &b/Mgd update <point, name, boss, playtime, start time, level, next-level, category> <zindan> <Yeni Değer> &f: Mevcut zindanı günceller.'
+      - ' &b/Mgd delete <zindan> &f: Seçili zindanı siler.'
+      - ' &b/Mgd setmainspawn &f: Ana başlangıç bölgesini ayarlarsınız.'
+      - ' &b/Mgd cancel &f: Zindan oluşturmasını iptal et.'
+      - ''
+      - ' &b・ &fBoss yönetimi için: &d/Mgdb'
+      - ''
+    trigger-type-dungeon:
+      admin:
+        - ''
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fYönetim Komutları'
+        - ' &b/Mgdt setup <Zindan Adı> <Kategorisi> &f: Yeni zindan oluşturur.'
+        - ' &b/Mgdt join <Zindan> &f: Seçili zindana giriş yaparsın.'
+        - ' &b/Mgdt delete <zindan> &f: Seçili zindanı siler.'
+        - ''
+        - ' &b・ &fBoss yönetimi için: &d/Mgdb'
+        - ' &b・ &fSeviyeli zindan yönetimi için: &d/Mgd'
+        - ''
+  error:
+    title: "&c&lHATA"
+    wait: "&c#countdown &fsaniye beklemen gerek !"
+    not-your-genus-skill: '&fTürün bu özelliği kullanamaz !'
+    player-not-online: '#prefix Oyuncu aktif değil !'
+    select-spawn-first: '#prefix İlk önce bir başlangıç seçmelisin ! &d/Mgd setmainspawn'
+    cannot-created: '#prefix İşlem &d#name &fadında bir zindan oluşturulamadı, bilgiler başka bir zindana ait olabilirmi ?'
+    no-data-found: '#prefix Herhangi bir veri bulunamadı.'
+    not-whitelist-command: '#prefix zindanda iken bu komutu kullanamazsın !'
+  depends:
+    not-loaded: '#prefix #plugin aktif değil ya da yüklenirken bir sorun meydana gelmiş olabilir.'
+  countdown-warn:
+    title: '&c&lHIZLI OL'
+    subtitle: '&fGeriye sadece &c#remain &fsaniye kaldı !'
+  genus:
+    unknow-tool: '#prefix &d#name &fisminde bir eşya yok.'
+    added-skill-tool: '#prefix &d#name &ftürünün özel eşyası envanterine eklendi !'
+    selected:
+      title: '<#4f91fc>&lMagnesify Dungeons'
+      subtitle: '&fTürünü &e#genus &folarak seçtin !'
+  reload: '#prefix Eklenti <#4f91fc>#ms &fmilisaniye içerisinde başarıyla yenilendi.'
+  no-permission: '#prefix Bu işlem için yeterli yetkiye sahip değilsin.'
+  in-game-command: '#prefix Bu komutu konsoldan kullanamazsın.'
+  main-spawn-selected: '#prefix Ana başlangıç bölgesi ayarlandı.'
+  point:
+    player:
+      reset:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&fHesabın sıfırlandı !'
+      set:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&fPuanın &e#amount &folarak ayarlandı !'
+      taked:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&fHesabından &e#amount &fpuan kaldırıldı !'
+      gived:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&fHesabına &e#amount &fpuan eklendi !'
+    admin:
+      gived: '#prefix &e#player &fadlı oyuncuya &e#amount &fadet puan eklendi.'
+      reset: '#prefix &e#player &fadlı oyuncunun hesabı sıfırlandı.'
+      taked: '#prefix &e#player &fadlı oyuncudan &e#amount &fadet puan alındı.'
+      set: '#prefix &e#player &fadlı oyuncunun hesabı &e#amount &Folarak ayarlandı.'
+  market:
+    buy: '#prefix &fÜrün #product &e#price &fkarşılığında satın alındı'
+    not-enough-balance: '#prefix #product &fürününü satın almak için yeteri miktarda bütçen yok, gerekli olan: &e#price'
+  status:
+    lose:
+      chat: '#prefix Yaratık tarafından öldürüldün...'
+      title: '&c&lKAYBETTIN'
+      time-subtitle: '&fSana verilen sürede zindanı tamamlayamadın.'
+      subtitle: '&fYaratık tarafından öldürüldün...'
+    win:
+      chat: '#prefix Yaratığı öldürdün ! 3 saniye sonra başlangıca ışınlanacaksın. Sonraki zindana geçiş yapabilirsin...'
+      title: '&6&lKAZANDIN'
+      subtitle: '&fTebrikler #point puan hesabına eklendi !'
+  boss:
+    updated:
+      type: '#prefix &fYaratık tipi güncellendi...'
+    creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
+    created: '#prefix Yaratık oluşturuldu, yaratık adı &d#name, &fidsi &d#id.'
+    creation-progress-started: '#prefix Yaratık oluşturma işlemi başladı, &dlütfen bir yaratık adı belirtin&f. İşlemi iptal etmek için &d/Mgdb cancel'
+    deleted: '#prefix &d#name &fisimli yaratık silindi.'
+    unknow-boss: '#prefix &d#name &fisminde bir yaratık yok.'
+    no-progress-found: '#prefix Bir yaratık oluşturmuyorsun.'
+  update:
+    point: '#prefix &b#name &fadlı zindanın puanı değiştirildi, yeni değer: &e#value'
+    name: '#prefix &b#name &fadlı zindanın ismi değiştirildi, yeni değer: &e#value'
+    category: '#prefix &b#name &fadlı zindanın kategorisi değiştirildi, yeni değer: &e#value'
+    level: '#prefix &b#name &fadlı zindanın seviyesi değiştirildi, yeni değer: &e#value'
+    next-level: '#prefix &b#name &fadlı zindanın sonraki seviyesi değiştirildi, yeni değer: &e#value'
+    boss: '#prefix &b#name &fadlı zindanın yaratığı değiştirildi, yeni değer: &e#value'
+    play-time: '#prefix &b#name &fadlı zindanın oynama süresi değiştirildi, yeni değer: &e#value'
+    start-time: '#prefix &b#name &fadlı zindanın başlama süresi değiştirildi, yeni değer: &e#value'
+    spawn: '#prefix &b#name &fadlı zindanın başlangıcı değiştirildi, yeni değer: &e#value'
+  dungeon:
+    boss-not-exists: '#prefix Zindan aktif ancak zindanın içinde savaşacak boss henüz ayarlanmamış. Yoksa boss kaçtı mı ?'
+    not-in-dungeon: '#prefix Bir zindanda değilsin.'
+    not-next-level-dungeon: '#prefix Bu zindana şu an giriş yapamazsın, önceki seviyeleri tamamlaman gerek !'
+    leave-success: '#prefix Zindandan çıkış yaptın, korkak...'
+    not-first-level: '#prefix Bu zindanın seviyesi giriş seviyesi değil !'
+    full: '#prefix #name şu anda dolu, zindandaki oyuncunun görev bitimine &d#countdown &fsaniye var'
+    already-in-dungeon: '#prefix #name adlı zindana giriş yapamazsın, şu an zaten bir zindandasın !'
+    entering: '<#4f91fc>&l#countdown &fsaniye içinde zindana ışınlanıyorsun... İptal etmek için &d/#custom_commands[cancel]'
+    starting: '<#4f91fc>&l#countdown &fsaniye içinde savaş başlayacak... Çıkış yapmak için &d/#custom_commands[leave]'
+    playing: '&fBossu <#4f91fc>&l#countdown &fsaniye içinde öldürmen gerek ! Çıkış yapmak için &d/#custom_commands[leave]'
+    creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
+    created: '#prefix Zindan oluşturuldu, zindan adı &d#name, &fkategorisi &d#category.'
+    creation-progress-started: '#prefix Zindan oluşturma işlemi başladı, &dlütfen bir zindan adı belirtin&f. İşlemi iptal etmek için &d/Mgd cancel'
+    deleted: '#prefix &d#name &fisimli zindan silindi.'
+    unknow-dungeon: '#prefix &d#name &fisminde bir zindan yok.'
+    cancelled: '#prefix &fZindan oluşturma işlemi iptal edildi..'
+    no-progress-found: '#prefix Bir zindan oluşturmuyorsun.'
+    chest-mode:
+      disabled: '#prefix &fSandık düzenleme modu kapatıldı.'
+      enabled: '#prefix &fSandık düzenleme modu açıldı.'
+    last-level:
+      title: '&6&lSON SEVİYE'
+      subtitle: '&fBitişe çok yaklaştın !'
+    new-level:
+      title: '&6&lSONRAKİ SEVİYE'
+      subtitle: '&fTebrikler ! &d#level. &fseviyeye ulaştın !'
+    canceled:
+      must-be-number: '#prefix Girdiğin değer bir sayı olmalı.'
+    stats:
+      title: "<#4f91fc>&lMagnesify Dungeons &8・ &fSıralama"
+      sublines: " &f- &a#rank. &f#name"
+
+plugin:
+  spawn-not-exists: "<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?"
+  unknow-boss: "<#4f91fc>[Magnesify Dungeons] &f%s adında bir yaratık yok, hata oluşmaması adına Magnesify, Normal yaratığı doğuruyor..."
+  boss-gui:
+    name: "&a%s Düzenleniyor..."
+    click-with-new-item: '&7Yeni eşya ile birlikte buraya tıklayınız.'
+    drops: '&aYaratığın düşürdüğü eşyaları güncelle'
+    settings: '&aYaratık ayarları'
+    details: '&aDetaylar'
+    boss-name: '&fYaratık adı: &e%s'
+    health: '&fCan: &c%s'
+    knockback: '&fSaldırı Tepmesi: &a%s'
+    attack: '&fSaldırı hasarı: &a%s'
+    type: '&fTür: &a%s'
+    items: '&aYaratığın düşürdüğü eşyalar'
+  challange:
+    setup-subtitle: "<#4b8eff>Şu an Meydan Okuma modunda zindan oluşturuyorsun !"
+  developer: "<#4b8eff>Magnesify Dungeons&f, Hacı Mert Gökhan tarafından geliştirildi."
+  loaded: "<#4b8eff>[Magnesify Dungeons] &fEklenti %s ms`de yüklendi..."
+  data-not-found: "<#4b8eff>[Magnesify Dungeons] %s için bir veri bulunamadı, veri oluşturuluyor."
+  error:
+    ia:
+      genus:  "<#4b8eff>[Magnesify Dungeons] &f'settings.genus.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."
+      profile: "<#4b8eff>[Magnesify Dungeons] &f'settings.profile.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."
+  boss:
+    created: "<#4b8eff>[Magnesify Dungeons] &fBoss 'Magnesify' oluşturuldu..."
+  folder:
+    datas:
+      error: "<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü oluşturulurken bir sorun oluştu."
+      exists: "<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü zaten mevcut."
+      created: "<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü başarıyla oluşturuldu."
+    caches:
+      error: "<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü oluşturulurken bir sorun oluştu."
+      exists: "<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü zaten mevcut."
+      created: "<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü başarıyla oluşturuldu."
+  supports:
+    items-adder:
+      found: "<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'ItemsAdder' tespit edildi. Markete uyarlanıyor..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fItemsAdder bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."
+    papi:
+      found: "<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'PlaceHolderAPI' tespit edildi. Eklentiye uyarlanıyor..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fPlaceHolderAPI bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."
+    mythicmobs:
+      found: "<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'MythicMobs' tespit edildi. Eklentiye uyarlanıyor..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fMythicMobs bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."
+    vault:
+      economy: "<#4b8eff>[Magnesify Dungeons] &fBir ekonomi eklentisi bulunamadı, vault uyarlaması iptal ediliyor..."
+      found: "<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'Vault' tespit edildi. Markete uyarlanıyor..."
+      unload: "<#4b8eff>[Magnesify Dungeons] &fVault entegrasyonu iptal ediliyor..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fVault bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."
+  market:
+    info: "<#4b8eff>[Magnesify Dungeons] &fMarkette mevcut olarak <#4b8eff>%s&f adet ürün bulunuyor."

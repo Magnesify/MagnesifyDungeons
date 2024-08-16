@@ -1,8 +1,10 @@
 package com.magnesify.magnesifydungeons.genus;
 
+import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.GenusFile;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -111,7 +113,7 @@ public class DungeonGenus {
                 if (lastUseMap.containsKey(playerName)) {
                     long lastUseTime = lastUseMap.get(playerName);
                     if (currentTime - lastUseTime < time*1000) { // 30 saniye bekleme süresi
-                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.error.title"), get().getConfig().getString("settings.messages.error.wait").replace("#countdown", String.valueOf(currentTime - lastUseTime)));
+                        dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.wait").replace("#countdown", String.valueOf(currentTime - lastUseTime)));
                         return;
                     }
                 }
@@ -126,7 +128,7 @@ public class DungeonGenus {
                     }
                 }.runTaskLater(get(), 20*countdown);
             } else {
-                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.error.title"), get().getConfig().getString("settings.messages.error.not-your-genus-skill"));
+                dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.not-your-genus-skill"));
             }
         }
 
@@ -183,7 +185,7 @@ public class DungeonGenus {
                     }
                 }
             } else {
-                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.error.title"), get().getConfig().getString("settings.messages.error.not-your-genus-skill"));
+                dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.not-your-genus-skill"));
             }
         }
 

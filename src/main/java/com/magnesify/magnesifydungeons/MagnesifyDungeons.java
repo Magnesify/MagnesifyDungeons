@@ -25,6 +25,7 @@ import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
 import com.magnesify.magnesifydungeons.genus.events.PlayerGenusEvents;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiInteract;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.market.MarketManager;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import com.magnesify.magnesifydungeons.market.gui.MarketGuiInteract;
@@ -50,13 +51,16 @@ public final class MagnesifyDungeons extends JavaPlugin {
     private static MagnesifyDungeons instance;
     public synchronized static MagnesifyDungeons get() {return instance;}
     public void setInstance(MagnesifyDungeons magnesifyDungeons) {instance = magnesifyDungeons;}
-
+    public static String locale = "tr";
 
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         setInstance(this);
+        LanguageFile languageFile = new LanguageFile();
+        languageFile.createLanguage(locale);
         Options options = new Options(); options.reload();
+
         MarketFile marketFile = new MarketFile();
         marketFile.createKitsConfig();
         GenusFile genusFile = new GenusFile();
@@ -72,38 +76,38 @@ public final class MagnesifyDungeons extends JavaPlugin {
                     " / / / / / / /_/ / /_/ / / / /  __(__  ) / __/ /_/ / \n" +
                     "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
                     "                /____/                      /____/   \n" +
-                    "\n\n<#4b8eff>Magnesify Dungeons&f, Hacı Mert Gökhan tarafından geliştirildi."));
+                    "\n\n" + new LanguageFile().getLanguage(locale).getString("plugin.developer")));
             int a=0;
             for(int i = 1; i<=marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false).size() - 2;i++) {
                 a +=marketFile.getMarketConfig().getConfigurationSection("market." + i).getKeys(false).size();
             }
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fMarkette mevcut olarak <#4b8eff>" + a + "&f adet ürün bulunuyor."));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format( new LanguageFile().getLanguage(locale).getString("plugin.market.info"),a)));
             if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'ItemsAdder' tespit edildi. Markete uyarlanıyor..."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.items-adder.found")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fItemsAdder bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.items-adder.not-found")));
             }
             if(Bukkit.getPluginManager().getPlugin("Vault") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'Vault' tespit edildi. Markete uyarlanıyor..."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.vault.found")));
                 if (!setupEconomy() ) {
-                    Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fBir ekonomi eklentisi bulunamadı, vault uyarlaması iptal ediliyor..."));
+                    Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.vault.economy")));
                     setVault(false);
                     return;
                 } else {
                     setVault(true);
                 }
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fVault bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.vault.not-found")));
             }
             if(Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'MythicMobs' tespit edildi. Eklentiye uyarlanıyor..."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.mythicmobs.found")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fMythicMobs bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.mythicmobs.not-found")));
             }
             if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'PlaceholderAPI' tespit edildi. Eklentiye uyarlanıyor..."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.papi.found")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fPlaceholderAPI bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.papi.not-found")));
             }
         }
 
@@ -111,25 +115,24 @@ public final class MagnesifyDungeons extends JavaPlugin {
         File datasFolder = new File(dataFolder, "datas");
         if (!datasFolder.exists()) {
             if (datasFolder.mkdirs()) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü başarıyla oluşturuldu."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.datas.created")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü oluşturulurken bir sorun oluştu."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.datas.error")));
             }
         } else {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'datas' klasörü zaten mevcut."));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.datas.exists")));
         }
 
         File cachesFolder = new File(dataFolder, "caches");
         if (!cachesFolder.exists()) {
             if (cachesFolder.mkdirs()) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü başarıyla oluşturuldu."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.caches.created")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü oluşturulurken bir sorun oluştu."));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.caches.error")));
             }
         } else {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'caches' klasörü zaten mevcut."));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.caches.exists")));
         }
-
         JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
         JsonStorage cache = new JsonStorage(this.getDataFolder() + "/caches/player_dungeon_cache.json");
         JsonStorage players = new JsonStorage(this.getDataFolder() + "/datas/players.json");
@@ -183,18 +186,18 @@ public final class MagnesifyDungeons extends JavaPlugin {
 
         MagnesifyBoss create_boss = new MagnesifyBoss("Magnesify", "Magnesify");
         if(create_boss.create()) {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fBoss 'Magnesify' oluşturuldu..."));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.boss.created")));
         }
 
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(!Bukkit.getOnlinePlayers().isEmpty()) {
                 DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
                 dungeonPlayer.create();
-                if(options.get().getBoolean("options.send-new-data-log")) Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format("<#4b8eff>[Magnesify Dungeons] %s için bir veri bulunamadı, veri oluşturuluyor.", player.getUniqueId().toString())));
+                if(options.get().getBoolean("options.send-new-data-log")) Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage(locale).getString("plugin.data-not-found"), player.getUniqueId().toString())));
             }
         }
         long endTime = System.currentTimeMillis();
-        Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fEklenti " + String.valueOf(endTime-startTime) + " ms`de yüklendi..."));
+        Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format( new LanguageFile().getLanguage(locale).getString("plugin.loaded"),String.valueOf(endTime-startTime))));
 
         new BukkitRunnable() {
             @Override
@@ -203,14 +206,14 @@ public final class MagnesifyDungeons extends JavaPlugin {
                     if(creationSystemLevel.get(player.getUniqueId()) != null) {
                         DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
                         if(challange.get(player.getUniqueId()) != null) {
-                            dungeonPlayer.messageManager().stay("<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r", "<#4b8eff>Şu an Meydan Okuma modunda zindan oluşturuyorsun !");
+                            dungeonPlayer.messageManager().stay("<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r", new LanguageFile().getLanguage(locale).getString("plugin.challange.setup-subtitle"));
                         }
-                        dungeonPlayer.messageManager().actionbar(String.format("&fZindan Adı: <#4b8eff>%s " +
-                                "&b| &fKategori: <#4b8eff>%s " +
-                                "&b| &fBoss Kimliği: <#4b8eff>%s " +
-                                "&b| &fOynama Süresi: <#4b8eff>%s " +
-                                "&b| &fBekleme Süresi: <#4b8eff>%s " +
-                                "&b| &fSeviye: <#4b8eff>%s", data.get("Name") == null ? getConfig().getString("settings.holders.not-selected") : data.get("Name"),data.get("Category") == null ? getConfig().getString("settings.holders.not-selected") : data.get("Category"),data.get("BossID") == null ? getConfig().getString("settings.holders.not-selected") : data.get("BossID"),data.get("PT") == null ? getConfig().getString("settings.holders.not-selected") : data.get("PT"),data.get("ST") == null ? getConfig().getString("settings.holders.not-selected") : data.get("ST"),data.get("lvl") == null ? getConfig().getString("settings.holders.not-selected") : data.get("lvl")));
+                        dungeonPlayer.messageManager().actionbar(String.format("&f"+getConfig().getString("settings.holders.name")+": <#4b8eff>%s " +
+                                "&b| &f"+getConfig().getString("settings.holders.category")+": <#4b8eff>%s " +
+                                "&b| &f"+getConfig().getString("settings.holders.boss_id")+": <#4b8eff>%s " +
+                                "&b| &f"+getConfig().getString("settings.holders.play-time")+": <#4b8eff>%s " +
+                                "&b| &f"+getConfig().getString("settings.holders.start-time")+": <#4b8eff>%s " +
+                                "&b| &f"+getConfig().getString("settings.holders.level")+": <#4b8eff>%s", data.get("Name") == null ? getConfig().getString("settings.holders.not-selected") : data.get("Name"),data.get("Category") == null ? getConfig().getString("settings.holders.not-selected") : data.get("Category"),data.get("BossID") == null ? getConfig().getString("settings.holders.not-selected") : data.get("BossID"),data.get("PT") == null ? getConfig().getString("settings.holders.not-selected") : data.get("PT"),data.get("ST") == null ? getConfig().getString("settings.holders.not-selected") : data.get("ST"),data.get("lvl") == null ? getConfig().getString("settings.holders.not-selected") : data.get("lvl")));
                     }
                 }
             }

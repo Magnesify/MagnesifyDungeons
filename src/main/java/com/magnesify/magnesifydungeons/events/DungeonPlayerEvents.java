@@ -9,6 +9,7 @@ import com.magnesify.magnesifydungeons.files.Options;
 import com.magnesify.magnesifydungeons.genus.DungeonGenus;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiLoader;
 import com.magnesify.magnesifydungeons.genus.gui.IAGenusGuiLoader;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.Bukkit;
@@ -113,7 +114,7 @@ public class DungeonPlayerEvents implements Listener {
             for(String commands : get().getConfig().getStringList("settings.whitelist-commands")) {
                 if (!command.equalsIgnoreCase(commands)) {
                     event.setCancelled(true);
-                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.error.not-whitelist-command"));
+                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.not-whitelist-command"));
                 }
                 return;
             }

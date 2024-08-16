@@ -63,6 +63,7 @@ public class BossGuiInteract implements Listener {
                     if(event.getCursor() != null) {
                         ItemStack itemStack = new ItemStack(event.getCursor());
                         databaseManager.boss().setHelmetItem(boss_manager.get("boss"), itemStack.getType().toString());
+                        if(itemStack.getItemMeta() == null) return;
                         if(itemStack.getItemMeta().hasEnchants()) {
                             String encahnt = "";
                             for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
@@ -84,6 +85,7 @@ public class BossGuiInteract implements Listener {
                     if(event.getCursor() != null) {
                         ItemStack itemStack = new ItemStack(event.getCursor());
                         databaseManager.boss().setChestplateItem(boss_manager.get("boss"), itemStack.getType().toString());
+                        if(itemStack.getItemMeta() == null) return;
                         if(itemStack.getItemMeta().hasEnchants()) {
                             String encahnt = "";
                             for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
@@ -105,6 +107,7 @@ public class BossGuiInteract implements Listener {
                     if(event.getCursor() != null) {
                         ItemStack itemStack = new ItemStack(event.getCursor());
                         databaseManager.boss().setLeggingsItem(boss_manager.get("boss"), itemStack.getType().toString());
+                        if(itemStack.getItemMeta() == null) return;
                         if(itemStack.getItemMeta().hasEnchants()) {
                             String encahnt = "";
                             for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
@@ -126,6 +129,7 @@ public class BossGuiInteract implements Listener {
                     if(event.getCursor() != null) {
                         ItemStack itemStack = new ItemStack(event.getCursor());
                         databaseManager.boss().setBootsItem(boss_manager.get("boss"), itemStack.getType().toString());
+                        if(itemStack.getItemMeta() == null) return;
                         if(itemStack.getItemMeta().hasEnchants()) {
                             String encahnt = "";
                             for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
@@ -147,6 +151,7 @@ public class BossGuiInteract implements Listener {
                     if(event.getCursor() != null) {
                         ItemStack itemStack = new ItemStack(event.getCursor());
                         databaseManager.boss().setWeaponItem(boss_manager.get("boss"), itemStack.getType().toString());
+                        if(itemStack.getItemMeta() == null) return;
                         if(itemStack.getItemMeta().hasEnchants()) {
                             String encahnt = "";
                             for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {

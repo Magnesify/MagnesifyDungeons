@@ -2,6 +2,7 @@ package com.magnesify.magnesifydungeons.market.gui;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import com.magnesify.magnesifydungeons.modules.StringFunctionReader;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
@@ -60,7 +61,7 @@ public class MarketGuiInteract implements Listener {
                             if(Vault.getVault()) {
                                 if (Vault.getEconomy().getBalance(player) >= price) {
                                     Vault.getEconomy().withdrawPlayer(player, price);
-                                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.buy").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
+                                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.market.buy").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
                                     if(commands) {
                                         for(String cmds : marketFile.getMarketConfig().getStringList("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".commands")) {
                                             StringFunctionReader.RunFunction(player, cmds);
@@ -106,17 +107,17 @@ public class MarketGuiInteract implements Listener {
                                         }
                                     }
                                 } else {
-                                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.not-enough-balance").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
+                                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.market.not-enough-balance").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
                                 }
                             } else {
-                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.depends.not-loaded").replace("#plugin","Vault"));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.depends.not-loaded").replace("#plugin","Vault"));
                             }
                             return;
                         }
                         if (getProductType(ranks, player).equalsIgnoreCase("dungeon_point")) {
                             if (playerMethods.getPoints(player) >= price) {
                                 playerMethods.removePoint(player, price);
-                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.buy").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.market.buy").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
                                 if(commands) {
                                     for(String cmds : marketFile.getMarketConfig().getStringList("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".items." + items + ".commands")) {
                                         StringFunctionReader.RunFunction(player, cmds);
@@ -162,7 +163,7 @@ public class MarketGuiInteract implements Listener {
                                     }
                                 }
                             } else {
-                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.market.not-enough-balance").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.market.not-enough-balance").replace("#product", parseHexColors(marketFile.getMarketConfig().getString("market." + MarketGuiLoader.current_page.get(player.getUniqueId()) + ".products." + ranks + ".display"))).replace("#price", format(ranks, price,player)));
                             }
                             return;
                         }

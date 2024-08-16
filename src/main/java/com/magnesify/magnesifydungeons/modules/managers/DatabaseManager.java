@@ -47,6 +47,7 @@ public class DatabaseManager {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS trigger_type_dungeons (name TEXT, available BOOLEAN, current_player TEXT, category TEXT, current_level INTEGER DEFAULT 0,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, boss_id TEXT, play_time INTEGER DEFAULT 3, start_time INTEGER DEFAULT 5, point INTEGER DEFAULT 0, next_level INTEGER DEFAULT 0, type TEXT,checkpoint_amount INTEGER DEFAULT 1, enable TEXT DEFAULT 'Hayır', boss_world TEXT, boss_x DOUBLE, boss_y DOUBLE, boss_z DOUBLE, boss_yaw FLOAT, boss_pitch FLOAT, PRIMARY KEY(name, category))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS boss (name TEXT, id TEXT, mgid TEXT, uuid TEXT,helmet TEXT,chestplate TEXT,leggings TEXT,boots TEXT,weapon TEXT,damage DOUBLE DEFAULT 0.0, knockback DOUBLE DEFAULT 0.0,max_health DOUBLE DEFAULT 0.0, drops TEXT DEFAULT 'GOLDEN_APPLE', type TEXT DEFAULT 'ZOMBIE', display TEXT DEFAULT '&cMagnesify', PRIMARY KEY(name, mgid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS stats (name TEXT,uuid TEXT, kill INTEGER DEFAULT 0, death INTEGER DEFAULT 0, win INTEGER DEFAULT 0, lose INTEGER DEFAULT 0, played_match INTEGER DEFAULT 0, PRIMARY KEY(name, uuid))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS players (name TEXT,uuid TEXT, point INTEGER DEFAULT 0, in_dungeon BOOLEAN,last_boss TEXT, last_dungeon TEXT, done BOOLEAN, genus TEXT, PRIMARY KEY(name, uuid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS checkpoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT ,boss TEXT, PRIMARY KEY(connected_dungeon, checkpoint_queue))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS bosspoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT , PRIMARY KEY(connected_dungeon, checkpoint_queue))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeon_chests (connected_dungeon TEXT, id INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, PRIMARY KEY(connected_dungeon, id))");
@@ -81,6 +82,51 @@ public class DatabaseManager {
             throw new SQLException("DataSource is not initialized");
         }
         return dataSource.getConnection();
+    }
+
+    public Users users() {
+        return new Users();
+    }
+
+    public class Users {
+
+        public Users(){}
+
+        public Boolean isExists(String uuid) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM players WHERE uuid = ?")) {
+                statement.setString(1, uuid);
+                ResultSet resultSet = statement.executeQuery();
+                return resultSet.next();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        public CompletableFuture<Boolean> create(Player player) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("INSERT INTO players (name,uuid, point, in_dungeon,last_boss, last_dungeon, done, genus) VALUES (?, ?, ?, ?, ?, ?,?,?)")) {
+                    statement.setString(1, player.getName());
+                    statement.setString(2, player.getUniqueId().toString());
+                    statement.setInt(3, 0);
+                    statement.setBoolean(4, false);
+                    statement.setString(5, "Magnesify");
+                    statement.setString(6, "Magnesify");
+                    statement.setBoolean(7, false);
+                    statement.setString(8, "None");
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
     }
 
     public CompletableFuture<Boolean> CreateNewChest(String dungeon_name, Location location, int queue) {
@@ -1279,6 +1325,7 @@ public class DatabaseManager {
             }
             return null;
         }
+
         public String getLeggingsItem(String dungeon) {
             load();
             try (Connection connection = getConnection();
@@ -1391,6 +1438,23 @@ public class DatabaseManager {
             return CompletableFuture.supplyAsync(() -> {
                 try (Connection connection = getConnection();
                      PreparedStatement statement = connection.prepareStatement("UPDATE boss SET mgid = ? WHERE name = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+
+        public CompletableFuture<Boolean> setDrops(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET drops = ? WHERE name = ?")) {
                     statement.setString(1, bool);
                     statement.setString(2, dungeon);
                     return statement.executeUpdate() > 0;

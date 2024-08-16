@@ -2,8 +2,8 @@ package com.magnesify.magnesifydungeons.storage;
 
 import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
+import com.magnesify.magnesifydungeons.modules.managers.PlayerManager;
 import org.bukkit.entity.Player;
-import org.json.JSONObject;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 
@@ -19,26 +19,18 @@ public class PlayerMethods {
     public PlayerMethods(){}
 
     public void createPlayer() {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if(players.getValue("players." + player.getUniqueId().toString()) == null) {
+        PlayerManager playerManager = new PlayerManager(player);
+        if(playerManager.CreatePlayer()) {
             DatabaseManager databaseManager = new DatabaseManager(get());
             databaseManager.CreateNewStats(player);
-            JSONObject players_config = new JSONObject();
-            players_config.put("players." + player.getUniqueId().toString() + ".name", player.getName());
-            players_config.put("players." + player.getUniqueId().toString() + ".point", 0);
-            players_config.put("players." + player.getUniqueId().toString() + ".kill", 0);
-            players_config.put("players." + player.getUniqueId().toString() + ".death", 0);
-            players_config.put("players." + player.getUniqueId().toString() + ".last_dungeon", "Yok");
-            players_config.put("players." + player.getUniqueId().toString() + ".last_boss", "Yok");
-            players_config.put("players." + player.getUniqueId().toString() + ".in_dungeon", false);
-            players_config.put("players." + player.getUniqueId().toString() + ".done", false);
-            players.writeData(players_config);
         }
     }
 
+    // Burada kaldın, Oyuncuları SQLite a taşıyorsun.
+
     public boolean playerExists(Player player) {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return players.getValue("players." + player.getUniqueId().toString()) != null;
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().isExists(player.getUniqueId().toString());
     }
     public boolean inDungeon(Player player) {
         JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");

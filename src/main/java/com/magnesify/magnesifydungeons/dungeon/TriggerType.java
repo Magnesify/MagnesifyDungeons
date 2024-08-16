@@ -1,8 +1,10 @@
 package com.magnesify.magnesifydungeons.dungeon;
 
+import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.managers.DungeonContentManager;
@@ -18,6 +20,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
+import static com.magnesify.magnesifydungeons.MagnesifyDungeons.locale;
+import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 
 public class TriggerType {
     private HashMap<String, Integer> countdownTime = new HashMap<>();
@@ -59,6 +63,7 @@ public class TriggerType {
         PlayerMethods playerMethods = new PlayerMethods(player);
         if (!playerMethods.inDungeon(player)) {
             playerMethods.updateLastDungeon(player, dungeon);
+            playerMethods.updateLastBoss(player, parameters(dungeon).boss());
             playerMethods.updateDungeonStatus(player, true);
             inGameHashMap.put(player.getUniqueId(), true);
             playerMethods.setDone(player, false);
@@ -94,7 +99,7 @@ public class TriggerType {
                             player.teleport(loc);
                         } else {
                             DungeonConsole dungeonConsole = new DungeonConsole();
-                            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?");
+                            dungeonConsole.ConsoleOutputManager().write( new LanguageFile().getLanguage(locale).getString("plugin.spawn-not-exists"));
                         }
                     }
                 } else {
@@ -198,14 +203,14 @@ public class TriggerType {
                         int remainingTime = countdowns.get(playerId);
                         if (remainingTime > 0) {
                             countdowns.put(playerId, remainingTime - 1); // Geri sayım süresini azaltma
-                            dungeonPlayer.messageManager().actionbar(get().getConfig().getString("settings.messages.dungeon.entering").replace("#custom_commands[cancel]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
+                            dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.entering").replace("#custom_commands[cancel]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
                             player.playSound(player.getLocation(), Sound.valueOf(get().getConfig().getString("settings.sounds.entering")), 3.0F, 0.5F);
                         } else {
                             player.teleport(location(parameters(dungeon).name()));
                             level.put(playerId, 1);
                             countdowns.remove(playerId);
                             this.cancel();
-                            start(player, parameters(dungeon).boss(), boss_location(parameters(dungeon).name()), dungeon);
+                            start(player, parameters(dungeon).boss(), dungeon);
                         }
                     } else {
                         this.cancel();
@@ -214,7 +219,7 @@ public class TriggerType {
             }.runTaskTimer(get(), 0, 20);
         }
 
-        public void start(Player player, String boss, Location location, String dungeon) {
+        public void start(Player player, String boss, String dungeon) {
             countdowns.put(player.getUniqueId(), parameters(dungeon).start());
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
             new BukkitRunnable() {
@@ -225,7 +230,7 @@ public class TriggerType {
                         int remainingTime = countdowns.get(playerId);
                         if (remainingTime > 0) {
                             countdowns.put(playerId, remainingTime - 1); // Geri sayım süresini azaltma
-                            dungeonPlayer.messageManager().actionbar(get().getConfig().getString("settings.messages.dungeon.starting").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
+                            dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.starting").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
                             player.playSound(player.getLocation(), Sound.valueOf(get().getConfig().getString("settings.sounds.starting")), 3.0F, 0.5F);
                         } else {
                             countdowns.remove(playerId);
@@ -236,6 +241,7 @@ public class TriggerType {
                             if(magnesifyBoss.exists()) {
                                 magnesifyBoss.spawn(bosspoints(dungeon, 1), player);
                             } else {
+                                Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.unknow-boss"),boss)));
                                 MagnesifyBoss magnesify = new MagnesifyBoss("Magnesify");
                                 magnesify.spawn(bosspoints(dungeon, 1), player);
                             }
@@ -264,11 +270,11 @@ public class TriggerType {
                             if (remainingTime > 0) {
                                 countdownTime.put(name, countTime-1);
                                 countdowns.put(playerId, remainingTime - 1);
-                                dungeonPlayer.messageManager().actionbar(get().getConfig().getString("settings.messages.dungeon.playing").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.leave")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
+                                dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.playing").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.leave")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
                                 for(String warn : get().getConfig().getConfigurationSection("settings.countdown-warnings").getKeys(false)) {
                                     int warn_at = get().getConfig().getInt("settings.countdown-warnings." + warn + ".warn-at");
                                     if(remainingTime == warn_at) {
-                                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.countdown-warn.title"), get().getConfig().getString("settings.messages.countdown-warn.subtitle").replace("#remain", String.valueOf(remainingTime)));
+                                        dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.countdown-warn.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.countdown-warn.subtitle").replace("#remain", String.valueOf(remainingTime)));
                                         return;
                                     }
                                 }
@@ -279,7 +285,7 @@ public class TriggerType {
                                 String last_dungeon= get().getPlayers().getLastBoss(player);
                                 MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
                                 magnesifyBoss.killBoss();
-                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.time-subtitle"));
+                                dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.lose.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.lose.time-subtitle"));
                                 get().getPlayers().updateDungeonStatus(player, false);
                                 countdowns.remove(playerId);
                                 countdownTime.remove(name);

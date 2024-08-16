@@ -7,6 +7,7 @@ import com.magnesify.magnesifydungeons.dungeon.TriggerType;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.genus.DungeonGenus;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.managers.StatsManager;
@@ -35,6 +36,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
+import static com.magnesify.magnesifydungeons.MagnesifyDungeons.locale;
 import static com.magnesify.magnesifydungeons.dungeon.TriggerType.level;
 
 public class MythicMobDeathEvent implements Listener {
@@ -85,7 +87,7 @@ public class MythicMobDeathEvent implements Listener {
                             player.teleport(loc);
                         } else {
                             DungeonConsole dungeonConsole = new DungeonConsole();
-                            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?");
+                            dungeonConsole.ConsoleOutputManager().write( new LanguageFile().getLanguage(locale).getString("plugin.spawn-not-exists"));
                         }
                     }
                 } else {
@@ -294,7 +296,7 @@ public class MythicMobDeathEvent implements Listener {
                                                 next_boss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                                             } else {
                                                 DungeonConsole dungeonConsole = new DungeonConsole();
-                                                dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &f" + next_boss.name() + " adında bir yaratık yok, hata oluşmaması adına Magnesify, Normal yaratığı doğuruyor...");
+                                                dungeonConsole.ConsoleOutputManager().write(String.format(new LanguageFile().getLanguage("tr").getString("plugin.unknow-boss"),next_boss.name()));
                                                 MagnesifyBoss spawnDefaultboss = new MagnesifyBoss("Magnesify");
                                                 spawnDefaultboss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                                             }
@@ -362,7 +364,7 @@ public class MythicMobDeathEvent implements Listener {
                                         next_boss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                                     } else {
                                         DungeonConsole dungeonConsole = new DungeonConsole();
-                                        dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &f" + next_boss.name() + " adında bir yaratık yok, hata oluşmaması adına Magnesify, Normal yaratığı doğuruyor...");
+                                        dungeonConsole.ConsoleOutputManager().write(String.format(new LanguageFile().getLanguage("tr").getString("plugin.unknow-boss"),next_boss.name()));
                                         MagnesifyBoss spawnDefaultboss = new MagnesifyBoss("Magnesify");
                                         spawnDefaultboss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                                     }
@@ -429,7 +431,7 @@ public class MythicMobDeathEvent implements Listener {
                                     next_boss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                                 } else {
                                     DungeonConsole dungeonConsole = new DungeonConsole();
-                                    dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &f" + next_boss.name() + " adında bir yaratık yok, hata oluşmaması adına Magnesify, Normal yaratığı doğuruyor...");
+                                    dungeonConsole.ConsoleOutputManager().write(String.format(new LanguageFile().getLanguage("tr").getString("plugin.unknow-boss"),next_boss.name()));
                                     MagnesifyBoss spawnDefaultboss = new MagnesifyBoss("Magnesify");
                                     spawnDefaultboss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                                 }

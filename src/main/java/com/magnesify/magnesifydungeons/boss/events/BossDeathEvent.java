@@ -7,6 +7,7 @@ import com.magnesify.magnesifydungeons.dungeon.TriggerType;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.genus.DungeonGenus;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.managers.StatsManager;
@@ -142,8 +143,8 @@ public class BossDeathEvent implements Listener {
                     playerMethods.setDone(entity, true);
                     triggerType.events().stop(entity);
                 }
-                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.lose.chat"));
-                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.lose.chat"));
+                dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.lose.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.lose.subtitle"));
             }
         }
     }
@@ -182,8 +183,8 @@ public class BossDeathEvent implements Listener {
                         statsManager.updateMatch(killer.getUniqueId().toString(), 1);
                         statsManager.updateKill(killer.getUniqueId().toString(), 1);
                         dungeonPlayer.updateCurrentLevelForDungeon(dungeon.parameters().name(), dungeon.parameters().next());
-                        dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.status.win.chat"));
-                        dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.win.chat"));
+                        dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.win.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));
                     } else {
                         entity.remove();
                         event.getDrops().clear();
@@ -211,7 +212,7 @@ public class BossDeathEvent implements Listener {
                                 MagnesifyBoss spawnDefaultboss = new MagnesifyBoss("Magnesify");
                                 spawnDefaultboss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                             }
-                            dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.dungeon.new-level.title"), get().getConfig().getString("settings.messages.dungeon.new-level.subtitle").replace("#level", String.valueOf(level.get(killer.getUniqueId()))));
+                            dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.new-level.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.new-level.subtitle").replace("#level", String.valueOf(level.get(killer.getUniqueId()))));
                         } else {
                             sendspawn(killer);
                             statsManager.updateMatch(killer.getUniqueId().toString(), 1);
@@ -219,7 +220,7 @@ public class BossDeathEvent implements Listener {
                             triggerType.leave(killer, get().getPlayers().getLastDungeon(killer));
                             get().getPlayers().updatePoint(killer, triggerType.point(get().getPlayers().getLastDungeon(killer)));
                             get().getPlayers().updateDungeonStatus(killer, false);
-                            dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(triggerType.parameters(get().getPlayers().getLastDungeon(killer)).point())));
+                            dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.win.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.win.subtitle").replace("#point", String.valueOf(triggerType.parameters(get().getPlayers().getLastDungeon(killer)).point())));
                         }
                     }
                 }
