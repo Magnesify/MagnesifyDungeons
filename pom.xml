@@ -87,6 +87,12 @@
           <version>20231013</version>
       </dependency>
       <dependency>
+          <groupId>com.github.MilkBowl</groupId>
+          <artifactId>VaultAPI</artifactId>
+          <version>1.7</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
           <version>5.1.0</version>

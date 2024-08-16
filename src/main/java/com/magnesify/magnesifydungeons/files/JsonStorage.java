@@ -1,6 +1,5 @@
 package com.magnesify.magnesifydungeons.files;
 
-import org.bukkit.Bukkit;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -9,8 +8,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-
-import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 
 public class JsonStorage {
 
@@ -21,6 +18,9 @@ public class JsonStorage {
         try {
             if (!file.exists()) {
                 file.createNewFile();
+                JSONObject players_config = new JSONObject();
+                players_config.put("json_config_version", "1");
+                createJsonFile(players_config);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,9 +4,11 @@ import com.magnesify.magnesifydungeons.boss.BossManager;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.boss.events.BossCreateEvent;
 import com.magnesify.magnesifydungeons.boss.events.BossDeathEvent;
+import com.magnesify.magnesifydungeons.boss.gui.BossGuiInteract;
+import com.magnesify.magnesifydungeons.boss.gui.drops.DropsGuiInteract;
 import com.magnesify.magnesifydungeons.commands.Administrator;
-import com.magnesify.magnesifydungeons.commands.player.Stats;
 import com.magnesify.magnesifydungeons.commands.player.Profile;
+import com.magnesify.magnesifydungeons.commands.player.Stats;
 import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.options.SendMessage;
@@ -40,6 +42,8 @@ import static com.magnesify.magnesifydungeons.commands.Administrator.challange;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.data;
+import static com.magnesify.magnesifydungeons.support.Vault.setVault;
+import static com.magnesify.magnesifydungeons.support.Vault.setupEconomy;
 
 public final class MagnesifyDungeons extends JavaPlugin {
     private DatabaseManager dbManager;
@@ -81,6 +85,13 @@ public final class MagnesifyDungeons extends JavaPlugin {
             }
             if(Bukkit.getPluginManager().getPlugin("Vault") != null) {
                 Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fDesteklenen eklenti 'Vault' tespit edildi. Markete uyarlanıyor..."));
+                if (!setupEconomy() ) {
+                    Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fBir ekonomi eklentisi bulunamadı, vault uyarlaması iptal ediliyor..."));
+                    setVault(false);
+                    return;
+                } else {
+                    setVault(true);
+                }
             } else {
                 Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fVault bulunamadı, bu eklenti için uyarlama işlemi atlanıyor."));
             }
@@ -127,9 +138,9 @@ public final class MagnesifyDungeons extends JavaPlugin {
 
         JSONObject players_config = new JSONObject();
         players_config.put("json_config_version", "1");
-        players.createJsonFile(players_config);
-        stats.createJsonFile(players_config);
-        cache.createJsonFile(players_config);
+        players.writeData(players_config);
+        stats.writeData(players_config);
+        cache.writeData(players_config);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("spawn.world", "world");
@@ -138,7 +149,8 @@ public final class MagnesifyDungeons extends JavaPlugin {
         jsonObject.put("spawn.z", 0);
         jsonObject.put("spawn.pitch", 0);
         jsonObject.put("spawn.yaw", 0);
-        jsonStorage.createJsonFile(jsonObject);
+        jsonStorage.writeData(jsonObject);
+
         dbManager = new DatabaseManager(this);
         dbManager.initialize();
 
@@ -161,6 +173,8 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ProfileGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallangeGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new BossGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new DropsGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerGenusEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new MarketGuiInteract(this), this);

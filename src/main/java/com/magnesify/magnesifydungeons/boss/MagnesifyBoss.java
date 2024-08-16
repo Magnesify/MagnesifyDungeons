@@ -129,7 +129,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getChestplateEnchants(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    chestplatemeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 chestplate.setItemMeta(chestplatemeta);
 
@@ -138,7 +138,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getLeggingsEnchant(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    leggingsmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 leggings.setItemMeta(leggingsmeta);
 
@@ -147,7 +147,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getBootsEnchant(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    bootsmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 boots.setItemMeta(bootsmeta);
 
@@ -157,7 +157,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getWeaponEnchant(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmetmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    weaponmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
 
                 weapon.setItemMeta(weaponmeta);
@@ -199,7 +199,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getChestplateEnchants(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmet_pmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    chestplate_pmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 chestplate_p.setItemMeta(chestplate_pmeta);
 
@@ -208,7 +208,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getLeggingsEnchant(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmet_pmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    leggings_pmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 leggings_p.setItemMeta(leggings_pmeta);
 
@@ -217,7 +217,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getBootsEnchant(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmet_pmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    boots_pmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
                 boots_p.setItemMeta(boots_pmeta);
 
@@ -227,7 +227,7 @@ public class MagnesifyBoss {
                 for(String a : databaseManager.boss().getWeaponEnchant(name)) {
                     String[] split = a.split(":");
                     NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                    helmet_pmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    weaponpmeta.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
                 }
 
                 weaponp.setItemMeta(weaponpmeta);

@@ -18,6 +18,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -40,7 +43,7 @@ public class DungeonPlayerEvents implements Listener {
                 event.getPlayer().setGameMode(GameMode.SURVIVAL);
             }
         }
-        if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
+        if (Bukkit.getWorld(defaults.MainSpawn().world() == null ? "world" : defaults.MainSpawn().world() ) != null) {
             Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
             event.getPlayer().teleport(loc);
         } else {
@@ -81,6 +84,41 @@ public class DungeonPlayerEvents implements Listener {
         }
     }
 
+    @EventHandler
+    public void bbreak(BlockBreakEvent event) {
+        DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
+        if(dungeonPlayer.inDungeon()) {
+            if(!event.getPlayer().isOp() || !event.getPlayer().hasPermission("mgd.bypass")) {
+                event.setCancelled(true);
+
+            }
+        }
+    }
+
+    @EventHandler
+    public void bplace(BlockPlaceEvent event) {
+        DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
+        if(dungeonPlayer.inDungeon()) {
+            if(!event.getPlayer().isOp() || !event.getPlayer().hasPermission("mgd.bypass")) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+        String command = event.getMessage().substring(1).split(" ")[0];
+        DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
+        if(dungeonPlayer.inDungeon()) {
+            for(String commands : get().getConfig().getStringList("settings.whitelist-commands")) {
+                if (!command.equalsIgnoreCase(commands)) {
+                    event.setCancelled(true);
+                    dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.error.not-whitelist-command"));
+                }
+                return;
+            }
+        }
+    }
     public void killEntity(String lastBoss) {
         for (Entity entity : Bukkit.getWorld(get().getConfig().getString("settings.defaults.dungeon-world")).getEntities()) {
             if (entity instanceof Zombie) {

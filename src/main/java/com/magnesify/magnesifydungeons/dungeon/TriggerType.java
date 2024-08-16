@@ -276,10 +276,10 @@ public class TriggerType {
                                 leave(player, dungeon);
                                 PlayerMethods playerMethods = new PlayerMethods(player);
                                 playerMethods.updateDungeonStatus(player, false);
-                                String last_dungeon= get().getPlayers().getLastDungeon(player);
+                                String last_dungeon= get().getPlayers().getLastBoss(player);
                                 MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
                                 magnesifyBoss.killBoss();
-                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.subtitle"));
+                                dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.lose.title"), get().getConfig().getString("settings.messages.status.lose.time-subtitle"));
                                 get().getPlayers().updateDungeonStatus(player, false);
                                 countdowns.remove(playerId);
                                 countdownTime.remove(name);

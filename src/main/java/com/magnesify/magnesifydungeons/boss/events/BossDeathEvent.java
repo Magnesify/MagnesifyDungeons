@@ -168,7 +168,6 @@ public class BossDeathEvent implements Listener {
                         dungeon.events().stop(killer);
                         get().getPlayers().updateDungeonStatus(killer, false);
                         get().getPlayers().updatePoint(killer, dungeon.point());
-                        get().getPlayers().updateKill(killer, 1);
                         event.getDrops().clear();
                         MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss_name);
                         for (String a : magnesifyBoss.drops()) {
@@ -187,7 +186,6 @@ public class BossDeathEvent implements Listener {
                         dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(dungeon.parameters().point())));
                     } else {
                         entity.remove();
-                        get().getPlayers().updateKill(killer, 1);
                         event.getDrops().clear();
                         MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss_name);
                         for (String a : magnesifyBoss.drops()) {
@@ -209,6 +207,7 @@ public class BossDeathEvent implements Listener {
                             } else {
                                 DungeonConsole dungeonConsole = new DungeonConsole();
                                 dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &f" + next_boss.name() + " adında bir yaratık yok, hata oluşmaması adına Magnesify, Normal yaratığı doğuruyor...");
+                                playerMethods.updateLastBoss(killer, "Magnesify");
                                 MagnesifyBoss spawnDefaultboss = new MagnesifyBoss("Magnesify");
                                 spawnDefaultboss.spawn(databaseManager.TriggerTypeDungeons().getBosspointsLocation(get().getPlayers().getLastDungeon(killer), level.get(killer.getUniqueId())), killer);
                             }
@@ -218,6 +217,7 @@ public class BossDeathEvent implements Listener {
                             statsManager.updateMatch(killer.getUniqueId().toString(), 1);
                             TriggerType triggerType = new TriggerType(killer);
                             triggerType.leave(killer, get().getPlayers().getLastDungeon(killer));
+                            get().getPlayers().updatePoint(killer, triggerType.point(get().getPlayers().getLastDungeon(killer)));
                             get().getPlayers().updateDungeonStatus(killer, false);
                             dungeonPlayer.messageManager().title(get().getConfig().getString("settings.messages.status.win.title"), get().getConfig().getString("settings.messages.status.win.subtitle").replace("#point", String.valueOf(triggerType.parameters(get().getPlayers().getLastDungeon(killer)).point())));
                         }

@@ -852,6 +852,23 @@ public class DatabaseManager {
             return "Yok";
         }
 
+        public String getHelmet(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT helmet FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("helmet");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
         public String getHelmetItem(String dungeon) {
             load();
             try (Connection connection = getConnection();
@@ -869,6 +886,238 @@ public class DatabaseManager {
             }
             return "Yok";
         }
+
+
+
+        public CompletableFuture<Boolean> setHelmetEnchants(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET helmet = ? WHERE name = ?")) {
+                    statement.setString(1, getHelmetItem(dungeon) + "/" + bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public String getChestplate(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT chestplate FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("chestplate");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public CompletableFuture<Boolean> setChestplateItem(String dungeon, String bool) {
+            load();
+            String[] a = getChestplate(dungeon).split("/");
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET chestplate = ? WHERE name = ?")) {
+                    statement.setString(1, bool + "/" + a[1]);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public CompletableFuture<Boolean> setChestplateEnchants(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET chestplate = ? WHERE name = ?")) {
+                    statement.setString(1, getChestplateItem(dungeon) + "/" + bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public CompletableFuture<Boolean> setWeaponEnchant(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET weapon = ? WHERE name = ?")) {
+                    statement.setString(1, getWeaponsItem(dungeon) + "/" + bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> setLeggingsEnchant(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET leggings = ? WHERE name = ?")) {
+                    statement.setString(1, getLeggingsItem(dungeon) + "/" + bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> setBootsEnchant(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET boots = ? WHERE name = ?")) {
+                    statement.setString(1, getBootsItem(dungeon) + "/" + bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public String getLeggings(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT leggings FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("leggings");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public CompletableFuture<Boolean> setLeggingsItem(String dungeon, String bool) {
+            load();
+            String[] a = getLeggings(dungeon).split("/");
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET leggings = ? WHERE name = ?")) {
+                    statement.setString(1, bool + "/" + a[1]);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public String getBoots(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT boots FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("boots");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public CompletableFuture<Boolean> setBootsItem(String dungeon, String bool) {
+            load();
+            String[] a = getBoots(dungeon).split("/");
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET boots = ? WHERE name = ?")) {
+                    statement.setString(1, bool + "/" + a[1]);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public String getWeapon(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT weapon FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("weapon");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public CompletableFuture<Boolean> setWeaponItem(String dungeon, String bool) {
+            load();
+            String[] a = getWeapon(dungeon).split("/");
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET weapon = ? WHERE name = ?")) {
+                    statement.setString(1, bool + "/" + a[1]);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> setHelmetItem(String dungeon, String bool) {
+            load();
+            String[] a = getHelmet(dungeon).split("/");
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET helmet = ? WHERE name = ?")) {
+                    statement.setString(1, bool + "/" + a[1]);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
 
         public List<String> getHelmetEnchants(String dungeon) {
             load();
@@ -1167,6 +1416,7 @@ public class DatabaseManager {
                 return false;
             });
         }
+
 
 
 

@@ -9,16 +9,14 @@ format:
 market:
   next:
     display: '&aSonraki sayfa'
-    material: IRON_AXE
-    custom-material: _iainternal:icon_right_blue
+    material: LIME_DYE
     slot: 53
     lore:
       - ''
       - '&7Sonraki sayfaya geçiş yap.'
   prev:
     display: '&cÖnceki sayfa'
-    material: IRON_AXE
-    custom-material: _iainternal:icon_left_blue
+    material: RED_DYE
     slot: 45
     lore:
       - ''

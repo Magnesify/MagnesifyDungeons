@@ -102,7 +102,7 @@ public class MarketGuiLoader {
             } else {itemStack = new ItemStack(Material.PAPER);}
             ItemMeta meta = itemStack.getItemMeta();
             if(is_lore_set) {
-                List<String> main_lores = marketFile.getMarketConfig().getStringList("market."+current_page.get(player.getUniqueId())+"products." + ranks + ".lore");
+                List<String> main_lores = marketFile.getMarketConfig().getStringList("market."+current_page.get(player.getUniqueId())+".products." + ranks + ".lore");
                 List<String> sub_lore = new ArrayList<>();
                 for(int a = 0; a<main_lores.size();a++) {
                     sub_lore.add(parseHexColors(main_lores.get(a).replace("#price", format(ranks,marketFile.getMarketConfig().getDouble("market."+current_page.get(player.getUniqueId())+".products." + ranks + ".price.value"),player))));

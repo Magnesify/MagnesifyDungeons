@@ -31,6 +31,9 @@ import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.data;
+import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
+import static com.magnesify.magnesifydungeons.support.Vault.setVault;
+import static com.magnesify.magnesifydungeons.support.Vault.setupEconomy;
 
 public class Administrator implements Arguments, CommandExecutor, TabCompleter {
     public Administrator(MagnesifyDungeons magnesifyDungeons) {}
@@ -226,6 +229,29 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                         }
                     } else {
                         dungeonEntity.EntityChatManager().send(get().getConfig().getString("settings.messages.in-game-command"));
+                    }
+                }else if (strings[0].equalsIgnoreCase("hook")) {
+                    if(strings[1].equalsIgnoreCase("Vault")) {
+                        if (!setupEconomy() ) {
+                            dungeonEntity.EntityChatManager().send(parseHexColors(TEXT_PREFIX + " &fBir ekonomi eklentisi bulunamadı, vault uyarlaması iptal ediliyor..."));
+                            setVault(false);
+                        } else {
+                            dungeonEntity.EntityChatManager().send(parseHexColors(TEXT_PREFIX + " &fVault başarıyla yüklendi..."));
+                            setVault(true);
+                        }
+                    } else {
+                        help(commandSender);
+                    }
+                }else if (strings[0].equalsIgnoreCase("unload")) {
+                    if(strings[1].equalsIgnoreCase("Vault")) {
+                        if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+                            dungeonEntity.EntityChatManager().send(parseHexColors(TEXT_PREFIX + " &fVault entegrasyonu iptal ediliyor..."));
+                            setVault(false);
+                        } else {
+                            dungeonEntity.EntityChatManager().send(parseHexColors(TEXT_PREFIX + " &fVault sunucuda mevcut değil."));
+                        }
+                    } else {
+                        help(commandSender);
                     }
                 }else if (strings[0].equalsIgnoreCase("join")) {
                     if (commandSender instanceof Player) {
@@ -436,7 +462,10 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             commands.add("cancel");
             commands.add("reload");
             commands.add("point");
+            commands.add("hook");
+            commands.add("unload");
             commands.add("create");
+            commands.add("devmode");
             commands.add("challange");
             commands.add("genus-tools");
             commands.add("genus-gui");
@@ -459,6 +488,10 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             }
             if (args[0].equalsIgnoreCase("genus-tools")) {
                 commands.add("GHOST");
+                StringUtil.copyPartialMatches(args[1], commands, completions);
+            }
+            if (args[0].equalsIgnoreCase("hook")) {
+                commands.add("Vault");
                 StringUtil.copyPartialMatches(args[1], commands, completions);
             }
             if (args[0].equalsIgnoreCase("point")) {

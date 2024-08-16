@@ -1,6 +1,7 @@
 package com.magnesify.magnesifydungeons.boss;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
+import com.magnesify.magnesifydungeons.boss.gui.BossGuiLoader;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
@@ -14,12 +15,14 @@ import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.boss.events.BossCreateEvent.bossSystemLevel;
 
 public class BossManager implements CommandExecutor, TabCompleter {
+    public static HashMap<String, String> boss_manager = new HashMap<>();
 
     public BossManager(MagnesifyDungeons magnesifyDungeons) {}
 
@@ -64,11 +67,29 @@ public class BossManager implements CommandExecutor, TabCompleter {
                 } else if (strings.length == 2) {
                     if (strings[0].equalsIgnoreCase("delete")) {
                         String name = strings[1];
-                        if(databaseManager.isBossAvailable(name)) {
+                        if (databaseManager.isBossAvailable(name)) {
                             databaseManager.boss().delete(name);
                             dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.boss.deleted"));
                         } else {
                             dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.boss.unknow-boss"));
+                        }
+                    } else {
+                        help(commandSender);
+                    }
+                } else if (strings.length == 3) {
+                    if (strings[0].equalsIgnoreCase("update")) {
+                        if (strings[1].equalsIgnoreCase("tools")) {
+                            String name = strings[2];
+                            if (databaseManager.isBossAvailable(name)) {
+                                boss_manager.clear();
+                                boss_manager.put("boss", name);
+                                MagnesifyBoss magnesifyBoss = new MagnesifyBoss(name);
+                                BossGuiLoader.openInventory(player, magnesifyBoss);
+                            } else {
+                                dungeonPlayer.messageManager().chat(get().getConfig().getString("settings.messages.boss.unknow-boss"));
+                            }
+                        } else {
+                            help(commandSender);
                         }
                     } else {
                         help(commandSender);
@@ -122,6 +143,7 @@ public class BossManager implements CommandExecutor, TabCompleter {
             }
             if (args[0].equalsIgnoreCase("update")) {
                 commands.add("type");
+                commands.add("tools");
                 StringUtil.copyPartialMatches(args[1], commands, completions);
             }
         } else if (args.length == 3) {
