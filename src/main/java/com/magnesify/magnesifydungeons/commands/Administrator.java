@@ -70,12 +70,12 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.admin")) {
+            for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.admin")) {
                 dungeonPlayer.messageManager().chat(messages);
             }
         } else {
             DungeonConsole dungeonConsole = new DungeonConsole(sender);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.admin")) {
+            for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.admin")) {
                 dungeonConsole.ConsoleOutputManager().write(messages);
             }
         }
@@ -466,7 +466,6 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             commands.add("hook");
             commands.add("unload");
             commands.add("create");
-            commands.add("devmode");
             commands.add("challange");
             commands.add("genus-tools");
             commands.add("genus-gui");

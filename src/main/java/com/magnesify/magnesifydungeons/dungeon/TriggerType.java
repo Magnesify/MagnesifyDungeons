@@ -21,7 +21,6 @@ import java.util.UUID;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.locale;
-import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 
 public class TriggerType {
     private HashMap<String, Integer> countdownTime = new HashMap<>();
@@ -172,9 +171,13 @@ public class TriggerType {
         return databaseManager.TriggerTypeDungeons().getLocation(name);
     }
 
-    public static Location boss_location(String name) {
-        DatabaseManager databaseManager = new DatabaseManager(get());
-        return databaseManager.TriggerTypeDungeons().getBossLocation(name);
+    public static void SpawnFirstLevelMob(String dungeon, Location location, Player player) {
+        String boss = new DatabaseManager(get()).TriggerTypeDungeons().getCheckpointBoss(dungeon, 1);
+        MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss);
+        if(magnesifyBoss.exists()) {
+            magnesifyBoss.spawn(location, player);
+            new PlayerMethods().updateLastBoss(player, new DatabaseManager(get()).boss().getMGID(boss));
+        }
     }
 
     public static Location bosspoints(String name, int lvl) {
@@ -235,16 +238,7 @@ public class TriggerType {
                         } else {
                             countdowns.remove(playerId);
                             this.cancel();
-                            PlayerMethods playerMethods = new PlayerMethods(player);
-                            playerMethods.updateLastBoss(player, boss);
-                            MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss);
-                            if(magnesifyBoss.exists()) {
-                                magnesifyBoss.spawn(bosspoints(dungeon, 1), player);
-                            } else {
-                                Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage("tr").getString("plugin.unknow-boss"),boss)));
-                                MagnesifyBoss magnesify = new MagnesifyBoss("Magnesify");
-                                magnesify.spawn(bosspoints(dungeon, 1), player);
-                            }
+                            SpawnFirstLevelMob(dungeon, bosspoints(dungeon, 1), player);
                             play(player, parameters(dungeon).name(), dungeon);
                         }
                     } else {
@@ -283,8 +277,8 @@ public class TriggerType {
                                 PlayerMethods playerMethods = new PlayerMethods(player);
                                 playerMethods.updateDungeonStatus(player, false);
                                 String last_dungeon= get().getPlayers().getLastBoss(player);
-                                MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
-                                magnesifyBoss.killBoss();
+                                MagnesifyBoss magnesifyBoss = new MagnesifyBoss();
+                                magnesifyBoss.killBoss(last_dungeon);
                                 dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.lose.title"), new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.status.lose.time-subtitle"));
                                 get().getPlayers().updateDungeonStatus(player, false);
                                 countdowns.remove(playerId);

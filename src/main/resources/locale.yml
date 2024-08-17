@@ -126,6 +126,9 @@ messages:
     deleted: '#prefix &d#name &fisimli yaratık silindi.'
     unknow-boss: '#prefix &d#name &fisminde bir yaratık yok.'
     no-progress-found: '#prefix Bir yaratık oluşturmuyorsun.'
+  stats:
+    title: "<#4f91fc>&lMagnesify Dungeons &8・ &fSıralama"
+    sublines: " &f- &a#rank. &f#name"
   update:
     point: '#prefix &b#name &fadlı zindanın puanı değiştirildi, yeni değer: &e#value'
     name: '#prefix &b#name &fadlı zindanın ismi değiştirildi, yeni değer: &e#value'
@@ -136,6 +139,7 @@ messages:
     play-time: '#prefix &b#name &fadlı zindanın oynama süresi değiştirildi, yeni değer: &e#value'
     start-time: '#prefix &b#name &fadlı zindanın başlama süresi değiştirildi, yeni değer: &e#value'
     spawn: '#prefix &b#name &fadlı zindanın başlangıcı değiştirildi, yeni değer: &e#value'
+    level-boss: '#prefix &b#name &fadlı zindanın &e#level &fseviyesindeki yaratık &d#boss &folarak değiştirildi.'
   dungeon:
     boss-not-exists: '#prefix Zindan aktif ancak zindanın içinde savaşacak boss henüz ayarlanmamış. Yoksa boss kaçtı mı ?'
     not-in-dungeon: '#prefix Bir zindanda değilsin.'
@@ -144,7 +148,7 @@ messages:
     not-first-level: '#prefix Bu zindanın seviyesi giriş seviyesi değil !'
     full: '#prefix #name şu anda dolu, zindandaki oyuncunun görev bitimine &d#countdown &fsaniye var'
     already-in-dungeon: '#prefix #name adlı zindana giriş yapamazsın, şu an zaten bir zindandasın !'
-    entering: '<#4f91fc>&l#countdown &fsaniye içinde zindana ışınlanıyorsun... İptal etmek için &d/#custom_commands[cancel]'
+    entering: '<#4f91fc>&l#countdown &fsaniye içinde zindana ışınlanıyorsun... İptal etmek için &d/#custom_commands[leave]'
     starting: '<#4f91fc>&l#countdown &fsaniye içinde savaş başlayacak... Çıkış yapmak için &d/#custom_commands[leave]'
     playing: '&fBossu <#4f91fc>&l#countdown &fsaniye içinde öldürmen gerek ! Çıkış yapmak için &d/#custom_commands[leave]'
     creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
@@ -165,9 +169,7 @@ messages:
       subtitle: '&fTebrikler ! &d#level. &fseviyeye ulaştın !'
     canceled:
       must-be-number: '#prefix Girdiğin değer bir sayı olmalı.'
-    stats:
-      title: "<#4f91fc>&lMagnesify Dungeons &8・ &fSıralama"
-      sublines: " &f- &a#rank. &f#name"
+
 
 plugin:
   spawn-not-exists: "<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?"

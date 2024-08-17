@@ -13,6 +13,23 @@ settings:
     GHOST:
       display: '<#4b8eff>Paralel Ruh'
       material: BOOK
+  trigger-type:
+    boss:
+      title: '<#4b8eff>Zindan Seviyeleri'
+    dungeons:
+      title: '<#4b8eff>Aktif Keşif Zindanları'
+    title: '<#4b8eff>Keşif Zindanları'
+    custom-gui-texture: _iainternal:blank_menu
+    defaults:
+      display: '<#4b8eff>&l#dungeon'
+      material: NETHERITE_AXE
+      lore:
+        - ''
+        - '&fDurum: &e#status'
+        - ''
+        - '&fSüre: <#4b8eff>#play_time'
+        - '&fToplam <#4b8eff>#total_level &fseviyeden oluşuyor...'
+        - ''
   challange:
     title: '<#4b8eff>Meydan Okumalar'
     custom-gui-texture: _iainternal:blank_menu
@@ -87,12 +104,13 @@ settings:
     starting: ENTITY_PLAYER_LEVELUP
     entering: ENTITY_PLAYER_LEVELUP
   custom-commands:
-    cancel: iptal
     leave: ayrıl
     join: gir
     market: market
     stats: istatistikler
     profile: profil
+    dungeons: zindanlar
+    challanges: meydanokumalar
   holders:
     full: "Dolu"
     empty: "Boş"

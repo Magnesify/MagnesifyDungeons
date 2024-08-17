@@ -1,6 +1,5 @@
 package com.magnesify.magnesifydungeons.storage;
 
-import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.managers.PlayerManager;
 import org.bukkit.entity.Player;
@@ -26,135 +25,103 @@ public class PlayerMethods {
         }
     }
 
-    // Burada kaldın, Oyuncuları SQLite a taşıyorsun.
-
     public boolean playerExists(Player player) {
         DatabaseManager databaseManager = new DatabaseManager(get());
         return databaseManager.users().isExists(player.getUniqueId().toString());
     }
     public boolean inDungeon(Player player) {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (boolean) players.getValue("players." + player.getUniqueId().toString() + ".in_dungeon");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().getInDungeon(player.getUniqueId().toString());
     }
 
     public int getPoints(Player player) {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (int) players.getValue("players." + player.getUniqueId().toString() + ".point");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().getPoint(player.getUniqueId().toString());
     }
 
 
     public int getKill(Player player) {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (int) players.getValue("players." + player.getUniqueId().toString() + ".kill");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.stats().getKill(player.getUniqueId().toString());
     }
 
 
     public int getDeath(Player player) {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (int) players.getValue("players." + player.getUniqueId().toString() + ".death");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.stats().getDeath(player.getUniqueId().toString());
     }
 
     public void updatePoint(Player player, int dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".point", dungeon+getPoints(player));
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setPoint(player.getUniqueId().toString(), databaseManager.users().getPoint(player.getUniqueId().toString())+dungeon);
     }
 
 
 
     public void removePoint(Player player, int dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".point", getPoints(player)-dungeon);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setPoint(player.getUniqueId().toString(), databaseManager.users().getPoint(player.getUniqueId().toString())-dungeon);
     }
 
 
     public void setPoint(Player player, int dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".point", dungeon);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setPoint(player.getUniqueId().toString(), dungeon);
     }
 
     public void resetPoint(Player player){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".point", 0);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setPoint(player.getUniqueId().toString(), 0);
     }
 
     public void updateDeath(Player player, int dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".death", dungeon+getDeath(player));
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.stats().setDeath(player.getUniqueId().toString(), getDeath(player)+dungeon);
     }
 
     public void updateKill(Player player, int dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".kill", dungeon+getKill(player));
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.stats().setDeath(player.getUniqueId().toString(), getKill(player)+dungeon);
     }
 
 
     public void updateDungeonStatus(Player player, boolean dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".in_dungeon", dungeon);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setInDungeon(player.getUniqueId().toString(), dungeon);
     }
 
     public boolean getDungeon(Player player)  {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (boolean) players.getValue("players." + player.getUniqueId().toString() + ".in_dungeon");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().getInDungeon(player.getUniqueId().toString());
     }
 
     public boolean getDone(Player player)  {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (boolean) players.getValue("players." + player.getUniqueId().toString() + ".done");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().getDone(player.getUniqueId().toString());
     }
 
     public void updateLastDungeon(Player player, String dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".last_dungeon", dungeon);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setLastDungeon(player.getUniqueId().toString(), dungeon);
     }
 
     public void setDone(Player player, boolean dungeon){
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".done", dungeon);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setDone(player.getUniqueId().toString(), dungeon);
     }
 
     public String getLastDungeon(Player player)  {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (String) players.getValue("players." + player.getUniqueId().toString() + ".last_dungeon");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().getLastDungeon(player.getUniqueId().toString());
     }
 
     public void updateLastBoss(Player player, String dungeon) {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        if (playerExists(player)){
-            createPlayer();
-        }
-        players.updateData("players." + player.getUniqueId().toString() + ".last_boss", dungeon);
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        databaseManager.users().setLastBoss(player.getUniqueId().toString(), dungeon);
     }
 
     public String getLastBoss(Player player)  {
-        JsonStorage players = new JsonStorage(get().getDataFolder() + "/datas/players.json");
-        return (String) players.getValue("players." + player.getUniqueId().toString() + ".last_boss");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().getLastBoss(player.getUniqueId().toString());
     }
 }

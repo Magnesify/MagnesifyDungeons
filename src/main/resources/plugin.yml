@@ -35,6 +35,8 @@ commands:
     description: MagnesifyDungeonsTrigger, Trigger tip zindan yönetim komutu.
   Join:
     description: MagnesifyDungeon, Zindana katılma komutu.
+  Dungeons:
+    description: MagnesifyDungeon, Zindan komutu.
   Challanges:
     description: MagnesifyDungeon, Meydan okuma komutu.
   Leave:

@@ -28,7 +28,7 @@ public class Stats implements CommandExecutor {
             List<DatabaseManager.Stats.Sort.Player> sortedPlayers = databaseManager.stats().sort().getSortedPlayersByKill();
             for (int i = 0; i < Math.min(get().getConfig().getInt("settings.top-list-amount"), sortedPlayers.size()); i++) {
                 DatabaseManager.Stats.Sort.Player player = sortedPlayers.get(i);
-                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage("tr").getString("messages.stats.sublines").replace("#rank", String.valueOf((i + 1)).replace("#name", player.getName())));
+                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage("tr").getString("messages.stats.sublines").replace("#rank", String.valueOf((i + 1))).replace("#name", player.getName()));
             }
         }
         return false;

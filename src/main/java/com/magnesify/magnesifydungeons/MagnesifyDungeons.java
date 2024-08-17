@@ -18,6 +18,10 @@ import com.magnesify.magnesifydungeons.dungeon.types.challange.gui.ChallangeGuiI
 import com.magnesify.magnesifydungeons.dungeon.types.challange.gui.ChallangeGuiOpen;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.TriggerTypeLevelBossInteract;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.dungeons.DungeonsGuiInteract;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.dungeons.DungeonsGuiOpen;
+import com.magnesify.magnesifydungeons.events.CustomCommands;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
 import com.magnesify.magnesifydungeons.files.GenusFile;
@@ -135,14 +139,9 @@ public final class MagnesifyDungeons extends JavaPlugin {
         }
         JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
         JsonStorage cache = new JsonStorage(this.getDataFolder() + "/caches/player_dungeon_cache.json");
-        JsonStorage players = new JsonStorage(this.getDataFolder() + "/datas/players.json");
-
-        JsonStorage stats = new JsonStorage(this.getDataFolder() + "/caches/genus.json");
 
         JSONObject players_config = new JSONObject();
         players_config.put("json_config_version", "1");
-        players.writeData(players_config);
-        stats.writeData(players_config);
         cache.writeData(players_config);
 
         JSONObject jsonObject = new JSONObject();
@@ -166,6 +165,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         getCommand("MagnesifyDungeonsMarket").setExecutor(new MarketManager(this));
         getCommand("Challanges").setExecutor(new ChallangeGuiOpen(this));
         getCommand("DungeonProfile").setExecutor(new Profile(this));
+        getCommand("Dungeons").setExecutor(new DungeonsGuiOpen(this));
         getCommand("Stats").setExecutor(new Stats(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
@@ -176,9 +176,12 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ProfileGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallangeGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new TriggerTypeLevelBossInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new BossGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new CustomCommands(this), this);
         Bukkit.getPluginManager().registerEvents(new DropsGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
+        Bukkit.getPluginManager().registerEvents(new DungeonsGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerGenusEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new MarketGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new SendMessage(this), this);

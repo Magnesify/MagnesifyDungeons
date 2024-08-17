@@ -31,12 +31,12 @@ public class BossManager implements CommandExecutor, TabCompleter {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.boss")) {
+            for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.boss")) {
                 dungeonPlayer.messageManager().chat(messages);
             }
         } else {
             DungeonConsole dungeonConsole = new DungeonConsole(sender);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.boss")) {
+            for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.boss")) {
                 dungeonConsole.ConsoleOutputManager().write(messages);
             }
         }

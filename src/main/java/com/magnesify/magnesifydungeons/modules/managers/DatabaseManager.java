@@ -105,6 +105,213 @@ public class DatabaseManager {
             return false;
         }
 
+        public String getLastBoss(String uuid) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT last_boss FROM players WHERE uuid = ?")) {
+                statement.setString(1, uuid);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("last_boss");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+
+        public CompletableFuture<Boolean> setLastBoss(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE players SET last_boss = ? WHERE uuid = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public String getGenus(String uuid) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT genus FROM players WHERE uuid = ?")) {
+                statement.setString(1, uuid);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("genus");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+
+        public CompletableFuture<Boolean> setGenus(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE players SET genus = ? WHERE uuid = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+
+        public String getLastDungeon(String uuid) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT last_dungeon FROM players WHERE uuid = ?")) {
+                statement.setString(1, uuid);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("last_dungeon");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+
+        public CompletableFuture<Boolean> setLastDungeon(String dungeon, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE players SET last_dungeon = ? WHERE uuid = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public boolean getInDungeon(String uuid) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT in_dungeon FROM players WHERE uuid = ?")) {
+                statement.setString(1, uuid);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    boolean point = resultSet.getBoolean("in_dungeon");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+
+
+        public CompletableFuture<Boolean> setInDungeon(String dungeon, boolean bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE players SET in_dungeon = ? WHERE uuid = ?")) {
+                    statement.setBoolean(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> setDone(String dungeon, boolean bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE players SET done = ? WHERE uuid = ?")) {
+                    statement.setBoolean(1, bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+
+        public boolean getDone(String uuid) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT done FROM players WHERE uuid = ?")) {
+                statement.setString(1, uuid);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    boolean point = resultSet.getBoolean("done");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+
+        public int getPoint(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT point FROM players WHERE uuid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    int point = resultSet.getInt("point");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
+        public CompletableFuture<Boolean> setPoint(String dungeon, int bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE players SET point = ? WHERE uuid = ?")) {
+                    statement.setInt(1, getPoint(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
         public CompletableFuture<Boolean> create(Player player) {
             load();
             return CompletableFuture.supplyAsync(() -> {
@@ -847,10 +1054,44 @@ public class DatabaseManager {
             return "Yok";
         }
 
+        public String getUUIDByMGID(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT uuid FROM boss WHERE mgid = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("uuid");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
         public String getMGID(String dungeon) {
             load();
             try (Connection connection = getConnection();
                  PreparedStatement statement = connection.prepareStatement("SELECT mgid FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String point = resultSet.getString("mgid");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return "Yok";
+        }
+
+        public String getMGIDByUUID(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT mgid FROM boss WHERE uuid = ?")) {
                 statement.setString(1, dungeon);
 
                 ResultSet resultSet = statement.executeQuery();
@@ -2415,6 +2656,24 @@ public class DatabaseManager {
             }
             return null;
         }
+
+
+        public CompletableFuture<Boolean> setCheckpointBoss(String dungeon, int level, String bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE checkpoints SET boss = ? WHERE connected_dungeon = ? AND checkpoint_queue = ?")) {
+                    statement.setString(1, bool);
+                    statement.setString(2, dungeon);
+                    statement.setInt(3, level);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
 
         public Location getBosspointsLocation(String dungeon, int level) {
             load();

@@ -36,8 +36,8 @@ public class ChallangeGuiLoader {
             String boss = databaseManager.getBoss(ranks.replace("challange_", ""));
             Challange challange = new Challange(ranks);
             MagnesifyBoss magnesifyBoss = new MagnesifyBoss(boss);
-            boolean is_material_set = get().getConfig().isSet("market.prev.material");
-            boolean is_custom_material_set = get().getConfig().isSet("market.prev.custom-material");
+            boolean is_material_set = get().getConfig().isSet("settings.challange.defaults.material");
+            boolean is_custom_material_set = get().getConfig().isSet("settings.challange.defaults.custom-material");
             ItemStack itemStack = null;
             if(is_material_set) {
                 itemStack = new ItemStack(Material.getMaterial(get().getConfig().getString("settings.challange.defaults.material")));

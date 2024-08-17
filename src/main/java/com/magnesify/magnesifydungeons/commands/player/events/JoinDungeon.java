@@ -11,8 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
-
 public class JoinDungeon implements CommandExecutor {
     public JoinDungeon(MagnesifyDungeons magnesifyDungeons) {}
 
@@ -23,7 +21,7 @@ public class JoinDungeon implements CommandExecutor {
             Player player = (Player) commandSender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
             if (strings.length == 0) {
-                for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.player.join")) {
+                for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.player.join")) {
                     dungeonPlayer.messageManager().chat(messages);
                 }
             } else if (strings.length == 1) {
@@ -40,7 +38,7 @@ public class JoinDungeon implements CommandExecutor {
                                         dungeon.events().wait(player, dungeon);
                                         dungeon.updateCurrentPlayer(player.getName());
                                         dungeon.status(false);
-                                        for(String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
+                                        for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.events.joined")) {
                                             dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
                                         }
                                     } else {
@@ -52,7 +50,7 @@ public class JoinDungeon implements CommandExecutor {
                                         dungeon.events().wait(player, dungeon);
                                         dungeon.updateCurrentPlayer(player.getName());
                                         dungeon.status(false);
-                                        for(String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
+                                        for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.events.joined")) {
                                             dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
                                         }
                                     } else {
@@ -72,7 +70,7 @@ public class JoinDungeon implements CommandExecutor {
                     dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.already-in-dungeon").replace("#name", strings[0]));
                 }
             } else {
-                for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.player.join")) {
+                for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.player.join")) {
                     dungeonPlayer.messageManager().chat(messages);
                 }
             }

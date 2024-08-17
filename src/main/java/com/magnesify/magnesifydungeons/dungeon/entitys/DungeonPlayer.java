@@ -84,9 +84,9 @@ public class DungeonPlayer {
     public void leaveChallange(Challange dungeon) {
         Defaults defaults = new Defaults();
         dungeon.status(true);
-        String last_dungeon= get().getPlayers().getLastDungeon(player);
-        MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
-        magnesifyBoss.killBoss();
+        String last_dungeon= get().getPlayers().getLastBoss(player);
+        MagnesifyBoss magnesifyBoss = new MagnesifyBoss();
+        magnesifyBoss.killBoss(last_dungeon);
         if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
             Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
             player.teleport(loc);
@@ -100,9 +100,6 @@ public class DungeonPlayer {
     public void leave(Dungeon dungeon) {
         Defaults defaults = new Defaults();
         dungeon.status(true);
-        String last_dungeon= get().getPlayers().getLastDungeon(player);
-        MagnesifyBoss magnesifyBoss = new MagnesifyBoss(last_dungeon);
-        magnesifyBoss.killBoss();
         if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
             Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
             player.teleport(loc);

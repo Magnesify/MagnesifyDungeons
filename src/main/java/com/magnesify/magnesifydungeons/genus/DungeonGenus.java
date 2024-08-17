@@ -3,8 +3,8 @@ package com.magnesify.magnesifydungeons.genus;
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.files.GenusFile;
-import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.languages.LanguageFile;
+import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.json.JSONObject;
 
 import java.util.*;
 
@@ -25,19 +24,11 @@ public class DungeonGenus {
 
     private Player player;
     final Map<String, Long> lastUseMap = new HashMap<>();
-    public HashMap<UUID, Integer> gerisayin = new HashMap<>();
-    public Map<UUID, Integer> ghost = new HashMap<>();
-
-
-
-    public JsonStorage load() {
-        JsonStorage stats = new JsonStorage(get().getDataFolder() + "/caches/genus.json");
-        return stats;
-    }
 
     public DungeonGenus(Player player) {
         this.player = player;
     }
+
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -58,11 +49,17 @@ public class DungeonGenus {
     }
 
     public String getGenus() {
-        return (String) load().getValue(player.getName() +"." + player.getUniqueId().toString() + ".genus");
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        return databaseManager.users().getGenus(player.getUniqueId().toString());
     }
 
     public boolean isGenusSet() {
-        return load().getValue(player.getName() +"." + player.getUniqueId().toString() + ".genus") !=null;
+        DatabaseManager databaseManager = new DatabaseManager(get());
+        if(databaseManager.users().getGenus(player.getUniqueId().toString()).equalsIgnoreCase("None")) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void setGenusSkills() {
@@ -70,24 +67,26 @@ public class DungeonGenus {
         boolean health = genusFile.getGenusConfig().isSet("dungeon-genus." + getGenus() + ".health-bar");
         boolean walk = genusFile.getGenusConfig().isSet("dungeon-genus." + getGenus() + ".walk-speed");
         boolean potion = genusFile.getGenusConfig().isSet("dungeon-genus." + getGenus() + ".potion-effects");
-        if(health) {
-            player.setMaxHealth(genusFile.getGenusConfig().getDouble("dungeon-genus." + getGenus() + ".health-bar"));
-        }
-        if(walk) {
-            player.setWalkSpeed((float) genusFile.getGenusConfig().getDouble("dungeon-genus." + getGenus() + ".walk-speed"));
-        }
-        if(player.getActivePotionEffects().size() > 0) {
-            for(PotionEffect potionEffect : player.getActivePotionEffects()) {
-                player.removePotionEffect(potionEffect.getType());
+        if(genusFile.getGenusConfig().getString("dungeon-genus." + getGenus()) != null) {
+            if(health) {
+                player.setMaxHealth(genusFile.getGenusConfig().getDouble("dungeon-genus." + getGenus() + ".health-bar"));
             }
-        }
-        if(potion) {
-            for(String effects : genusFile.getGenusConfig().getStringList("dungeon-genus." + getGenus() + ".potion-effects")) {
-                String[] spl = effects.split(":");
-                String effet = spl[0];
-                int power = Integer.parseInt(spl[1]);
-                PotionEffect speedEffect = new PotionEffect(PotionEffectType.getByName(effet), Integer.MAX_VALUE, power);
-                player.addPotionEffect(speedEffect);
+            if(walk) {
+                player.setWalkSpeed((float) genusFile.getGenusConfig().getDouble("dungeon-genus." + getGenus() + ".walk-speed"));
+            }
+            if(player.getActivePotionEffects().size() > 0) {
+                for(PotionEffect potionEffect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(potionEffect.getType());
+                }
+            }
+            if(potion) {
+                for(String effects : genusFile.getGenusConfig().getStringList("dungeon-genus." + getGenus() + ".potion-effects")) {
+                    String[] spl = effects.split(":");
+                    String effet = spl[0];
+                    int power = Integer.parseInt(spl[1]);
+                    PotionEffect speedEffect = new PotionEffect(PotionEffectType.getByName(effet), Integer.MAX_VALUE, power);
+                    player.addPotionEffect(speedEffect);
+                }
             }
         }
     }
@@ -193,9 +192,8 @@ public class DungeonGenus {
 
     public boolean setGenus(String genus) {
         if(genus().contains(genus)) {
-            JSONObject players_config = new JSONObject();
-            players_config.put(player.getName() +"." + player.getUniqueId().toString() + ".genus", genus);
-            load().writeData(players_config);
+            DatabaseManager databaseManager = new DatabaseManager(get());
+            databaseManager.users().setGenus(player.getUniqueId().toString(), genus);
             setGenusSkills();
             return true;
         } else {

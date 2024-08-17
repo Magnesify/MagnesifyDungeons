@@ -23,6 +23,10 @@ public class MagnesifyBoss {
 
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+    public MagnesifyBoss() {
+
+    }
+
     public static String generateRandomString() {
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
@@ -79,17 +83,15 @@ public class MagnesifyBoss {
         return databaseManager.boss().getHealth(name);
     }
 
-    public void killBoss() {
+    public void killBoss(String id) {
         DatabaseManager databaseManager = new DatabaseManager(get());
-        if(!databaseManager.boss().getUUID(name).equalsIgnoreCase("Yok")) {
-            UUID uuid = UUID.fromString(databaseManager.boss().getUUID(name));
-            Entity entity = Bukkit.getEntity(uuid);
-            if(entity != null) {
-                if (entity.hasMetadata("name")) {
-                    String metadataValue = entity.getMetadata("name").get(0).asString();
-                    if(databaseManager.boss().getMGID(name).equalsIgnoreCase(metadataValue)) {
-                        entity.remove();
-                    }
+        UUID uuid = UUID.fromString(databaseManager.boss().getUUIDByMGID(id));
+        Entity entity = Bukkit.getEntity(uuid);
+        if(entity != null) {
+            if (entity.hasMetadata("name")) {
+                String metadataValue = entity.getMetadata("name").get(0).asString();
+                if(databaseManager.boss().getMGIDByUUID(uuid.toString()).equalsIgnoreCase(metadataValue)) {
+                    entity.remove();
                 }
             }
         }

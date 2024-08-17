@@ -41,6 +41,7 @@ public class ChallangeGuiInteract implements Listener {
                                     for(String messages : get().getConfig().getStringList("settings.messages.events.joined")) {
                                         dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
                                     }
+                                    event.getWhoClicked().closeInventory();
                                     return;
                                 } else {
                                     dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.boss-not-exists").replace("#name", ranks));
