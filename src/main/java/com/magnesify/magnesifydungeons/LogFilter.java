@@ -17,7 +17,6 @@ public class LogFilter extends AbstractFilter
     {
         Logger logger = (Logger) LogManager.getRootLogger();
         logger.addFilter(new LogFilter());
-        Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &fLogFilter aktif edildi..."));
     }
 
     @Override

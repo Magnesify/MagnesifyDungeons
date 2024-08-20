@@ -4,6 +4,7 @@ import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.types.challange.Challange;
 import com.magnesify.magnesifydungeons.files.JsonStorage;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.Defaults;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import net.md_5.bungee.api.ChatColor;
@@ -87,12 +88,16 @@ public class DungeonPlayer {
         String last_dungeon= get().getPlayers().getLastBoss(player);
         MagnesifyBoss magnesifyBoss = new MagnesifyBoss();
         magnesifyBoss.killBoss(last_dungeon);
-        if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
-            Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
-            player.teleport(loc);
+        DungeonConsole dungeonConsole = new DungeonConsole();
+        if(defaults.MainSpawn().world() != null) {
+            if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
+                Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
+                player.teleport(loc);
+            } else {
+                dungeonConsole.ConsoleOutputManager().write(new LanguageFile().getLanguage().getString("plugin.spawn-not-exists"));
+            }
         } else {
-            DungeonConsole dungeonConsole = new DungeonConsole();
-            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?");
+            dungeonConsole.ConsoleOutputManager().write(new LanguageFile().getLanguage().getString("plugin.spawn-not-exists"));
         }
         get().getPlayers().updateDungeonStatus(player, false);
     }

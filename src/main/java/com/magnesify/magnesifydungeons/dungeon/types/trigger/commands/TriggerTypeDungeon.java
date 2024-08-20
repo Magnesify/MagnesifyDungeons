@@ -356,7 +356,7 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                             Player player = ((Player) commandSender).getPlayer();
                             if(!databaseManager.TriggerTypeDungeons().isDungeonExists(name)) {
                                 databaseManager.TriggerTypeDungeons().setSpawn(strings[2], player.getLocation());
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.spawn").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.spawn").replace("#name", strings[2]));
                             } else {
                                 dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }

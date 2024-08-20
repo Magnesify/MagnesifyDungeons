@@ -8,6 +8,7 @@ import com.magnesify.magnesifydungeons.boss.gui.BossGuiInteract;
 import com.magnesify.magnesifydungeons.boss.gui.drops.DropsGuiInteract;
 import com.magnesify.magnesifydungeons.commands.Administrator;
 import com.magnesify.magnesifydungeons.commands.player.Profile;
+import com.magnesify.magnesifydungeons.commands.player.Spawn;
 import com.magnesify.magnesifydungeons.commands.player.Stats;
 import com.magnesify.magnesifydungeons.commands.player.events.JoinDungeon;
 import com.magnesify.magnesifydungeons.commands.player.events.LeaveDungeon;
@@ -121,17 +122,6 @@ public final class MagnesifyDungeons extends JavaPlugin {
         }
 
         File dataFolder = getDataFolder();
-        File datasFolder = new File(dataFolder, "datas");
-        if (!datasFolder.exists()) {
-            if (datasFolder.mkdirs()) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.datas.created")));
-            } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.datas.error")));
-            }
-        } else {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.datas.exists")));
-        }
-
         File cachesFolder = new File(dataFolder, "caches");
         if (!cachesFolder.exists()) {
             if (cachesFolder.mkdirs()) {
@@ -142,21 +132,11 @@ public final class MagnesifyDungeons extends JavaPlugin {
         } else {
             Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.caches.exists")));
         }
-        JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
         JsonStorage cache = new JsonStorage(this.getDataFolder() + "/caches/player_dungeon_cache.json");
 
         JSONObject players_config = new JSONObject();
         players_config.put("json_config_version", "1");
         cache.writeData(players_config);
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("spawn.world", "world");
-        jsonObject.put("spawn.x", 0);
-        jsonObject.put("spawn.y", 0);
-        jsonObject.put("spawn.z", 0);
-        jsonObject.put("spawn.pitch", 0);
-        jsonObject.put("spawn.yaw", 0);
-        jsonStorage.writeData(jsonObject);
 
         dbManager = new DatabaseManager(this);
         dbManager.initialize();
@@ -173,6 +153,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
         getCommand("Dungeons").setExecutor(new DungeonsGuiOpen(this));
         getCommand("Stats").setExecutor(new Stats(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
+        getCommand("DungeonSpawn").setExecutor(new Spawn(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
 
         Bukkit.getPluginManager().registerEvents(new GenusGuiInteract(this), this);

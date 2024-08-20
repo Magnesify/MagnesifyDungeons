@@ -22,12 +22,12 @@ public class MarketManager implements CommandExecutor {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            for(String messages : new LanguageFile().getLanguage().getStringList("settings.messages.helps.kits.admin")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.market")) {
                 dungeonPlayer.messageManager().chat(messages);
             }
         } else {
             DungeonConsole dungeonConsole = new DungeonConsole(sender);
-            for(String messages : new LanguageFile().getLanguage().getStringList("settings.messages.helps.kits.admin")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.market")) {
                 dungeonConsole.ConsoleOutputManager().write(messages);
             }
         }
@@ -37,21 +37,21 @@ public class MarketManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         DungeonEntity dungeonEntity = new DungeonEntity(commandSender);
-        if (commandSender.hasPermission("mgd.market")) {
-            if(strings.length == 0) {
-                if(commandSender instanceof Player) {
-                    Player player = (Player) commandSender;
-                    MarketGuiLoader.openInventory(player, 1);
-                } else {
-                    dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
-                }
-            } else if (strings.length == 1) {
+        if (strings.length == 0) {
+            if (commandSender instanceof Player) {
+                Player player = (Player) commandSender;
+                MarketGuiLoader.openInventory(player, 1);
+            } else {
+                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
+            }
+        } else if (strings.length == 1) {
+            if (commandSender.hasPermission("mgd.market")) {
                 if (strings[0].equalsIgnoreCase("reload")) {
                     MarketFile marketFile = new MarketFile();
                     marketFile.saveKitsConfig();
-                    dungeonEntity.EntityChatManager().send(TEXT_PREFIX + " &fmarket.yml başarıyla kaydedildi...");
+                    dungeonEntity.EntityChatManager().send(String.format(new LanguageFile().getLanguage().getString("plugin.market-reloaded"), TEXT_PREFIX));
                 } else {
-                    if(commandSender instanceof Player) {
+                    if (commandSender instanceof Player) {
                         Player player = (Player) commandSender;
                         MarketGuiLoader.openInventory(player, 1);
                     } else {
@@ -59,11 +59,10 @@ public class MarketManager implements CommandExecutor {
                     }
                 }
             } else {
-                help(commandSender);
+                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.no-permission"));
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.no-permission"));
-
+            help(commandSender);
         }
         return false;
     }

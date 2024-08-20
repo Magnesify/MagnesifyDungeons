@@ -106,7 +106,6 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
             if (strings.length == 0) {
                 help(commandSender);
             } else if (strings.length == 1) {
-                JsonStorage jsonStorage = new JsonStorage(get().getDataFolder() + "/datas/plugin_datas.json");
                 if (strings[0].equalsIgnoreCase("reload")) {
                     long millis = reload();
                     dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.reload").replace("#ms", String.valueOf(millis)));
@@ -294,7 +293,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                             if (dungeon.exists()) {
                                 DatabaseManager databaseManager = new DatabaseManager(get());
                                 databaseManager.setSpawn(strings[2], player.getLocation());
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.spawn").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.spawn").replace("#name", strings[2]));
                             } else {
                                 dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }

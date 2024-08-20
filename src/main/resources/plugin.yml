@@ -44,6 +44,8 @@ commands:
     description: MagnesifyDungeon, Zindandan ayrılma komutu.
   Stats:
     description: MagnesifyDungeon, Sıralama komutu.
+  DungeonSpawn:
+    description: MagnesifyDungeon, Spawn komutu.
   DungeonProfile:
     description: MagnesifyDungeon, Kişisel zindan profili,
     aliases:
