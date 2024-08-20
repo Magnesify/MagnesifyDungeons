@@ -11,7 +11,7 @@ public class LanguageFile {
     private FileConfiguration kitsConfig = null;
     private File kitsFile = null;
 
-    public void createLanguage(String lcale) {
+    public void createLanguage() {
         if (kitsFile == null) {
             kitsFile = new File(get().getDataFolder(), "locale.yml");
         }
@@ -21,19 +21,19 @@ public class LanguageFile {
         kitsConfig = YamlConfiguration.loadConfiguration(kitsFile);
     }
 
-    public FileConfiguration getLanguage(String locale) {
+    public FileConfiguration getLanguage() {
         if (kitsConfig == null) {
-            createLanguage(locale);
+            createLanguage();
         }
         return kitsConfig;
     }
 
-    public void saveLanguage(String locale) {
+    public void saveLanguage() {
         if (kitsConfig == null || kitsFile == null) {
             return;
         }
         try {
-            getLanguage(locale).save(kitsFile);
+            getLanguage().save(kitsFile);
         } catch (Exception e) {
             get().getLogger().severe("locale.yml kaydedilirken bir hata oluştu !");
         }

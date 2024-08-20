@@ -25,7 +25,7 @@ public class Genus implements CommandExecutor {
                 if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
                     IAGenusGuiLoader.openInventory(player);
                 } else {
-                    Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.error.ia.genus")));
+                    Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage().getString("plugin.error.ia.genus")));
                     GenusGuiLoader.openInventory(player);
                 }
             } else {

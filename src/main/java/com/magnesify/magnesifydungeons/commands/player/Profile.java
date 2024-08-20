@@ -25,7 +25,7 @@ public class Profile implements CommandExecutor {
                 if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
                     IAProfileGuiLoader.openInventory(player);
                 } else {
-                    Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.error.ia.profile")));
+                    Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage().getString("plugin.error.ia.profile")));
                     ProfileGuiLoader.openInventory(player);
                 }
             } else {

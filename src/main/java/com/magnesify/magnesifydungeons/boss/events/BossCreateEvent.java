@@ -27,7 +27,7 @@ public class BossCreateEvent implements Listener {
                 case 1:
                     bossdata.put("Name", event.getMessage());
                     event.setCancelled(true);
-                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.creation").replace("#done", Defaults.name).replace("#next", Defaults.boss_id));
+                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.creation").replace("#done", Defaults.name).replace("#next", Defaults.boss_id));
                     bossSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                     break;
                 case 2:
@@ -36,9 +36,9 @@ public class BossCreateEvent implements Listener {
                     bossSystemLevel.remove(event.getPlayer().getUniqueId());
                     MagnesifyBoss create_boss = new MagnesifyBoss(bossdata.get("Name"), bossdata.get("ID"));
                     if(create_boss.create()) {
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.created").replace("#id", bossdata.get("ID")).replace("#name", bossdata.get("Name")));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.created").replace("#id", bossdata.get("ID")).replace("#name", bossdata.get("Name")));
                     } else {
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.cannot-created").replace("#id", bossdata.get("ID")).replace("#name", bossdata.get("Name")));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.error.cannot-created").replace("#id", bossdata.get("ID")).replace("#name", bossdata.get("Name")));
                     }
                     bossdata.clear();
                     break;

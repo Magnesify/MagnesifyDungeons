@@ -1,6 +1,7 @@
 package com.magnesify.magnesifydungeons.modules.managers;
 
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -67,7 +68,7 @@ public class DungeonContentManager {
                     setupDataHolder.put("chest_level", setupDataHolder.get("chest_level") + 1);
                     databaseManager.CreateNewChest(new_dungeon.get("chestdata"), event.getClickedBlock().getLocation(), setupDataHolder.get("chest_level"));
                 }
-                dungeonPlayer.messageManager().chat(TEXT_PREFIX + " " + new_dungeon.get("chestdata") + " zindanı için " + setupDataHolder.get("chest_level") + ". sandık oluşturuldu !");
+                dungeonPlayer.messageManager().chat(String.format(new LanguageFile().getLanguage().getString("plugin.chest-mode"),TEXT_PREFIX,new_dungeon.get("chestdata"),setupDataHolder.get("chest_level")));
             } else {
                 event.setCancelled(true);
             }

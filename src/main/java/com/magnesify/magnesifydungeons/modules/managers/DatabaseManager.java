@@ -45,7 +45,7 @@ public class DatabaseManager {
              Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS dungeons (name TEXT, available BOOLEAN, current_player TEXT, category TEXT, current_level INTEGER DEFAULT 0,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, boss_id TEXT, play_time INTEGER DEFAULT 3, start_time INTEGER DEFAULT 5, point INTEGER DEFAULT 0, next_level INTEGER DEFAULT 0, type TEXT, PRIMARY KEY(name, category))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS trigger_type_dungeons (name TEXT, available BOOLEAN, current_player TEXT, category TEXT, current_level INTEGER DEFAULT 0,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT, boss_id TEXT, play_time INTEGER DEFAULT 3, start_time INTEGER DEFAULT 5, point INTEGER DEFAULT 0, next_level INTEGER DEFAULT 0, type TEXT,checkpoint_amount INTEGER DEFAULT 1, enable TEXT DEFAULT 'Hayır', boss_world TEXT, boss_x DOUBLE, boss_y DOUBLE, boss_z DOUBLE, boss_yaw FLOAT, boss_pitch FLOAT, PRIMARY KEY(name, category))");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS boss (name TEXT, id TEXT, mgid TEXT, uuid TEXT,helmet TEXT,chestplate TEXT,leggings TEXT,boots TEXT,weapon TEXT,damage DOUBLE DEFAULT 0.0, knockback DOUBLE DEFAULT 0.0,max_health DOUBLE DEFAULT 0.0, drops TEXT DEFAULT 'GOLDEN_APPLE', type TEXT DEFAULT 'ZOMBIE', display TEXT DEFAULT '&cMagnesify', PRIMARY KEY(name, mgid))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS boss (name TEXT, id TEXT, mgid TEXT, uuid TEXT,helmet TEXT,chestplate TEXT,leggings TEXT,boots TEXT,weapon TEXT,damage DOUBLE DEFAULT 0.0, knockback DOUBLE DEFAULT 0.0,max_health DOUBLE DEFAULT 0.0, drops TEXT DEFAULT 'GOLDEN_APPLE', type TEXT DEFAULT 'ZOMBIE', display TEXT DEFAULT '&cMagnesify', isMythic BOOLEAN, PRIMARY KEY(name, mgid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS stats (name TEXT,uuid TEXT, kill INTEGER DEFAULT 0, death INTEGER DEFAULT 0, win INTEGER DEFAULT 0, lose INTEGER DEFAULT 0, played_match INTEGER DEFAULT 0, PRIMARY KEY(name, uuid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS players (name TEXT,uuid TEXT, point INTEGER DEFAULT 0, in_dungeon BOOLEAN,last_boss TEXT, last_dungeon TEXT, done BOOLEAN, genus TEXT, PRIMARY KEY(name, uuid))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS checkpoints (connected_dungeon TEXT, checkpoint_queue INTEGER,world TEXT, x DOUBLE, y DOUBLE, z DOUBLE, yaw FLOAT, pitch FLOAT ,boss TEXT, PRIMARY KEY(connected_dungeon, checkpoint_queue))");
@@ -631,7 +631,7 @@ public class DatabaseManager {
         load();
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement("INSERT INTO boss (name, id, mgid, uuid,helmet,chestplate,leggings,boots,weapon,damage, knockback,max_health, drops, type, display) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)")) {
+                 PreparedStatement statement = connection.prepareStatement("INSERT INTO boss (name, id, mgid, uuid,helmet,chestplate,leggings,boots,weapon,damage, knockback,max_health, drops, type, display, isMythic) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?,?)")) {
                 String[] split_generics = generics.split(":");
                 statement.setString(1, name);
                 statement.setString(2, id);
@@ -648,6 +648,7 @@ public class DatabaseManager {
                 statement.setString(13, drops);
                 statement.setString(14, type);
                 statement.setString(15, display);
+                statement.setBoolean(16, false);
                 return statement.executeUpdate() > 0;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -1037,6 +1038,23 @@ public class DatabaseManager {
             return "Yok";
         }
 
+        public boolean isMythic(String dungeon) {
+            load();
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT isMythic FROM boss WHERE name = ?")) {
+                statement.setString(1, dungeon);
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    boolean point = resultSet.getBoolean("isMythic");
+                    return point;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
         public String getUUID(String dungeon) {
             load();
             try (Connection connection = getConnection();
@@ -1182,6 +1200,21 @@ public class DatabaseManager {
                 try (Connection connection = getConnection();
                      PreparedStatement statement = connection.prepareStatement("UPDATE boss SET helmet = ? WHERE name = ?")) {
                     statement.setString(1, getHelmetItem(dungeon) + "/" + bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> setMythic(String dungeon, boolean bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET isMythic = ? WHERE name = ?")) {
+                    statement.setBoolean(1, bool);
                     statement.setString(2, dungeon);
                     return statement.executeUpdate() > 0;
                 } catch (SQLException e) {

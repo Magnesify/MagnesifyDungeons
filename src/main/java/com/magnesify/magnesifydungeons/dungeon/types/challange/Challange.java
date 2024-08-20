@@ -1,6 +1,5 @@
 package com.magnesify.magnesifydungeons.dungeon.types.challange;
 
-import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.languages.LanguageFile;
@@ -197,7 +196,7 @@ public class Challange {
                         int remainingTime = countdowns.get(playerId);
                         if (remainingTime > 0) {
                             countdowns.put(playerId, remainingTime - 1); // Geri sayım süresini azaltma
-                            dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.entering").replace("#custom_commands[cancel]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
+                            dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage().getString("messages.dungeon.entering").replace("#custom_commands[cancel]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
                             player.playSound(player.getLocation(), Sound.valueOf(get().getConfig().getString("settings.sounds.entering")), 3.0F, 0.5F);
                         } else {
                             player.teleport(location(parameters().name()));
@@ -223,7 +222,7 @@ public class Challange {
                         int remainingTime = countdowns.get(playerId);
                         if (remainingTime > 0) {
                             countdowns.put(playerId, remainingTime - 1); // Geri sayım süresini azaltma
-                            dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.starting").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
+                            dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage().getString("messages.dungeon.starting").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.cancel")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
                             player.playSound(player.getLocation(), Sound.valueOf(get().getConfig().getString("settings.sounds.starting")), 3.0F, 0.5F);
                         } else {
                             countdowns.remove(playerId);
@@ -233,7 +232,7 @@ public class Challange {
                                 magnesifyBoss.spawn(location, player);
                             } else {
                                 dungeonPlayer.leaveChallange(dungeon);
-                                Bukkit.getConsoleSender().sendMessage(String.format(new LanguageFile().getLanguage("tr").getString("plugin.unknow-boss"),magnesifyBoss.name()));
+                                Bukkit.getConsoleSender().sendMessage(String.format(new LanguageFile().getLanguage().getString("plugin.unknow-boss"),magnesifyBoss.name()));
                             }
                             play(player, parameters().name(), dungeon);
 
@@ -260,7 +259,7 @@ public class Challange {
                             if (remainingTime > 0) {
                                 countdownTime.put(name, countTime-1);
                                 countdowns.put(playerId, remainingTime - 1);
-                                dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.playing").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.leave")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
+                                dungeonPlayer.messageManager().actionbar(new LanguageFile().getLanguage().getString("messages.dungeon.playing").replace("#custom_commands[leave]", get().getConfig().getString("settings.custom-commands.leave")).replace("#countdown", String.valueOf(countdowns.get(playerId))));
                             } else {
                                 if(dungeon.getStatus()) {
                                     dungeonPlayer.leaveChallange(dungeon);

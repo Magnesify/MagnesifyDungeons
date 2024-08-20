@@ -4,3 +4,11 @@ options:
   send-new-data-log: true
   players-can-use-chat-while-in-dungeon: true
   open-genus-select-gui-if-genus-is-not-set: true
+
+spawn:
+  world:
+  x:
+  y:
+  z:
+  yaw:
+  pitch:

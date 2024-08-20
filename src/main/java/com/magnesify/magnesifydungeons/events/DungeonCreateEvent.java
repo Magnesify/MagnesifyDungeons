@@ -45,24 +45,24 @@ public class DungeonCreateEvent implements Listener {
                         data.put("Name", event.getMessage());
                         data.put("lvl", "*");
                         event.setCancelled(true);
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.name).replace("#next", Defaults.boss_id));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.name).replace("#next", Defaults.boss_id));
                         creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         data.put("Category", "Challange");
                         break;
                     case 2:
                         data.put("BossID", event.getMessage());
                         event.setCancelled(true);
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.boss_id).replace("#next", Defaults.playtime));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.boss_id).replace("#next", Defaults.playtime));
                         creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         break;
                     case 3:
                         if (isNumeric(event.getMessage())) {
                             data.put("PT", event.getMessage());
                             event.setCancelled(true);
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.playtime).replace("#next", Defaults.starttime));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.playtime).replace("#next", Defaults.starttime));
                             creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                             event.setCancelled(true);
                         }
                         break;
@@ -73,15 +73,15 @@ public class DungeonCreateEvent implements Listener {
                             creationSystemLevel.remove(event.getPlayer().getUniqueId());
                             Challange dungeon = new Challange(data.get("Name"), "Challange", 1, data.get("BossID"), Integer.parseInt(data.get("ST")), Integer.parseInt(data.get("PT")), event.getPlayer().getLocation());
                             if (dungeon.create()) {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.created").replace("#category", "Challange").replace("#name", data.get("Name")));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.created").replace("#category", "Challange").replace("#name", data.get("Name")));
                             } else {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.cannot-created").replace("#category", "Challange").replace("#name", data.get("Name")));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.error.cannot-created").replace("#category", "Challange").replace("#name", data.get("Name")));
                             }
                             data.clear();
                             challange.clear();
                             creationSystemLevel.clear();
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                             event.setCancelled(true);
                         }
                         break;
@@ -94,29 +94,29 @@ public class DungeonCreateEvent implements Listener {
                     case 1:
                         data.put("Name", event.getMessage());
                         event.setCancelled(true);
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.name).replace("#next", Defaults.category));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.name).replace("#next", Defaults.category));
                         creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         break;
                     case 2:
                         data.put("Category", event.getMessage());
                         event.setCancelled(true);
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.category).replace("#next", Defaults.boss_id));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.category).replace("#next", Defaults.boss_id));
                         creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         break;
                     case 3:
                         data.put("BossID", event.getMessage());
                         event.setCancelled(true);
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.boss_id).replace("#next", Defaults.playtime));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.boss_id).replace("#next", Defaults.playtime));
                         creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         break;
                     case 4:
                         if (isNumeric(event.getMessage())) {
                             data.put("PT", event.getMessage());
                             event.setCancelled(true);
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.playtime).replace("#next", Defaults.starttime));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.playtime).replace("#next", Defaults.starttime));
                             creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                             event.setCancelled(true);
                         }
                         break;
@@ -124,10 +124,10 @@ public class DungeonCreateEvent implements Listener {
                         if (isNumeric(event.getMessage())) {
                             data.put("ST", event.getMessage());
                             event.setCancelled(true);
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.creation").replace("#done", Defaults.starttime).replace("#next", Defaults.level));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.creation").replace("#done", Defaults.starttime).replace("#next", Defaults.level));
                             creationSystemLevel.put(event.getPlayer().getUniqueId(), level + 1);
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                             event.setCancelled(true);
                         }
                         break;
@@ -138,13 +138,13 @@ public class DungeonCreateEvent implements Listener {
                             creationSystemLevel.remove(event.getPlayer().getUniqueId());
                             Dungeon dungeon = new Dungeon(data.get("Name"), data.get("Category"), Integer.parseInt(data.get("lvl")), data.get("BossID"), Integer.parseInt(data.get("ST")), Integer.parseInt(data.get("PT")), event.getPlayer().getLocation());
                             if (dungeon.create()) {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.created").replace("#category", data.get("Category")).replace("#name", data.get("Name")));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.created").replace("#category", data.get("Category")).replace("#name", data.get("Name")));
                             } else {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.cannot-created").replace("#category", data.get("Category")).replace("#name", data.get("Name")));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.error.cannot-created").replace("#category", data.get("Category")).replace("#name", data.get("Name")));
                             }
                             data.clear();
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                             event.setCancelled(true);
                         }
                         break;

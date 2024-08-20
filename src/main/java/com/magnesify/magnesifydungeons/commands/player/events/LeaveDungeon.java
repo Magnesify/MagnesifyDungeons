@@ -28,15 +28,15 @@ public class LeaveDungeon implements CommandExecutor {
                     dungeon.status(true);
                     dungeonPlayer.leave(dungeon);
                     dungeon.events().stop(player);
-                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.leave-success"));
+                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.leave-success"));
                 } else {
-                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon"));
+                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon"));
                 }
             } else {
-                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.not-in-dungeon"));
+                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.not-in-dungeon"));
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
 
         }
         return false;

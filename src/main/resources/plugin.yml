@@ -9,6 +9,7 @@ softdepend:
   - MythicMobs
   - PlaceholderAPI
   - ItemsAdder
+  - Vault
 description: MagnesifyDungeons, Gelişmiş zindan eklentisi.
 website: documents.magnesify.com
 commands:

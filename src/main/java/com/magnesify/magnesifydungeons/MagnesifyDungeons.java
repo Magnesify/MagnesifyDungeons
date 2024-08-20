@@ -34,6 +34,7 @@ import com.magnesify.magnesifydungeons.market.MarketManager;
 import com.magnesify.magnesifydungeons.market.file.MarketFile;
 import com.magnesify.magnesifydungeons.market.gui.MarketGuiInteract;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
+import com.magnesify.magnesifydungeons.mythic.MythicBossDeathEvent;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,6 +48,7 @@ import static com.magnesify.magnesifydungeons.commands.Administrator.challange;
 import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.creationSystemLevel;
 import static com.magnesify.magnesifydungeons.events.DungeonCreateEvent.data;
+import static com.magnesify.magnesifydungeons.mythic.MythicAdapter.setMythic;
 import static com.magnesify.magnesifydungeons.support.Vault.setVault;
 import static com.magnesify.magnesifydungeons.support.Vault.setupEconomy;
 
@@ -55,14 +57,13 @@ public final class MagnesifyDungeons extends JavaPlugin {
     private static MagnesifyDungeons instance;
     public synchronized static MagnesifyDungeons get() {return instance;}
     public void setInstance(MagnesifyDungeons magnesifyDungeons) {instance = magnesifyDungeons;}
-    public static String locale = "tr";
 
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         setInstance(this);
         LanguageFile languageFile = new LanguageFile();
-        languageFile.createLanguage(locale);
+        languageFile.createLanguage();
         Options options = new Options(); options.reload();
 
         MarketFile marketFile = new MarketFile();
@@ -80,38 +81,42 @@ public final class MagnesifyDungeons extends JavaPlugin {
                     " / / / / / / /_/ / /_/ / / / /  __(__  ) / __/ /_/ / \n" +
                     "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
                     "                /____/                      /____/   \n" +
-                    "\n\n" + new LanguageFile().getLanguage(locale).getString("plugin.developer")));
+                    "\n\n" + new LanguageFile().getLanguage().getString("plugin.developer")));
             int a=0;
             for(int i = 1; i<=marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false).size() - 2;i++) {
                 a +=marketFile.getMarketConfig().getConfigurationSection("market." + i).getKeys(false).size();
             }
-            Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format( new LanguageFile().getLanguage(locale).getString("plugin.market.info"),a)));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format( new LanguageFile().getLanguage().getString("plugin.market.info"),a)));
             if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.items-adder.found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.items-adder.found")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.items-adder.not-found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.items-adder.not-found")));
             }
             if(Bukkit.getPluginManager().getPlugin("Vault") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.vault.found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.vault.found")));
                 if (!setupEconomy() ) {
-                    Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.vault.economy")));
+                    Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.vault.economy")));
                     setVault(false);
                     return;
                 } else {
                     setVault(true);
                 }
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.vault.not-found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.vault.not-found")));
             }
             if(Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.mythicmobs.found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.mythicmobs.found")));
+                Bukkit.getPluginManager().registerEvents(new MythicBossDeathEvent(this), this);
+                setMythic(true);
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.mythicmobs.not-found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.mythicmobs.not-found")));
+                Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
+                setMythic(false);
             }
             if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.papi.found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.papi.found")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.supports.papi.not-found")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.papi.not-found")));
             }
         }
 
@@ -119,23 +124,23 @@ public final class MagnesifyDungeons extends JavaPlugin {
         File datasFolder = new File(dataFolder, "datas");
         if (!datasFolder.exists()) {
             if (datasFolder.mkdirs()) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.datas.created")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.datas.created")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.datas.error")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.datas.error")));
             }
         } else {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.datas.exists")));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.datas.exists")));
         }
 
         File cachesFolder = new File(dataFolder, "caches");
         if (!cachesFolder.exists()) {
             if (cachesFolder.mkdirs()) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.caches.created")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.caches.created")));
             } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.caches.error")));
+                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.caches.error")));
             }
         } else {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.folder.caches.exists")));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.folder.caches.exists")));
         }
         JsonStorage jsonStorage = new JsonStorage(this.getDataFolder() + "/datas/plugin_datas.json");
         JsonStorage cache = new JsonStorage(this.getDataFolder() + "/caches/player_dungeon_cache.json");
@@ -174,7 +179,6 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DungeonPlayerEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ProfileGuiInteract(this), this);
-        Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallangeGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerTypeLevelBossInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new BossGuiInteract(this), this);
@@ -189,18 +193,18 @@ public final class MagnesifyDungeons extends JavaPlugin {
 
         MagnesifyBoss create_boss = new MagnesifyBoss("Magnesify", "Magnesify");
         if(create_boss.create()) {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage(locale).getString("plugin.boss.created")));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.boss.created")));
         }
 
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(!Bukkit.getOnlinePlayers().isEmpty()) {
                 DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
                 dungeonPlayer.create();
-                if(options.get().getBoolean("options.send-new-data-log")) Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage(locale).getString("plugin.data-not-found"), player.getUniqueId().toString())));
+                if(options.get().getBoolean("options.send-new-data-log")) Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.data-not-found"), player.getUniqueId().toString())));
             }
         }
         long endTime = System.currentTimeMillis();
-        Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format( new LanguageFile().getLanguage(locale).getString("plugin.loaded"),String.valueOf(endTime-startTime))));
+        Bukkit.getConsoleSender().sendMessage(parseHexColors(String.format( new LanguageFile().getLanguage().getString("plugin.loaded"),String.valueOf(endTime-startTime))));
 
         new BukkitRunnable() {
             @Override
@@ -209,7 +213,7 @@ public final class MagnesifyDungeons extends JavaPlugin {
                     if(creationSystemLevel.get(player.getUniqueId()) != null) {
                         DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
                         if(challange.get(player.getUniqueId()) != null) {
-                            dungeonPlayer.messageManager().stay("<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r", new LanguageFile().getLanguage(locale).getString("plugin.challange.setup-subtitle"));
+                            dungeonPlayer.messageManager().stay("<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r", new LanguageFile().getLanguage().getString("plugin.challange.setup-subtitle"));
                         }
                         dungeonPlayer.messageManager().actionbar(String.format("&f"+getConfig().getString("settings.holders.name")+": <#4b8eff>%s " +
                                 "&b| &f"+getConfig().getString("settings.holders.category")+": <#4b8eff>%s " +

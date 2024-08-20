@@ -21,6 +21,7 @@ import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
 import static com.magnesify.magnesifydungeons.boss.events.BossCreateEvent.bossSystemLevel;
+import static com.magnesify.magnesifydungeons.mythic.MythicAdapter.getMythic;
 
 public class BossManager implements CommandExecutor, TabCompleter {
     public static HashMap<String, String> boss_manager = new HashMap<>();
@@ -31,12 +32,12 @@ public class BossManager implements CommandExecutor, TabCompleter {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.boss")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.boss")) {
                 dungeonPlayer.messageManager().chat(messages);
             }
         } else {
             DungeonConsole dungeonConsole = new DungeonConsole(sender);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.boss")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.boss")) {
                 dungeonConsole.ConsoleOutputManager().write(messages);
             }
         }
@@ -55,11 +56,11 @@ public class BossManager implements CommandExecutor, TabCompleter {
                 } else if (strings.length == 1) {
                     if (strings[0].equalsIgnoreCase("create")) {
                         if (bossSystemLevel.get(player.getUniqueId()) != null) {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.already-in-progress"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.already-in-progress"));
                             return false;
                         } else {
                             bossSystemLevel.put(player.getUniqueId(), 1);
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.creation-progress-started"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.creation-progress-started"));
                             return true;
                         }
                     } else {
@@ -70,9 +71,9 @@ public class BossManager implements CommandExecutor, TabCompleter {
                         String name = strings[1];
                         if (databaseManager.isBossAvailable(name)) {
                             databaseManager.boss().delete(name);
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.deleted"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.deleted"));
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.unknow-boss"));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.unknow-boss"));
                         }
                     } else {
                         help(commandSender);
@@ -87,7 +88,25 @@ public class BossManager implements CommandExecutor, TabCompleter {
                                 MagnesifyBoss magnesifyBoss = new MagnesifyBoss(name);
                                 BossGuiLoader.openInventory(player, magnesifyBoss);
                             } else {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.unknow-boss"));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.unknow-boss"));
+                            }
+                        } else if (strings[1].equalsIgnoreCase("mythic")) {
+                            if(getMythic()) {
+                                String name = strings[2];
+                                if (databaseManager.isBossAvailable(name)) {
+                                    boolean bool = databaseManager.boss().isMythic(name);
+                                    if(bool) {
+                                        databaseManager.boss().setMythic(name, false);
+                                    } else {
+                                        databaseManager.boss().setMythic(name, true);
+                                    }
+                                    boolean nbool = databaseManager.boss().isMythic(name);
+                                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.updated.mythic").replace("#status", nbool == true ? "✓" : "☓"));
+                                } else {
+                                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.unknow-boss"));
+                                }
+                            } else {
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.mythic-not-found"));
                             }
                         } else {
                             help(commandSender);
@@ -101,9 +120,9 @@ public class BossManager implements CommandExecutor, TabCompleter {
                             String name = strings[2];
                             if (databaseManager.isBossAvailable(name)) {
                                 databaseManager.boss().setType(name, strings[3]);
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.updated.type"));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.updated.type"));
                             } else {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.unknow-boss"));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.boss.unknow-boss"));
                             }
                         } else {
                             help(commandSender);
@@ -115,11 +134,11 @@ public class BossManager implements CommandExecutor, TabCompleter {
                     help(commandSender);
                 }
             } else {
-                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.no-permission"));
+                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.no-permission"));
 
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
         }
         return false;
     }
@@ -145,6 +164,7 @@ public class BossManager implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("update")) {
                 commands.add("type");
                 commands.add("tools");
+                commands.add("mythic");
                 StringUtil.copyPartialMatches(args[1], commands, completions);
             }
         } else if (args.length == 3) {
@@ -157,9 +177,12 @@ public class BossManager implements CommandExecutor, TabCompleter {
             }
         } else if (args.length == 4) {
             if (args[0].equalsIgnoreCase("update")) {
-                commands.add("SKELETON");
-                commands.add("ZOMBIE");
-                StringUtil.copyPartialMatches(args[3], commands, completions);
+                if(args[1].equalsIgnoreCase("type")) {
+                    commands.add("SKELETON");
+                    commands.add("PHANTOM");
+                    commands.add("ZOMBIE");
+                    StringUtil.copyPartialMatches(args[3], commands, completions);
+                }
             }
         }
         Collections.sort(completions);

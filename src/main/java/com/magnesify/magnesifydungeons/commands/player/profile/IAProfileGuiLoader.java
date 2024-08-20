@@ -33,7 +33,7 @@ public class IAProfileGuiLoader {
             loadItems(ent);
             inv.showInventory(ent);
         } else {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage("tr").getString("plugin.error.ia.profile")));
+            Bukkit.getConsoleSender().sendMessage(parseHexColors(new LanguageFile().getLanguage().getString("plugin.error.ia.profile")));
         }
     }
     public static String stats() {

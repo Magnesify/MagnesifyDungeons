@@ -22,12 +22,12 @@ public class MarketManager implements CommandExecutor {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.kits.admin")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("settings.messages.helps.kits.admin")) {
                 dungeonPlayer.messageManager().chat(messages);
             }
         } else {
             DungeonConsole dungeonConsole = new DungeonConsole(sender);
-            for(String messages : new LanguageFile().getLanguage("tr").getStringList("settings.messages.helps.kits.admin")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("settings.messages.helps.kits.admin")) {
                 dungeonConsole.ConsoleOutputManager().write(messages);
             }
         }
@@ -43,7 +43,7 @@ public class MarketManager implements CommandExecutor {
                     Player player = (Player) commandSender;
                     MarketGuiLoader.openInventory(player, 1);
                 } else {
-                    dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+                    dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
                 }
             } else if (strings.length == 1) {
                 if (strings[0].equalsIgnoreCase("reload")) {
@@ -55,14 +55,14 @@ public class MarketManager implements CommandExecutor {
                         Player player = (Player) commandSender;
                         MarketGuiLoader.openInventory(player, 1);
                     } else {
-                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
                     }
                 }
             } else {
                 help(commandSender);
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.no-permission"));
+            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.no-permission"));
 
         }
         return false;

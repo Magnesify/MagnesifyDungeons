@@ -111,15 +111,19 @@ public class DungeonPlayerEvents implements Listener {
         String command = event.getMessage().substring(1).split(" ")[0];
         DungeonPlayer dungeonPlayer = new DungeonPlayer(event.getPlayer());
         if(dungeonPlayer.inDungeon()) {
-            for(String commands : get().getConfig().getStringList("settings.whitelist-commands")) {
-                if (!command.equalsIgnoreCase(commands)) {
-                    event.setCancelled(true);
-                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.not-whitelist-command"));
+            if(!event.getPlayer().hasPermission("mgd.bypass")) {
+                for(String commands : get().getConfig().getStringList("settings.whitelist-commands")) {
+                    if (!command.equalsIgnoreCase(commands)) {
+                        event.setCancelled(true);
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.error.not-whitelist-command"));
+                    }
+                    return;
                 }
-                return;
             }
         }
     }
+
+
     public void killEntity(String lastBoss) {
         for (Entity entity : Bukkit.getWorld(get().getConfig().getString("settings.defaults.dungeon-world")).getEntities()) {
             if (entity instanceof Zombie) {

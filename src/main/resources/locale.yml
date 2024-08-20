@@ -120,6 +120,8 @@ messages:
   boss:
     updated:
       type: '#prefix &fYaratık tipi güncellendi...'
+      mythic: '#prefix &fYaratık mythic boss yaratığımı: #status'
+    mythic-not-found: '#prefix &fMythic Boss eklentisi bulunamadı...'
     creation: '#prefix İşlem &b#done &ftamamlandı, sıradaki işlem: &d#next'
     created: '#prefix Yaratık oluşturuldu, yaratık adı &d#name, &fidsi &d#id.'
     creation-progress-started: '#prefix Yaratık oluşturma işlemi başladı, &dlütfen bir yaratık adı belirtin&f. İşlemi iptal etmek için &d/Mgdb cancel'
@@ -174,6 +176,7 @@ messages:
 plugin:
   spawn-not-exists: "<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?"
   unknow-boss: "<#4f91fc>[Magnesify Dungeons] &f%s adında bir yaratık yok, hata oluşmaması adına Magnesify, Normal yaratığı doğuruyor..."
+  chest-mode: "%s %s zindanı için %s. sandık oluşturuldu !"
   boss-gui:
     name: "&a%s Düzenleniyor..."
     click-with-new-item: '&7Yeni eşya ile birlikte buraya tıklayınız.'

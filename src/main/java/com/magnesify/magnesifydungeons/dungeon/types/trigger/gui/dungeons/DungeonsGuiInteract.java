@@ -42,13 +42,13 @@ public class DungeonsGuiInteract implements Listener {
                                 event.getWhoClicked().closeInventory();
                                 return;
                             } else {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.boss-not-exists").replace("#name", ranks));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.boss-not-exists").replace("#name", ranks));
                             }
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.full").replace("#countdown", "").replace("#name", ranks));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.full").replace("#countdown", "").replace("#name", ranks));
                         }
                     } else {
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.already-in-dungeon").replace("#name", ranks));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.already-in-dungeon").replace("#name", ranks));
                     }
                 }
             }

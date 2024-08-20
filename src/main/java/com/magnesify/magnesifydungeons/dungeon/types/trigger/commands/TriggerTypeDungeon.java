@@ -36,12 +36,12 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
-            for(String messages : get().getConfig().getStringList("settings.messages.helps.trigger-type-dungeon.admin")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.trigger-type-dungeon.admin")) {
                 dungeonPlayer.messageManager().chat(messages);
             }
         } else {
             DungeonConsole dungeonConsole = new DungeonConsole(sender);
-            for(String messages : get().getConfig().getStringList("settings.messages.helps.trigger-type-dungeon.admin")) {
+            for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.trigger-type-dungeon.admin")) {
                 dungeonConsole.ConsoleOutputManager().write(messages);
             }
         }
@@ -164,12 +164,12 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                         if (isNumeric(strings[2])) {
                             if (databaseManager.isBossAvailable(bossName)) {
                                 databaseManager.TriggerTypeDungeons().setCheckpointBoss(dungeon, lvl, bossName);
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.level-boss").replace("#name", strings[3]).replace("#boss", bossName).replace("#level", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.level-boss").replace("#name", strings[3]).replace("#boss", bossName).replace("#level", strings[2]));
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.boss.unknow-boss").replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.boss.unknow-boss").replace("#name", strings[2]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                         }
                     } else {
                         help(commandSender);
@@ -184,84 +184,84 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                         if (isNumeric(strings[3])) {
                             if (databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                                 databaseManager.TriggerTypeDungeons().setPoint(strings[2], Integer.parseInt(strings[3]));
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.point").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.point").replace("#value", strings[3]).replace("#name", strings[2]));
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                         }
                     } else if (strings[1].equalsIgnoreCase("level")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                                 databaseManager.TriggerTypeDungeons().setLevel(strings[2], Integer.parseInt(strings[3]));
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.level").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.level").replace("#value", strings[3]).replace("#name", strings[2]));
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                         }
                     }else if (strings[1].equalsIgnoreCase("next-level")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                                 databaseManager.TriggerTypeDungeons().setNextLevel(strings[2], Integer.parseInt(strings[3]));
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                         }
                     }else if (strings[1].equalsIgnoreCase("play-time")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                                 databaseManager.TriggerTypeDungeons().setPlaytime(strings[2], Integer.parseInt(strings[3]));
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.play-time").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.play-time").replace("#value", strings[3]).replace("#name", strings[2]));
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                         }
                     }else if (strings[1].equalsIgnoreCase("start-time")) {
                         String zindan = strings[2];
                         if (isNumeric(strings[3])) {
                             if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                                 databaseManager.TriggerTypeDungeons().setStarttime(strings[2], Integer.parseInt(strings[3]));
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.start-time").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.start-time").replace("#value", strings[3]).replace("#name", strings[2]));
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.canceled.must-be-number"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.canceled.must-be-number"));
                         }
                     }else if (strings[1].equalsIgnoreCase("category")) {
                         String zindan = strings[2];
                         if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                             databaseManager.TriggerTypeDungeons().setCategory(strings[2], strings[3]);
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.next-level").replace("#value", strings[3]).replace("#name", strings[2]));
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                         }
                     }else if (strings[1].equalsIgnoreCase("name")) {
                         String zindan = strings[2];
                         if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                             databaseManager.TriggerTypeDungeons().setName(strings[2], strings[3]);
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.name").replace("#value", strings[3]).replace("#name", strings[2]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.name").replace("#value", strings[3]).replace("#name", strings[2]));
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                         }
                     }else if (strings[1].equalsIgnoreCase("boss")) {
                         String zindan = strings[2];
                         if(databaseManager.TriggerTypeDungeons().isDungeonExists(zindan)) {
                             databaseManager.TriggerTypeDungeons().setBossID(strings[2], strings[3]);
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.boss").replace("#value", strings[3]).replace("#name", strings[2]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.boss").replace("#value", strings[3]).replace("#name", strings[2]));
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                         }
                     } else {
                         help(commandSender);
@@ -281,13 +281,13 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                                 triggerType.join(name);
                                 dungeonEntity.EntityChatManager().send(TEXT_PREFIX + " &fZindana giriş yaptın !");
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.full").replace("#name", name).replace("#countdown", ""));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.full").replace("#name", name).replace("#countdown", ""));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
                         }
                     } else {
-                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
                     }
                 } else if (strings[0].equalsIgnoreCase("manage")) {
                     if (databaseManager.TriggerTypeDungeons().isDungeonExists(strings[1])) {
@@ -295,19 +295,19 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                             Player player = ((Player) commandSender).getPlayer();
                             TriggerTypeLevelBossLoader.openInventory(player);
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
                         }
                     } else {
-                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
                     }
                 } else if (strings[0].equalsIgnoreCase("delete")) {
                     if (databaseManager.TriggerTypeDungeons().isDungeonExists(strings[1])) {
                         databaseManager.TriggerTypeDungeons().deleteDungeon(strings[1]);
                         databaseManager.deleteBosspointRecordsContainingParameter(strings[1]);
                         databaseManager.deleteCheckpointRecordsContainingParameter(strings[1]);
-                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.deleted").replace("#name", strings[1]));
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.deleted").replace("#name", strings[1]));
                     } else {
-                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
                     }
                 } else if (strings[0].equalsIgnoreCase("chest-mode")) {
                     if(commandSender instanceof Player) {
@@ -316,18 +316,18 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                             if(dungeonChestCreation.get(player.getUniqueId()) == null) {
                                 dungeonChestCreation.put(player.getUniqueId(), true);
                                 new_dungeon.put("chestdata", strings[1]);
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.chest-mode.enabled").replace("#name", strings[1]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.chest-mode.enabled").replace("#name", strings[1]));
                             } else {
                                 dungeonChestCreation.remove(player.getUniqueId());
                                 setupDataHolder.remove("chest_level");
                                 setupDataHolder.remove("chestdata");
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.chest-mode.disabled").replace("#name", strings[1]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.chest-mode.disabled").replace("#name", strings[1]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
                         }
                     } else {
-                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
                     }
                 } else {
                     help(commandSender);
@@ -344,10 +344,10 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                             setup.StartSetup(player, player.getLocation());
                             dungeonEntity.EntityChatManager().send(TEXT_PREFIX + " &fTrigger Type zindan kurulumu başladı.");
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.error.cannot-created").replace("#category", category).replace("#name", name));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.error.cannot-created").replace("#category", category).replace("#name", name));
                         }
                     } else {
-                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
                     }
                 } else if (strings[0].equalsIgnoreCase("update")) {
                     if (strings[1].equalsIgnoreCase("spawn")) {
@@ -356,12 +356,12 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                             Player player = ((Player) commandSender).getPlayer();
                             if(!databaseManager.TriggerTypeDungeons().isDungeonExists(name)) {
                                 databaseManager.TriggerTypeDungeons().setSpawn(strings[2], player.getLocation());
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.update.spawn").replace("#value", strings[3]).replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.update.spawn").replace("#value", strings[3]).replace("#name", strings[2]));
                             } else {
-                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
+                                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[2]));
                             }
                         } else {
-                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
                         }
                     } else {
                         help(commandSender);
@@ -373,7 +373,7 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                 help(commandSender);
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.no-permission"));
+            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.no-permission"));
         }
         return false;
     }

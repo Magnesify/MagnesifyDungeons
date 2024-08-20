@@ -21,7 +21,7 @@ public class JoinDungeon implements CommandExecutor {
             Player player = (Player) commandSender;
             DungeonPlayer dungeonPlayer = new DungeonPlayer(player);
             if (strings.length == 0) {
-                for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.player.join")) {
+                for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.player.join")) {
                     dungeonPlayer.messageManager().chat(messages);
                 }
             } else if (strings.length == 1) {
@@ -38,11 +38,11 @@ public class JoinDungeon implements CommandExecutor {
                                         dungeon.events().wait(player, dungeon);
                                         dungeon.updateCurrentPlayer(player.getName());
                                         dungeon.status(false);
-                                        for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.events.joined")) {
+                                        for(String messages : new LanguageFile().getLanguage().getStringList("messages.events.joined")) {
                                             dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
                                         }
                                     } else {
-                                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.not-first-level").replace("#name", strings[0]));
+                                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.not-first-level").replace("#name", strings[0]));
                                     }
                                 } else {
                                     if(dungeonPlayer.getCurrentLevelForDungeon(strings[0]) == dungeon.parameters().level()) {
@@ -50,32 +50,32 @@ public class JoinDungeon implements CommandExecutor {
                                         dungeon.events().wait(player, dungeon);
                                         dungeon.updateCurrentPlayer(player.getName());
                                         dungeon.status(false);
-                                        for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.events.joined")) {
+                                        for(String messages : new LanguageFile().getLanguage().getStringList("messages.events.joined")) {
                                             dungeonPlayer.messageManager().chat(messages.replace("#boss_name", magnesifyBoss.name()).replace("#boss_health", String.valueOf(magnesifyBoss.health())).replace("#next_level", String.valueOf(dungeon.parameters().next())).replace("#category", dungeon.parameters().category()).replace("#playtime", String.valueOf(dungeon.parameters().play())));
                                         }
                                     } else {
-                                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.not-next-level-dungeon").replace("#name", strings[0]));
+                                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.not-next-level-dungeon").replace("#name", strings[0]));
                                     }
                                 }
                             } else {
-                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.boss-not-exists").replace("#name", strings[0]));
+                                dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.boss-not-exists").replace("#name", strings[0]));
                             }
                         } else {
-                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.full").replace("#countdown", String.valueOf(dungeon.countdown())).replace("#name", strings[0]));
+                            dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.full").replace("#countdown", String.valueOf(dungeon.countdown())).replace("#name", strings[0]));
                         }
                     } else {
-                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.unknow-dungeon").replace("#name", strings[0]));
+                        dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[0]));
                     }
                 } else {
-                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.dungeon.already-in-dungeon").replace("#name", strings[0]));
+                    dungeonPlayer.messageManager().chat(new LanguageFile().getLanguage().getString("messages.dungeon.already-in-dungeon").replace("#name", strings[0]));
                 }
             } else {
-                for(String messages : new LanguageFile().getLanguage("tr").getStringList("messages.helps.player.join")) {
+                for(String messages : new LanguageFile().getLanguage().getStringList("messages.helps.player.join")) {
                     dungeonPlayer.messageManager().chat(messages);
                 }
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.in-game-command"));
+            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
 
         }
         return false;

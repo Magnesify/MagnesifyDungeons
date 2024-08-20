@@ -31,7 +31,7 @@ public class GenusGuiInteract implements Listener {
                 if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(parseHexColors(display))) {
                     dungeonGenus.setGenus(genus);
                     event.getWhoClicked().closeInventory();
-                    dungeonPlayer.messageManager().title(new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.genus.selected.title"),new LanguageFile().getLanguage(MagnesifyDungeons.locale).getString("messages.genus.selected.subtitle").replace("#genus", genus));
+                    dungeonPlayer.messageManager().title(new LanguageFile().getLanguage().getString("messages.genus.selected.title"),new LanguageFile().getLanguage().getString("messages.genus.selected.subtitle").replace("#genus", genus));
                     return;
                 }
             }
