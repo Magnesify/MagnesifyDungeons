@@ -13,40 +13,31 @@ softdepend:
 description: MagnesifyDungeons, Gelişmiş zindan eklentisi.
 website: documents.magnesify.com
 commands:
-  MagnesifyDungeons:
+  Dungeons:
     aliases:
       - mgd
     permission: mgd.admin
     description: MagnesifyDungeon, Ana eklenti yönetim komutu.
-  MagnesifyDungeonsBoss:
-    aliases:
-      - mgdb
-    permission: mgdb.admin
+  Boss:
+    permission: mgd.admin
     description: MagnesifyDungeonsBoss, Ana boss yönetim komutu.
-  MagnesifyDungeonsMarket:
-    aliases:
-      - mgdm
-      - dungeonmarket
-    permission: mgdm.admin
+  DungeonMarket:
+    permission: mgd.admin
     description: MagnesifyDungeonsMarket, Ana market komutu.
-  MagnesifyDungeonsTrigger:
-    aliases:
-      - mgdt
-    permission: mgdt.admin
+  DiscoveryDungeons:
+    permission: mgd.admin
     description: MagnesifyDungeonsTrigger, Trigger tip zindan yönetim komutu.
   Join:
     description: MagnesifyDungeon, Zindana katılma komutu.
-  Dungeons:
-    description: MagnesifyDungeon, Zindan komutu.
   Challanges:
     description: MagnesifyDungeon, Meydan okuma komutu.
   Leave:
     description: MagnesifyDungeon, Zindandan ayrılma komutu.
   Stats:
     description: MagnesifyDungeon, Sıralama komutu.
+  Genus:
+    description: MagnesifyDungeon, Sıralama komutu.
   DungeonSpawn:
     description: MagnesifyDungeon, Spawn komutu.
   DungeonProfile:
     description: MagnesifyDungeon, Kişisel zindan profili,
-    aliases:
-      - dp

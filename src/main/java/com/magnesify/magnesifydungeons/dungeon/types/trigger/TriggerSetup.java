@@ -20,7 +20,7 @@ public class TriggerSetup {
     public void StartSetup(Player player, Location location) {
         Inventory inventory = player.getInventory();
 
-        ItemStack start_location = new ItemStack(Material.NAME_TAG, 1);
+        ItemStack start_location = new ItemStack(Material.CLOCK, 1);
         ItemMeta start_location_meta = start_location.getItemMeta();
         start_location_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"));
         List<String> slm = new ArrayList<>();

@@ -105,12 +105,16 @@ public class DungeonPlayer {
     public void leave(Dungeon dungeon) {
         Defaults defaults = new Defaults();
         dungeon.status(true);
-        if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
-            Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
-            player.teleport(loc);
+        DungeonConsole dungeonConsole = new DungeonConsole();
+        if(defaults.MainSpawn().world() != null) {
+            if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
+                Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
+                player.teleport(loc);
+            } else {
+                dungeonConsole.ConsoleOutputManager().write(new LanguageFile().getLanguage().getString("plugin.spawn-not-exists"));
+            }
         } else {
-            DungeonConsole dungeonConsole = new DungeonConsole();
-            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıcın kayıtlı olduğu dünya bulunamadı, dünya silindimi ?");
+            dungeonConsole.ConsoleOutputManager().write(new LanguageFile().getLanguage().getString("plugin.spawn-not-exists"));
         }
         get().getPlayers().updateDungeonStatus(player, false);
     }

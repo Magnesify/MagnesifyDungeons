@@ -44,12 +44,16 @@ public class DungeonPlayerEvents implements Listener {
                 event.getPlayer().setGameMode(GameMode.SURVIVAL);
             }
         }
-        if (Bukkit.getWorld(defaults.MainSpawn().world() == null ? "world" : defaults.MainSpawn().world() ) != null) {
-            Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
-            event.getPlayer().teleport(loc);
+        DungeonConsole dungeonConsole = new DungeonConsole();
+        if(defaults.MainSpawn().world() != null) {
+            if (Bukkit.getWorld(defaults.MainSpawn().world()) != null) {
+                Location loc = new Location(Bukkit.getWorld(defaults.MainSpawn().world()), defaults.MainSpawn().x(), defaults.MainSpawn().y(), defaults.MainSpawn().z(), (float) defaults.MainSpawn().yaw(), (float) defaults.MainSpawn().pitch());
+                event.getPlayer().teleport(loc);
+            } else {
+                dungeonConsole.ConsoleOutputManager().write(new LanguageFile().getLanguage().getString("plugin.spawn-not-exists"));
+            }
         } else {
-            DungeonConsole dungeonConsole = new DungeonConsole();
-            dungeonConsole.ConsoleOutputManager().write("<#4f91fc>[Magnesify Dungeons] &fBaşlangıç henüz ayarlanmamış &d/mgd setmainspawn &fyazarak başlangıcı ayarlayabilirsin.");
+            dungeonConsole.ConsoleOutputManager().write(new LanguageFile().getLanguage().getString("plugin.spawn-not-exists"));
         }
         DungeonGenus dungeonGenus = new DungeonGenus(event.getPlayer());
         Options options = new Options();

@@ -1224,6 +1224,99 @@ public class DatabaseManager {
             });
         }
 
+        public CompletableFuture<Boolean> addHealth(String dungeon, double bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET max_health = ? WHERE name = ?")) {
+                    statement.setDouble(1, getHealth(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });// burada kaldım
+        }
+
+
+        public CompletableFuture<Boolean> removeHealth(String dungeon, double bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET max_health = ? WHERE name = ?")) {
+                    statement.setDouble(1, getHealth(dungeon)-bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> addKnockback(String dungeon, double bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET knockback = ? WHERE name = ?")) {
+                    statement.setDouble(1, getKnockback(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });// burada kaldım
+        }
+
+
+        public CompletableFuture<Boolean> removeKnockback(String dungeon, double bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET knockback = ? WHERE name = ?")) {
+                    statement.setDouble(1, getKnockback(dungeon)-bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
+        public CompletableFuture<Boolean> addDamage(String dungeon, double bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET damage = ? WHERE name = ?")) {
+                    statement.setDouble(1, getAttack(dungeon)+bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });// burada kaldım
+        }
+
+
+        public CompletableFuture<Boolean> removeDamage(String dungeon, double bool) {
+            load();
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement statement = connection.prepareStatement("UPDATE boss SET damage = ? WHERE name = ?")) {
+                    statement.setDouble(1, getAttack(dungeon)-bool);
+                    statement.setString(2, dungeon);
+                    return statement.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            });
+        }
+
         public String getChestplate(String dungeon) {
             load();
             try (Connection connection = getConnection();

@@ -3,6 +3,7 @@ package com.magnesify.magnesifydungeons.boss.gui;
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.boss.MagnesifyBoss;
 import com.magnesify.magnesifydungeons.boss.gui.drops.DropsGuiLoader;
+import com.magnesify.magnesifydungeons.boss.gui.settings.SettingsGuiLoader;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -55,6 +56,9 @@ public class BossGuiInteract implements Listener {
                     break;
                 case 31:
                     event.setCancelled(true);
+                    player.closeInventory();
+                    MagnesifyBoss magnesifyBosss = new MagnesifyBoss(boss_manager.get("boss"));
+                    SettingsGuiLoader.openInventory(player, magnesifyBosss);
                     break;
                 case 16:
                     if(boss_manager.get("boss") == null) {

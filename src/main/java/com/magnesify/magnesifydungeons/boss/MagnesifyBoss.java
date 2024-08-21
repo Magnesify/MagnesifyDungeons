@@ -124,6 +124,93 @@ public class MagnesifyBoss {
             }
         } else {
             switch (databaseManager.boss().getType(name)) {
+                case "MAGMA_CUBE":
+                    MagmaCube magmaCube = (MagmaCube) location.getWorld().spawnEntity(location, EntityType.MAGMA_CUBE);
+                    magmaCube.setCustomName(parseHexColors(databaseManager.boss().getDisplay(name)));
+                    magmaCube.setCustomNameVisible(true);
+                    magmaCube.setSize(Integer.MAX_VALUE);
+                    String randStrPhantoms = generateRandomString();
+                    databaseManager.boss().setMGID(name, randStrPhantoms);
+                    databaseManager.boss().setUUID(name, magmaCube.getUniqueId().toString());
+                    String last_dungeons = get().getPlayers().getLastDungeon(player);
+                    get().getPlayers().updateLastBoss(player, randStrPhantoms);
+                    magmaCube.setMetadata("name", new FixedMetadataValue(get(), randStrPhantoms));
+                    magmaCube.setMetadata("dungeon", new FixedMetadataValue(get(), last_dungeons));
+                    magmaCube.setMetadata("boss", new FixedMetadataValue(get(), name));
+                    magmaCube.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(databaseManager.boss().getHealth(name));
+                    magmaCube.setHealth(databaseManager.boss().getHealth(name));
+                    magmaCube.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(databaseManager.boss().getAttack(name));
+                    magmaCube.getAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK).setBaseValue(databaseManager.boss().getKnockback(name));
+                    break;
+                case "WITHER_SKELETON":
+                    WitherSkeleton witherSkeleton = (WitherSkeleton) location.getWorld().spawnEntity(location, EntityType.WITHER_SKELETON);
+                    witherSkeleton.setCustomName(parseHexColors(databaseManager.boss().getDisplay(name)));
+                    witherSkeleton.setCustomNameVisible(true);
+                    String randStrPhantomswitherSkeleton = generateRandomString();
+                    databaseManager.boss().setMGID(name, randStrPhantomswitherSkeleton);
+                    databaseManager.boss().setUUID(name, witherSkeleton.getUniqueId().toString());
+                    String last_dungeonss = get().getPlayers().getLastDungeon(player);
+                    get().getPlayers().updateLastBoss(player, randStrPhantomswitherSkeleton);
+                    witherSkeleton.setMetadata("name", new FixedMetadataValue(get(), randStrPhantomswitherSkeleton));
+                    witherSkeleton.setMetadata("dungeon", new FixedMetadataValue(get(), last_dungeonss));
+                    witherSkeleton.setMetadata("boss", new FixedMetadataValue(get(), name));
+                    witherSkeleton.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(databaseManager.boss().getHealth(name));
+                    witherSkeleton.setHealth(databaseManager.boss().getHealth(name));
+                    witherSkeleton.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(databaseManager.boss().getAttack(name));
+                    witherSkeleton.getAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK).setBaseValue(databaseManager.boss().getKnockback(name));
+                    ItemStack helmetwitherSkeleton = new ItemStack(Material.getMaterial(databaseManager.boss().getHelmetItem(name)));
+                    ItemMeta helmetmetawitherSkeleton = helmetwitherSkeleton.getItemMeta();
+                    for(String a : databaseManager.boss().getHelmetEnchants(name)) {
+                        String[] split = a.split(":");
+                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                        helmetmetawitherSkeleton.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    }
+                    helmetwitherSkeleton.setItemMeta(helmetmetawitherSkeleton);
+
+                    ItemStack chestplatewitherSkeleton = new ItemStack(Material.getMaterial(databaseManager.boss().getChestplateItem(name)));
+                    ItemMeta chestplatemetawitherSkeleton = chestplatewitherSkeleton.getItemMeta();
+                    for(String a : databaseManager.boss().getChestplateEnchants(name)) {
+                        String[] split = a.split(":");
+                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                        chestplatemetawitherSkeleton.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    }
+                    chestplatewitherSkeleton.setItemMeta(chestplatemetawitherSkeleton);
+
+                    ItemStack leggingswitherSkeleton = new ItemStack(Material.getMaterial(databaseManager.boss().getLeggingsItem(name)));
+                    ItemMeta  leggingsmetawitherSkeleton = leggingswitherSkeleton.getItemMeta();
+                    for(String a : databaseManager.boss().getLeggingsEnchant(name)) {
+                        String[] split = a.split(":");
+                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                        leggingsmetawitherSkeleton.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    }
+                    leggingswitherSkeleton.setItemMeta(leggingsmetawitherSkeleton);
+
+                    ItemStack bootswitherSkeleton = new ItemStack(Material.getMaterial(databaseManager.boss().getBootsItem(name)));
+                    ItemMeta bootsmetawitherSkeleton = bootswitherSkeleton.getItemMeta();
+                    for(String a : databaseManager.boss().getBootsEnchant(name)) {
+                        String[] split = a.split(":");
+                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                        bootsmetawitherSkeleton.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    }
+                    bootswitherSkeleton.setItemMeta(bootsmetawitherSkeleton);
+
+
+                    ItemStack weaponwitherSkeleton = new ItemStack(Material.getMaterial(databaseManager.boss().getWeaponsItem(name)));
+                    ItemMeta weaponmetawitherSkeleton = weaponwitherSkeleton.getItemMeta();
+                    for(String a : databaseManager.boss().getWeaponEnchant(name)) {
+                        String[] split = a.split(":");
+                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+                        weaponmetawitherSkeleton.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+                    }
+
+                    weaponwitherSkeleton.setItemMeta(weaponmetawitherSkeleton);
+
+                    witherSkeleton.getEquipment().setHelmet(helmetwitherSkeleton);
+                    witherSkeleton.getEquipment().setChestplate(chestplatewitherSkeleton);
+                    witherSkeleton.getEquipment().setLeggings(leggingswitherSkeleton);
+                    witherSkeleton.getEquipment().setBoots(bootswitherSkeleton);
+                    witherSkeleton.getEquipment().setItemInMainHand(weaponwitherSkeleton);
+                    break;
                 case "PHANTOM":
                     Phantom phantom = (Phantom) location.getWorld().spawnEntity(location, EntityType.PHANTOM);
                     phantom.setCustomName(parseHexColors(databaseManager.boss().getDisplay(name)));
@@ -140,59 +227,6 @@ public class MagnesifyBoss {
                     phantom.setHealth(databaseManager.boss().getHealth(name));
                     phantom.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(databaseManager.boss().getAttack(name));
                     phantom.getAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK).setBaseValue(databaseManager.boss().getKnockback(name));
-
-                    ItemStack helmetPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getHelmetItem(name)));
-                    ItemMeta helmetmetaPhantom = helmetPhantom.getItemMeta();
-                    for(String a : databaseManager.boss().getHelmetEnchants(name)) {
-                        String[] split = a.split(":");
-                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                        helmetmetaPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
-                    }
-                    helmetPhantom.setItemMeta(helmetmetaPhantom);
-
-                    ItemStack chestplatePhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getChestplateItem(name)));
-                    ItemMeta chestplatemetaPhantom = chestplatePhantom.getItemMeta();
-                    for(String a : databaseManager.boss().getChestplateEnchants(name)) {
-                        String[] split = a.split(":");
-                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                        chestplatemetaPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
-                    }
-                    chestplatePhantom.setItemMeta(chestplatemetaPhantom);
-
-                    ItemStack leggingsrandStrPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getLeggingsItem(name)));
-                    ItemMeta leggingsmetarandStrPhantom = leggingsrandStrPhantom.getItemMeta();
-                    for(String a : databaseManager.boss().getLeggingsEnchant(name)) {
-                        String[] split = a.split(":");
-                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                        leggingsmetarandStrPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
-                    }
-                    leggingsrandStrPhantom.setItemMeta(leggingsmetarandStrPhantom);
-
-                    ItemStack bootsrandStrPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getBootsItem(name)));
-                    ItemMeta bootsmetarandStrPhantom = bootsrandStrPhantom.getItemMeta();
-                    for(String a : databaseManager.boss().getBootsEnchant(name)) {
-                        String[] split = a.split(":");
-                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                        bootsmetarandStrPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
-                    }
-                    bootsrandStrPhantom.setItemMeta(bootsmetarandStrPhantom);
-
-
-                    ItemStack weaponPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getWeaponsItem(name)));
-                    ItemMeta weaponmetaPhantom = weaponPhantom.getItemMeta();
-                    for(String a : databaseManager.boss().getWeaponEnchant(name)) {
-                        String[] split = a.split(":");
-                        NamespacedKey key = new NamespacedKey("minecraft", split[0]);
-                        weaponmetaPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
-                    }
-
-                    weaponPhantom.setItemMeta(weaponmetaPhantom);
-
-                    phantom.getEquipment().setHelmet(helmetPhantom);
-                    phantom.getEquipment().setChestplate(chestplatePhantom);
-                    phantom.getEquipment().setLeggings(leggingsrandStrPhantom);
-                    phantom.getEquipment().setBoots(bootsrandStrPhantom);
-                    phantom.getEquipment().setItemInMainHand(weaponPhantom);
                     break;
                 case "ZOMBIE":
                     Zombie zombie = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);

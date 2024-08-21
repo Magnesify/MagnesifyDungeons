@@ -1,4 +1,71 @@
-Spawn sistemi düzenlenecek.
-Lisans sistemi eklenecek.
-Bütün komutlar test edilecek.
-Paralel Ruh düzenlenecek // kaldırılacak
+
+case "PHANTOM":
+  Phantom phantom = (Phantom) location.getWorld().spawnEntity(location, EntityType.PHANTOM);
+  phantom.setCustomName(parseHexColors(databaseManager.boss().getDisplay(name)));
+  phantom.setCustomNameVisible(true);
+  String randStrPhantom = generateRandomString();
+  databaseManager.boss().setMGID(name, randStrPhantom);
+  databaseManager.boss().setUUID(name, phantom.getUniqueId().toString());
+  String last_dungeon = get().getPlayers().getLastDungeon(player);
+  get().getPlayers().updateLastBoss(player, randStrPhantom);
+  phantom.setMetadata("name", new FixedMetadataValue(get(), randStrPhantom));
+  phantom.setMetadata("dungeon", new FixedMetadataValue(get(), last_dungeon));
+  phantom.setMetadata("boss", new FixedMetadataValue(get(), name));
+  phantom.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(databaseManager.boss().getHealth(name));
+  phantom.setHealth(databaseManager.boss().getHealth(name));
+  phantom.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(databaseManager.boss().getAttack(name));
+  phantom.getAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK).setBaseValue(databaseManager.boss().getKnockback(name));
+  
+  ItemStack helmetPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getHelmetItem(name)));
+  ItemMeta helmetmetaPhantom = helmetPhantom.getItemMeta();
+  for(String a : databaseManager.boss().getHelmetEnchants(name)) {
+    String[] split = a.split(":");
+    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+    helmetmetaPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+}
+  helmetPhantom.setItemMeta(helmetmetaPhantom);
+  
+  ItemStack chestplatePhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getChestplateItem(name)));
+  ItemMeta chestplatemetaPhantom = chestplatePhantom.getItemMeta();
+  for(String a : databaseManager.boss().getChestplateEnchants(name)) {
+    String[] split = a.split(":");
+    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+    chestplatemetaPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+}
+  chestplatePhantom.setItemMeta(chestplatemetaPhantom);
+  
+  ItemStack leggingsrandStrPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getLeggingsItem(name)));
+  ItemMeta leggingsmetarandStrPhantom = leggingsrandStrPhantom.getItemMeta();
+  for(String a : databaseManager.boss().getLeggingsEnchant(name)) {
+    String[] split = a.split(":");
+    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+    leggingsmetarandStrPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+}
+  leggingsrandStrPhantom.setItemMeta(leggingsmetarandStrPhantom);
+  
+  ItemStack bootsrandStrPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getBootsItem(name)));
+  ItemMeta bootsmetarandStrPhantom = bootsrandStrPhantom.getItemMeta();
+  for(String a : databaseManager.boss().getBootsEnchant(name)) {
+    String[] split = a.split(":");
+    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+    bootsmetarandStrPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+}
+  bootsrandStrPhantom.setItemMeta(bootsmetarandStrPhantom);
+  
+  
+  ItemStack weaponPhantom = new ItemStack(Material.getMaterial(databaseManager.boss().getWeaponsItem(name)));
+  ItemMeta weaponmetaPhantom = weaponPhantom.getItemMeta();
+  for(String a : databaseManager.boss().getWeaponEnchant(name)) {
+    String[] split = a.split(":");
+    NamespacedKey key = new NamespacedKey("minecraft", split[0]);
+    weaponmetaPhantom.addEnchant(Enchantment.getByKey(key), Integer.parseInt(split[1]), true);
+}
+
+  weaponPhantom.setItemMeta(weaponmetaPhantom);
+  
+  phantom.getEquipment().setHelmet(helmetPhantom);
+  phantom.getEquipment().setChestplate(chestplatePhantom);
+  phantom.getEquipment().setLeggings(leggingsrandStrPhantom);
+  phantom.getEquipment().setBoots(bootsrandStrPhantom);
+  phantom.getEquipment().setItemInMainHand(weaponPhantom);
+  break;

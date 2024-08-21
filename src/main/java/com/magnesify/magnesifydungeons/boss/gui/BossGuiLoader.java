@@ -29,20 +29,6 @@ public class BossGuiLoader {
         ent.openInventory(inv);
     }
 
-    public static String stats() {
-        DatabaseManager databaseManager = new DatabaseManager(get());
-        List<DatabaseManager.Stats.Sort.Player> sortedPlayers = databaseManager.stats().sort().getSortedPlayersByKill();
-        StringBuilder data = new StringBuilder();
-        for (int i = 0; i < Math.min(3, sortedPlayers.size()); i++) {
-            DatabaseManager.Stats.Sort.Player player = sortedPlayers.get(i);
-            data.append("#").append(i + 1).append(" ").append(player.getName());
-            data.append("\n");
-        }
-        return data.toString();
-    }
-
-
-
     @Deprecated
     public static void loadItems(MagnesifyBoss magnesifyBoss) {
         String name = magnesifyBoss.name();

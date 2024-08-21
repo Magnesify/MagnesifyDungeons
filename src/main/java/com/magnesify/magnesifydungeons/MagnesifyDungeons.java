@@ -6,7 +6,9 @@ import com.magnesify.magnesifydungeons.boss.events.BossCreateEvent;
 import com.magnesify.magnesifydungeons.boss.events.BossDeathEvent;
 import com.magnesify.magnesifydungeons.boss.gui.BossGuiInteract;
 import com.magnesify.magnesifydungeons.boss.gui.drops.DropsGuiInteract;
+import com.magnesify.magnesifydungeons.boss.gui.settings.SettingsGuiInteract;
 import com.magnesify.magnesifydungeons.commands.Administrator;
+import com.magnesify.magnesifydungeons.commands.player.Genus;
 import com.magnesify.magnesifydungeons.commands.player.Profile;
 import com.magnesify.magnesifydungeons.commands.player.Spawn;
 import com.magnesify.magnesifydungeons.commands.player.Stats;
@@ -18,10 +20,12 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.types.challange.gui.ChallangeGuiInteract;
 import com.magnesify.magnesifydungeons.dungeon.types.challange.gui.ChallangeGuiOpen;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.TriggerTypeDungeon;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.gui.TriggerGuiInteract;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.TriggerTypeLevelBossInteract;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.boss.MagnesifyBossGuiInteract;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.boss.type.BossTypeGuiInteract;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.dungeons.DungeonsGuiInteract;
-import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.dungeons.DungeonsGuiOpen;
 import com.magnesify.magnesifydungeons.events.CustomCommands;
 import com.magnesify.magnesifydungeons.events.DungeonCreateEvent;
 import com.magnesify.magnesifydungeons.events.DungeonPlayerEvents;
@@ -59,9 +63,20 @@ public final class MagnesifyDungeons extends JavaPlugin {
     public synchronized static MagnesifyDungeons get() {return instance;}
     public void setInstance(MagnesifyDungeons magnesifyDungeons) {instance = magnesifyDungeons;}
 
+    private void logMemoryUsage() {
+        Runtime runtime = Runtime.getRuntime();
+        long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+        long maxMemory = runtime.maxMemory();
+        double usedMemoryMB = usedMemory / 2048.0 / 2048.0;
+        double maxMemoryMB = maxMemory / 2048.0 / 2048.0;
+        getLogger().info(String.format("[Memory] Used Memory: %.2f MB, Maximum Memory: %.2f MB", usedMemoryMB, maxMemoryMB));
+
+    }
+
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
+        getServer().getScheduler().runTaskTimer(this, this::logMemoryUsage, 20L, 20L * 60);
         setInstance(this);
         LanguageFile languageFile = new LanguageFile();
         languageFile.createLanguage();
@@ -75,14 +90,6 @@ public final class MagnesifyDungeons extends JavaPlugin {
         LogFilter.registerFilter();
 
         if(!options.get().getBoolean("options.clean-start")) {
-            Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4f91fc>\n" +
-                    "                                          _ ____     \n" +
-                    "   ____ ___  ____ _____ _____  ___  _____(_) __/_  __\n" +
-                    "  / __ `__ \\/ __ `/ __ `/ __ \\/ _ \\/ ___/ / /_/ / / /\n" +
-                    " / / / / / / /_/ / /_/ / / / /  __(__  ) / __/ /_/ / \n" +
-                    "/_/ /_/ /_/\\__,_/\\__, /_/ /_/\\___/____/_/_/  \\__, /  \n" +
-                    "                /____/                      /____/   \n" +
-                    "\n\n" + new LanguageFile().getLanguage().getString("plugin.developer")));
             int a=0;
             for(int i = 1; i<=marketFile.getMarketConfig().getConfigurationSection("market").getKeys(false).size() - 2;i++) {
                 a +=marketFile.getMarketConfig().getConfigurationSection("market." + i).getKeys(false).size();
@@ -141,19 +148,19 @@ public final class MagnesifyDungeons extends JavaPlugin {
         dbManager = new DatabaseManager(this);
         dbManager.initialize();
 
-        getCommand("MagnesifyDungeons").setExecutor(new Administrator(this));
-        getCommand("MagnesifyDungeons").setTabCompleter(new Administrator(this));
-        getCommand("MagnesifyDungeonsTrigger").setExecutor(new TriggerTypeDungeon(this));
-        getCommand("MagnesifyDungeonsTrigger").setTabCompleter(new TriggerTypeDungeon(this));
-        getCommand("MagnesifyDungeonsBoss").setExecutor(new BossManager(this));
-        getCommand("MagnesifyDungeonsBoss").setTabCompleter(new BossManager(this));
-        getCommand("MagnesifyDungeonsMarket").setExecutor(new MarketManager(this));
-        getCommand("Challanges").setExecutor(new ChallangeGuiOpen(this));
+        getCommand("Dungeons").setExecutor(new Administrator(this));
+        getCommand("Dungeons").setTabCompleter(new Administrator(this));
+        getCommand("DiscoveryDungeons").setExecutor(new TriggerTypeDungeon(this));
+        getCommand("DiscoveryDungeons").setTabCompleter(new TriggerTypeDungeon(this));
+        getCommand("Boss").setExecutor(new BossManager(this));
+        getCommand("Boss").setTabCompleter(new BossManager(this));
+        getCommand("Genus").setExecutor(new Genus(this));
+        getCommand("DungeonMarket").setExecutor(new MarketManager(this));
         getCommand("DungeonProfile").setExecutor(new Profile(this));
-        getCommand("Dungeons").setExecutor(new DungeonsGuiOpen(this));
+        getCommand("DungeonSpawn").setExecutor(new Spawn(this));
+        getCommand("Challanges").setExecutor(new ChallangeGuiOpen(this));
         getCommand("Stats").setExecutor(new Stats(this));
         getCommand("Join").setExecutor(new JoinDungeon(this));
-        getCommand("DungeonSpawn").setExecutor(new Spawn(this));
         getCommand("Leave").setExecutor(new LeaveDungeon(this));
 
         Bukkit.getPluginManager().registerEvents(new GenusGuiInteract(this), this);
@@ -161,9 +168,13 @@ public final class MagnesifyDungeons extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BossCreateEvent(this), this);
         Bukkit.getPluginManager().registerEvents(new ProfileGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallangeGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new BossTypeGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerTypeLevelBossInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new BossGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new MagnesifyBossGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new CustomCommands(this), this);
+        Bukkit.getPluginManager().registerEvents(new SettingsGuiInteract(this), this);
+        Bukkit.getPluginManager().registerEvents(new TriggerGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new DropsGuiInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new TriggerSetupEvents(this), this);
         Bukkit.getPluginManager().registerEvents(new DungeonsGuiInteract(this), this);

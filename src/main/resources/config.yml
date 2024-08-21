@@ -15,10 +15,14 @@ settings:
       material: BOOK
   trigger-type:
     boss:
-      title: '<#4b8eff>Zindan Seviyeleri'
+      title: '<#4b8eff>Dungeon Levels'
     dungeons:
-      title: '<#4b8eff>Aktif Keşif Zindanları'
-    title: '<#4b8eff>Keşif Zindanları'
+      title: '<#4b8eff>Active Discovery Dungeons'
+    boss-list:
+      title: '<#4b8eff>Boss List (Magnesify Boss)'
+    types:
+      title: '<#4b8eff>Boss Types (Magnesify Boss)'
+    title: '<#4b8eff>Discovery Dungeons'
     custom-gui-texture: _iainternal:blank_menu
     defaults:
       display: '<#4b8eff>&l#dungeon'
@@ -89,6 +93,8 @@ settings:
     title: '<#4b8eff>Yaratık güncelleme ekranı'
     drops:
       title: '<#4b8eff>Düşen eşyaları güncelliyorsun...'
+    settings:
+      title: '<#4b8eff>Boss Settings...'
   genus:
     title: '<#4b8eff>Tür seçim ekranı'
     custom-gui-texture: _iainternal:blank_menu

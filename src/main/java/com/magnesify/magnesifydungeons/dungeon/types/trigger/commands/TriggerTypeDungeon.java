@@ -6,9 +6,13 @@ import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.TriggerSetup;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.gui.IATriggerGuiLoader;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.commands.gui.TriggerGuiLoader;
 import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.TriggerTypeLevelBossLoader;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.boss.MagnesifyBossGuiLoader;
 import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.magnesify.magnesifydungeons.MagnesifyDungeons.get;
+import static com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer.parseHexColors;
 import static com.magnesify.magnesifydungeons.dungeon.types.trigger.events.TriggerSetupEvents.setupDataHolder;
 import static com.magnesify.magnesifydungeons.modules.Defaults.TEXT_PREFIX;
 import static com.magnesify.magnesifydungeons.modules.managers.DungeonContentManager.dungeonChestCreation;
@@ -56,6 +61,7 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
             commands.add("setup");
             commands.add("join");
             commands.add("delete");
+            commands.add("dungeon-levels");
             commands.add("manage");
             commands.add("chest-mode");
             commands.add("update");
@@ -101,16 +107,18 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
             }
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("update")) {
-                DatabaseManager databaseManager = new DatabaseManager(get());
-                for(int i = 0; i<databaseManager.TriggerTypeDungeons().getAllDungeons().size(); i++) {
-                    commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
+                if (args[1].equalsIgnoreCase("boss")) {
+                    commands.add("<level>");
+                    StringUtil.copyPartialMatches(args[2], commands, completions);
+                } else {
+                    DatabaseManager databaseManager = new DatabaseManager(get());
+                    for(int i = 0; i<databaseManager.TriggerTypeDungeons().getAllDungeons().size(); i++) {
+                        commands.add(databaseManager.TriggerTypeDungeons().getAllDungeons().get(i));
+                    }
+                    StringUtil.copyPartialMatches(args[2], commands, completions);
                 }
-                StringUtil.copyPartialMatches(args[2], commands, completions);
             }
-            if (args[1].equalsIgnoreCase("boss")) {
-                commands.add("<level>");
-                StringUtil.copyPartialMatches(args[2], commands, completions);
-            }
+
         } else if (args.length == 4) {
             if (args[0].equalsIgnoreCase("update")) {
                 if (args[1].equalsIgnoreCase("boss")) {
@@ -293,6 +301,19 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                     if (databaseManager.TriggerTypeDungeons().isDungeonExists(strings[1])) {
                         if (commandSender instanceof Player) {
                             Player player = ((Player) commandSender).getPlayer();
+                            new_dungeon.clear();
+                            new_dungeon.put("dungeon_name", strings[1]);
+                            MagnesifyBossGuiLoader.openInventory(player,strings[1]);
+                        } else {
+                            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
+                        }
+                    } else {
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.dungeon.unknow-dungeon").replace("#name", strings[1]));
+                    }
+                } else if (strings[0].equalsIgnoreCase("dungeon-levels")) {
+                    if (databaseManager.TriggerTypeDungeons().isDungeonExists(strings[1])) {
+                        if (commandSender instanceof Player) {
+                            Player player = ((Player) commandSender).getPlayer();
                             TriggerTypeLevelBossLoader.openInventory(player);
                         } else {
                             dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
@@ -373,7 +394,20 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
                 help(commandSender);
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.no-permission"));
+            if(commandSender instanceof Player) {
+                Player player = (Player) commandSender;
+                boolean textc = get().getConfig().isSet("settings.trigger-type.dungeon-list.custom-gui-texture");
+                if(textc) {
+                    if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+                        IATriggerGuiLoader.openInventory(player);
+                    } else {
+                        Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'settings.trigger-type.dungeon-list.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."));
+                        TriggerGuiLoader.openInventory(player);
+                    }
+                } else {
+                    TriggerGuiLoader.openInventory(player);
+                }
+            }
         }
         return false;
     }

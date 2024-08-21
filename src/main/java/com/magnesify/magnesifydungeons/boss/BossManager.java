@@ -180,7 +180,9 @@ public class BossManager implements CommandExecutor, TabCompleter {
                 if(args[1].equalsIgnoreCase("type")) {
                     commands.add("SKELETON");
                     commands.add("PHANTOM");
+                    commands.add("WITHER_SKELETON");
                     commands.add("ZOMBIE");
+                    commands.add("MAGMA_CUBE");
                     StringUtil.copyPartialMatches(args[3], commands, completions);
                 }
             }

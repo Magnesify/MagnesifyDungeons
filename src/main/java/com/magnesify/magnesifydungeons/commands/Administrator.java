@@ -7,8 +7,9 @@ import com.magnesify.magnesifydungeons.dungeon.Dungeon;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonConsole;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonEntity;
 import com.magnesify.magnesifydungeons.dungeon.entitys.DungeonPlayer;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.dungeons.DungeonsGuiLoader;
+import com.magnesify.magnesifydungeons.dungeon.types.trigger.gui.dungeons.IADungeonsGuiLoader;
 import com.magnesify.magnesifydungeons.files.GenusFile;
-import com.magnesify.magnesifydungeons.files.JsonStorage;
 import com.magnesify.magnesifydungeons.files.Options;
 import com.magnesify.magnesifydungeons.genus.gui.GenusGuiLoader;
 import com.magnesify.magnesifydungeons.genus.gui.IAGenusGuiLoader;
@@ -237,7 +238,7 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                     }
                 }else if (strings[0].equalsIgnoreCase("hook")) {
                     if(strings[1].equalsIgnoreCase("Vault")) {
-                        if (!setupEconomy() ) {
+                        if (!setupEconomy()) {
                             dungeonEntity.EntityChatManager().send(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.supports.vault.not-found"), TEXT_PREFIX)));
                             setVault(false);
                         } else {
@@ -451,7 +452,22 @@ public class Administrator implements Arguments, CommandExecutor, TabCompleter {
                 help(commandSender);
             }
         } else {
-            dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.no-permission"));
+            if(commandSender instanceof Player) {
+                Player player = (Player) commandSender;
+                boolean textc = get().getConfig().isSet("settings.trigger-type.custom-gui-texture");
+                if(textc) {
+                    if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+                        IADungeonsGuiLoader.openInventory(player);
+                    } else {
+                        Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'settings.trigger-type.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."));
+                        DungeonsGuiLoader.openInventory(player);
+                    }
+                } else {
+                    DungeonsGuiLoader.openInventory(player);
+                }
+            } else {
+                dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
+            }
         }
 
         return false;

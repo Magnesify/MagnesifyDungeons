@@ -17,16 +17,16 @@ messages:
     market:
       - ''
       - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fMarket'
-      - ' &b/Mgdm reload &f: Saves the market.yml file.'
-      - ' &b/Mgdm &f: Opens the Market menu.'
+      - ' &b/dungeonmarket reload &f: Saves the market.yml file.'
+      - ' &b/dungeonmarket &f: Opens the Market menu.'
       - ''
     boss:
       - ''
       - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fBoss Creation'
-      - ' &b/Mgdb create &f: Creates a new boss.'
-      - ' &b/Mgdb delete <boss> &f: Deletes the selected boss.'
-      - ' &b/Mgdb list &f: Lists all bosses.'
-      - ' &b/Mgdb cancel &f: Cancels boss creation.'
+      - ' &b/boss create &f: Creates a new boss.'
+      - ' &b/boss delete <boss> &f: Deletes the selected boss.'
+      - ' &b/boss list &f: Lists all bosses.'
+      - ' &b/boss cancel &f: Cancels boss creation.'
       - ''
     player:
       join:
@@ -38,14 +38,14 @@ messages:
     admin:
       - ''
       - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fAdmin Commands'
-      - ' &b/Mgd reload &f: Reloads the plugin.'
-      - ' &b/Mgd create &f: Creates a new dungeon.'
-      - ' &b/Mgd point <give, take, reset, set> <player> <amount> &f: Adds points to a player’s account.'
-      - ' &b/Mgd join <Dungeon> &f: Joins the specified dungeon directly (use when the server is in development mode).'
-      - ' &b/Mgd update <point, name, boss, playtime, start time, level, next-level, category> <dungeon> <New Value> &f: Updates the existing dungeon.'
-      - ' &b/Mgd delete <dungeon> &f: Deletes the selected dungeon.'
-      - ' &b/Mgd setmainspawn &f: Sets the main spawn point.'
-      - ' &b/Mgd cancel &f: Cancels dungeon creation.'
+      - ' &b/dungeon reload &f: Reloads the plugin.'
+      - ' &b/dungeon create &f: Creates a new dungeon.'
+      - ' &b/dungeon point <give, take, reset, set> <player> <amount> &f: Adds points to a player’s account.'
+      - ' &b/dungeon join <Dungeon> &f: Joins the specified dungeon directly (use when the server is in development mode).'
+      - ' &b/dungeon update <point, name, boss, playtime, start time, level, next-level, category> <dungeon> <New Value> &f: Updates the existing dungeon.'
+      - ' &b/dungeon delete <dungeon> &f: Deletes the selected dungeon.'
+      - ' &b/dungeon setmainspawn &f: Sets the main spawn point.'
+      - ' &b/dungeon cancel &f: Cancels dungeon creation.'
       - ''
       - ' &b・ &fFor boss management: &d/Mgdb'
       - ''
@@ -53,12 +53,12 @@ messages:
       admin:
         - ''
         - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &fAdmin Commands'
-        - ' &b/Mgdt setup <Dungeon Name> <Category> &f: Creates a new dungeon.'
-        - ' &b/Mgdt join <Dungeon> &f: Joins the selected dungeon.'
-        - ' &b/Mgdt delete <dungeon> &f: Deletes the selected dungeon.'
+        - ' &b/discoverydungeon setup <Dungeon Name> <Category> &f: Creates a new dungeon.'
+        - ' &b/discoverydungeon join <Dungeon> &f: Joins the selected dungeon.'
+        - ' &b/discoverydungeon delete <dungeon> &f: Deletes the selected dungeon.'
         - ''
-        - ' &b・ &fFor boss management: &d/Mgdb'
-        - ' &b・ &fFor level-based dungeon management: &d/Mgd'
+        - ' &b・ &fFor boss management: &d/boss'
+        - ' &b・ &fFor level-based dungeon management: &d/dungeon'
         - ''
   error:
     title: "&c&lERROR"
@@ -188,6 +188,16 @@ plugin:
     attack: '&fAttack damage: &a%s'
     type: '&fType: &a%s'
     items: '&aItems dropped by the creature'
+    settings-gui:
+      health: '&cBoss Health: &c&l%s'
+      health-lore: '&cLeft Click: &c&l- &8| &aRight Click: &a&l+'
+      knockback: '&cBoss Knockback: &c&l%s'
+      knockback-lore: '&cLeft Click: &c&l- &8| &aRight Click: &a&l+'
+      attack: '&cBoss Attack Damage: &c&l%s'
+      attack-lore: '&cLeft Click: &c&l- &8| &aRight Click: &a&l+'
+      mythic: '&cBoss Manager: &c&l%s'
+      mythic-lore: '&cLeft Click: &c&lMythic Boss &8| &aRight Click: &a&lMagnesify Boss'
+      back: "&cGo Back"
   challange:
     setup-subtitle: "<#4b8eff>You are currently creating a dungeon in Challenge mode!"
   developer: "<#4b8eff>Magnesify Dungeons&f, developed by Hacı Mert Gökhan."
