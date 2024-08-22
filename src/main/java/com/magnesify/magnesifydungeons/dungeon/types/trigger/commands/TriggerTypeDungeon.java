@@ -63,6 +63,7 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
             commands.add("delete");
             commands.add("dungeon-levels");
             commands.add("manage");
+            commands.add("gui");
             commands.add("chest-mode");
             commands.add("update");
             StringUtil.copyPartialMatches(args[0], commands, completions);
@@ -163,6 +164,27 @@ public class TriggerTypeDungeon implements CommandExecutor, TabCompleter {
             DatabaseManager databaseManager = new DatabaseManager(get());
             if (strings.length == 0) {
                 help(commandSender);
+            } else if (strings.length == 1) {
+                if (strings[0].equalsIgnoreCase("gui")) {
+                    if(commandSender instanceof Player) {
+                        Player player = (Player) commandSender;
+                        boolean textc = get().getConfig().isSet("settings.trigger-type.dungeon-list.custom-gui-texture");
+                        if(textc) {
+                            if(Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+                                IATriggerGuiLoader.openInventory(player);
+                            } else {
+                                Bukkit.getConsoleSender().sendMessage(parseHexColors("<#4b8eff>[Magnesify Dungeons] &f'settings.trigger-type.dungeon-list.custom-gui-texture' ayarlanmış durumda ancak ItemsAdder sunucuda bulunmuyor..."));
+                                TriggerGuiLoader.openInventory(player);
+                            }
+                        } else {
+                            TriggerGuiLoader.openInventory(player);
+                        }
+                    } else {
+                        dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
+                    }
+                } else {
+                    help(commandSender);
+                }
             }else if (strings.length == 5) {
                 if (strings[0].equalsIgnoreCase("update")) {
                     if (strings[1].equalsIgnoreCase("boss")) {

@@ -1,3 +1,7 @@
+license:
+  mail: ""
+  key: ""
+
 settings:
   prefix: '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls&r &8・&r'
   top-list-amount: 5
@@ -22,6 +26,19 @@ settings:
       title: '<#4b8eff>Boss List (Magnesify Boss)'
     types:
       title: '<#4b8eff>Boss Types (Magnesify Boss)'
+    dungeon-list:
+      title: '<#4b8eff>Discovery Dungeons'
+      custom-gui-texture: _iainternal:blank_menu
+      defaults:
+        display: '<#4b8eff>&l#dungeon'
+        material: NETHERITE_AXE
+        lore:
+          - ''
+          - '&fDurum: &e#status'
+          - ''
+          - '&fSüre: <#4b8eff>#play_time'
+          - '&fToplam <#4b8eff>#total_level &fseviyeden oluşuyor...'
+          - ''
     title: '<#4b8eff>Discovery Dungeons'
     custom-gui-texture: _iainternal:blank_menu
     defaults:
@@ -105,7 +122,6 @@ settings:
     teleport-delay-for-sending-spawn: 3
   defaults:
     dungeon-world: "Magnesify"
-    last-dungeon: "Henüz bir zindana giriş yapmamış."
   sounds:
     starting: ENTITY_PLAYER_LEVELUP
     entering: ENTITY_PLAYER_LEVELUP

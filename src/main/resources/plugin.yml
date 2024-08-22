@@ -7,11 +7,10 @@ prefix: MagnesifyDungeons
 authors: [hacimertgokhan]
 softdepend:
   - MythicMobs
-  - PlaceholderAPI
   - ItemsAdder
   - Vault
 description: MagnesifyDungeons, Gelişmiş zindan eklentisi.
-website: documents.magnesify.com
+website: wiki.magnesify.com
 commands:
   Dungeons:
     aliases:

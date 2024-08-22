@@ -62,21 +62,9 @@ public final class MagnesifyDungeons extends JavaPlugin {
     private static MagnesifyDungeons instance;
     public synchronized static MagnesifyDungeons get() {return instance;}
     public void setInstance(MagnesifyDungeons magnesifyDungeons) {instance = magnesifyDungeons;}
-
-    private void logMemoryUsage() {
-        Runtime runtime = Runtime.getRuntime();
-        long usedMemory = runtime.totalMemory() - runtime.freeMemory();
-        long maxMemory = runtime.maxMemory();
-        double usedMemoryMB = usedMemory / 2048.0 / 2048.0;
-        double maxMemoryMB = maxMemory / 2048.0 / 2048.0;
-        getLogger().info(String.format("[Memory] Used Memory: %.2f MB, Maximum Memory: %.2f MB", usedMemoryMB, maxMemoryMB));
-
-    }
-
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
-        getServer().getScheduler().runTaskTimer(this, this::logMemoryUsage, 20L, 20L * 60);
         setInstance(this);
         LanguageFile languageFile = new LanguageFile();
         languageFile.createLanguage();
@@ -120,11 +108,6 @@ public final class MagnesifyDungeons extends JavaPlugin {
                 Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.mythicmobs.not-found")));
                 Bukkit.getPluginManager().registerEvents(new BossDeathEvent(this), this);
                 setMythic(false);
-            }
-            if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.papi.found")));
-            } else {
-                Bukkit.getConsoleSender().sendMessage(parseHexColors( new LanguageFile().getLanguage().getString("plugin.supports.papi.not-found")));
             }
         }
 

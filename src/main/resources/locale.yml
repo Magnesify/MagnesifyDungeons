@@ -222,9 +222,6 @@ plugin:
     items-adder:
       found: "<#4b8eff>[Magnesify Dungeons] &fSupported plugin 'ItemsAdder' detected. Adapting to market..."
       not-found: "<#4b8eff>[Magnesify Dungeons] &fItemsAdder not found, adaptation for this plugin is skipped."
-    papi:
-      found: "<#4b8eff>[Magnesify Dungeons] &fSupported plugin 'PlaceHolderAPI' detected. Adapting to plugin..."
-      not-found: "<#4b8eff>[Magnesify Dungeons] &fPlaceHolderAPI not found, adaptation for this plugin is skipped."
     mythicmobs:
       found: "<#4b8eff>[Magnesify Dungeons] &fSupported plugin 'MythicMobs' detected. Adapting to plugin..."
       not-found: "<#4b8eff>[Magnesify Dungeons] &fMythicMobs not found, adaptation for this plugin is skipped."

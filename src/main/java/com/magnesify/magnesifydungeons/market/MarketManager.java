@@ -45,7 +45,7 @@ public class MarketManager implements CommandExecutor {
                 dungeonEntity.EntityChatManager().send(new LanguageFile().getLanguage().getString("messages.in-game-command"));
             }
         } else if (strings.length == 1) {
-            if (commandSender.hasPermission("mgd.market")) {
+            if (commandSender.hasPermission("mgd.admin")) {
                 if (strings[0].equalsIgnoreCase("reload")) {
                     MarketFile marketFile = new MarketFile();
                     marketFile.saveKitsConfig();
