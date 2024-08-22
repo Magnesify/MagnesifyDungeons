@@ -176,6 +176,21 @@ plugin:
   unknow-boss: "<#4f91fc>[Magnesify Dungeons] &fThere is no creature named %s. To avoid errors, Magnesify is spawning a normal creature..."
   chest-mode: "%s %s chest created for the dungeon!"
   market-reloaded: "%s &fmarket.yml successfully saved..."
+  setup:
+    spawn: "&aStarting Area"
+    new-level-entry-point: "&aNew Level Entry Area"
+    cancel: "&cCancel Setup"
+    done: "&cFinish Setup"
+    boss-spawn-point: "&aCreature Spawn Point"
+    messages:
+      spawn-selected: "%s %s için başlangıç bölgesi seçildi !"
+      cancelled: "%s The setup of the dungeon named %s has been cancelled, the dungeon has been deleted!"
+      already-done: "%s The setup of the dungeon named %s has already been completed!"
+      done: "%s The setup of the dungeon named %s has been completed!"
+      info: "%s The total number of checkpoints (levels) for %s is %s."
+      new-level-point-selected: "%s Level %s has been selected! Coordinate information: &b%s x:%s, y:%s, z:%s"
+      new-boss-point-selected: "%s The spawn point for the creature for level %s has been selected! Coordinate information: &b%s x:%s, y:%s, z:%s"
+
   boss-gui:
     name: "&a%s is being edited..."
     click-with-new-item: '&7Click here with a new item.'

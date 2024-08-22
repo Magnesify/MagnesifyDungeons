@@ -2,6 +2,7 @@ package com.magnesify.magnesifydungeons.dungeon.types.trigger.events;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
 import com.magnesify.magnesifydungeons.genus.DungeonGenus;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import com.magnesify.magnesifydungeons.modules.managers.DungeonContentManager;
 import com.magnesify.magnesifydungeons.storage.PlayerMethods;
@@ -38,13 +39,13 @@ public class TriggerSetupEvents implements Listener {
         }
         if (item.hasItemMeta() && item.getItemMeta() != null) {
             ItemMeta meta = item.getItemMeta();
-            if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"))) {
+            if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.spawn")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.new-level-entry-point")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.cancel")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.done")))) {
                 event.setCancelled(true);
             }
         }
@@ -57,13 +58,13 @@ public class TriggerSetupEvents implements Listener {
         }
         if (item.hasItemMeta() && item.getItemMeta() != null) {
             ItemMeta meta = item.getItemMeta();
-            if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"))) {
+            if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.spawn")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.new-level-entry-point")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.cancel")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.done")))) {
                 event.setCancelled(true);
             }
         }
@@ -77,13 +78,13 @@ public class TriggerSetupEvents implements Listener {
         }
         if (item.hasItemMeta() && item.getItemMeta() != null) {
             ItemMeta meta = item.getItemMeta();
-            if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"))) {
+            if (meta.getDisplayName().startsWith(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.spawn")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.new-level-entry-point")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.cancel")))) {
                 event.setCancelled(true);
-            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"))) {
+            } else if (meta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.done")))) {
                 event.setCancelled(true);
             }
         }
@@ -109,14 +110,14 @@ public class TriggerSetupEvents implements Listener {
             }
             if (item.hasItemMeta()) {
                 DatabaseManager databaseManager = new DatabaseManager(get());
-                if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"))) {
+                if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',  new LanguageFile().getLanguage().getString("plugin.setup.spawn")))) {
                     if (new_dungeon.get("new") != null) {
                         if (databaseManager.TriggerTypeDungeons().isDungeonExists(new_dungeon.get("new"))) {
                             databaseManager.TriggerTypeDungeons().setSpawn(new_dungeon.get("new"), event.getPlayer().getLocation());
-                            event.getPlayer().sendMessage(parseHexColors(String.format("%s %s için başlangıç bölgesi seçildi !", TEXT_PREFIX, new_dungeon.get("new"))));
+                            event.getPlayer().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.setup.messages.spawn-selected"), TEXT_PREFIX, new_dungeon.get("new"))));
                         }
                     }
-                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYaratık Doğum Noktası"))) {
+                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.boss-spawn-point")))) {
                     if (setupDataHolder.get("level_boss") == null) {
                         setupDataHolder.put("level_boss", 1);
                         databaseManager.CreateNewBosspoints(new_dungeon.get("new"), setupDataHolder.get("level_boss"), event.getPlayer().getLocation());
@@ -124,8 +125,8 @@ public class TriggerSetupEvents implements Listener {
                         setupDataHolder.put("level_boss", setupDataHolder.get("level_boss") + 1);
                         databaseManager.CreateNewBosspoints(new_dungeon.get("new"), setupDataHolder.get("level_boss"), event.getPlayer().getLocation());
                     }
-                    event.getPlayer().sendMessage(parseHexColors(String.format("%s %s. seviye için yaratığın doğum noktası seçildi ! Koordinat bilgisi: &b%s x:%s, y:%s, z:%s", TEXT_PREFIX, String.valueOf(setupDataHolder.get("level_boss")), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
-                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"))) {
+                    event.getPlayer().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.setup.messages.new-boss-point-selected"), TEXT_PREFIX, String.valueOf(setupDataHolder.get("level_boss")), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
+                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.new-level-entry-point")))) {
                     if (setupDataHolder.get("level") == null) {
                         setupDataHolder.put("level", 1);
                         databaseManager.CreateNewCheckpoint(new_dungeon.get("new"), setupDataHolder.get("level"), event.getPlayer().getLocation(), "Magnesify");
@@ -133,11 +134,11 @@ public class TriggerSetupEvents implements Listener {
                         setupDataHolder.put("level", setupDataHolder.get("level") + 1);
                         databaseManager.CreateNewCheckpoint(new_dungeon.get("new"), setupDataHolder.get("level"), event.getPlayer().getLocation(), "Magnesify");
                     }
-                    event.getPlayer().sendMessage(parseHexColors(String.format("%s %s. seviye seçildi ! Koordinat bilgisi: &b%s x:%s, y:%s, z:%s", TEXT_PREFIX, String.valueOf(setupDataHolder.get("level")), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
-                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"))) {
+                    event.getPlayer().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.setup.messages.new-level-point-selected"), TEXT_PREFIX, String.valueOf(setupDataHolder.get("level")), event.getPlayer().getLocation().getWorld().getName(), String.valueOf(event.getPlayer().getLocation().getX()), String.valueOf(event.getPlayer().getLocation().getY()), String.valueOf(event.getPlayer().getLocation().getZ()))));
+                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.done")))) {
                     if (!databaseManager.TriggerTypeDungeons().isEnable(new_dungeon.get("new"))) {
-                        event.getPlayer().sendMessage(parseHexColors(String.format("%s %s adlı zindanın kurulumu bitirildi !", TEXT_PREFIX, new_dungeon.get("new"))));
-                        event.getPlayer().sendMessage(parseHexColors(String.format("%s %s için toplam checkpoint (seviye) sayısı %s.", TEXT_PREFIX, new_dungeon.get("new"), setupDataHolder.get("level"))));
+                        event.getPlayer().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.setup.messages.done"), TEXT_PREFIX, new_dungeon.get("new"))));
+                        event.getPlayer().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.setup.messages.info"), TEXT_PREFIX, new_dungeon.get("new"), setupDataHolder.get("level"))));
                         databaseManager.TriggerTypeDungeons().setEnable(new_dungeon.get("new"), "Evet");
                         databaseManager.TriggerTypeDungeons().setTotalCheckpoints(new_dungeon.get("new"), setupDataHolder.get("level"));
                         new_dungeon.remove("new");
@@ -147,10 +148,10 @@ public class TriggerSetupEvents implements Listener {
                         new_dungeon.clear();
                         event.getPlayer().getInventory().clear();
                     } else {
-                        event.getPlayer().sendMessage(parseHexColors(String.format("%s %s adlı zindanın kurulumu zaten bitirilmiş !", TEXT_PREFIX, new_dungeon.get("new"))));
+                        event.getPlayer().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.setup.messages.already-done"), TEXT_PREFIX, new_dungeon.get("new"))));
                     }
-                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"))) {
-                    event.getPlayer().sendMessage(parseHexColors(String.format("%s %s adlı zindanın kurulumu iptal edildi, zindan silindi !", TEXT_PREFIX, new_dungeon.get("new"))));
+                } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.cancel")))) {
+                    event.getPlayer().sendMessage(parseHexColors(String.format(new LanguageFile().getLanguage().getString("plugin.setup.messages.cancelled"), TEXT_PREFIX, new_dungeon.get("new"))));
                     event.getPlayer().getInventory().clear();
                     new_dungeon.remove("new");
                     setupDataHolder.remove("level");

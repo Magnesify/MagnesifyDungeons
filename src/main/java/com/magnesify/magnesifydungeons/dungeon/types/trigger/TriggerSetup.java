@@ -1,6 +1,7 @@
 package com.magnesify.magnesifydungeons.dungeon.types.trigger;
 
 import com.magnesify.magnesifydungeons.MagnesifyDungeons;
+import com.magnesify.magnesifydungeons.languages.LanguageFile;
 import com.magnesify.magnesifydungeons.modules.managers.DatabaseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,7 +23,7 @@ public class TriggerSetup {
 
         ItemStack start_location = new ItemStack(Material.CLOCK, 1);
         ItemMeta start_location_meta = start_location.getItemMeta();
-        start_location_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aBaşlangıç Bölgesi"));
+        start_location_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.spawn")));
         List<String> slm = new ArrayList<>();
         slm.add(" ");
         slm.add(ChatColor.translateAlternateColorCodes('&', "&fZindana giren oyuncuların başlayacağı ilk bölgeyi seçmek için kullanılır."));
@@ -32,7 +33,7 @@ public class TriggerSetup {
 
         ItemStack checkpoint = new ItemStack(Material.REPEATER, 1);
         ItemMeta checkpoint_meta = checkpoint.getItemMeta();
-        checkpoint_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aYeni Seviyeye Giriş Bölgesi"));
+        checkpoint_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.new-level-entry-point")));
         List<String> cpm = new ArrayList<>();
         cpm.add(" ");
         cpm.add(ChatColor.translateAlternateColorCodes('&', "&fCheckpoint olarak düşünülebilir, yeni bir seviyeye geçiş için kullanılır."));
@@ -42,7 +43,7 @@ public class TriggerSetup {
 
         ItemStack bp = new ItemStack(Material.IRON_SWORD, 1);
         ItemMeta bp_meta = bp.getItemMeta();
-        bp_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aYaratık Doğum Noktası"));
+        bp_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.boss-spawn-point")));
         List<String> bpm = new ArrayList<>();
         bpm.add(" ");
         bpm.add(ChatColor.translateAlternateColorCodes('&', "&fYaratığının doğacağı lokasyonu seçmek için kullanırsınız."));
@@ -52,7 +53,7 @@ public class TriggerSetup {
 
         ItemStack cancel = new ItemStack(Material.ARROW, 1);
         ItemMeta cancel_meta = cancel.getItemMeta();
-        cancel_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&cKurulumu İptal Et"));
+        cancel_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.cancel")));
         List<String> cm = new ArrayList<>();
         cm.add(" ");
         cm.add(ChatColor.translateAlternateColorCodes('&', "&fKurulumu iptal etmek için sağ tıklayınız."));
@@ -62,7 +63,7 @@ public class TriggerSetup {
 
         ItemStack kurulum = new ItemStack(Material.GREEN_DYE, 1);
         ItemMeta kurulum_meta = cancel.getItemMeta();
-        kurulum_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&eKurulumu Bitir"));
+        kurulum_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', new LanguageFile().getLanguage().getString("plugin.setup.done")));
         List<String> km = new ArrayList<>();
         km.add(" ");
         km.add(ChatColor.translateAlternateColorCodes('&', "&fKurulumu tamamlamak için tıklayınız."));
