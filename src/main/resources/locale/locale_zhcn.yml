@@ -1,0 +1,227 @@
+
+messages:
+  events:
+    joined:
+      - ''
+      - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &f你已踏入地牢之界!'
+      - ' &f你需要在 &d#playtime &f秒内击杀头目.'
+      - ' &f下一级: &d#next_level.'
+      - ' &f地牢分类: &d#category.'
+      - ' &f战斗即将开始...'
+      - ''
+      - '<#4f91fc>&lMagnesify Dungeons &8・ &f头目信息'
+      - ' &f名称: &d#boss_name'
+      - ' &f生命: &d#boss_health'
+      - ''
+  helps:
+    market:
+      - ''
+      - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &f市场'
+      - ' &b/Mgdm reload &f: 保存 market.yml 文件.'
+      - ' &b/Mgdm &f: 打开市场菜单.'
+      - ''
+    boss:
+      - ''
+      - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &f头目创建'
+      - ' &b/Mgdb create &f: 创建新头目.'
+      - ' &b/Mgdb delete <头目名称> &f: 删除选定头目.'
+      - ' &b/Mgdb list &f: 列出所有头目.'
+      - ' &b/Mgdb cancel &f: 取消头目创建.'
+      - ''
+    player:
+      join:
+        - ''
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &f活动命令'
+        - ' &b/join <地牢名称>&f: &7加入指定地牢.'
+        - ' &b/join menu&f: &7显示地牢分类.'
+        - ''
+    admin:
+      - ''
+      - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &f管理员命令'
+      - ' &b/Mgd reload &f: 重载插件.'
+      - ' &b/Mgd create &f: 创建新地牢.'
+      - ' &b/Mgd point <give, take, reset, set> <玩家名称> <数量> &f: 对玩家点数进行操作.'
+      - ' &b/Mgd join <地牢名称> &f: 强制加入地牢 (开发模式下).'
+      - ' &b/Mgd update <point, name, boss, playtime, start time, level, next-level, category> <地牢名称> <新值> &f: 更新地牢设置.'
+      - ' &b/Mgd delete <地牢> &f: 删除指定地牢.'
+      - ' &b/Mgd setmainspawn &f: 设置主出生点.'
+      - ' &b/Mgd cancel &f: 取消地牢创建.'
+      - ''
+      - ' &b・ &f打开头目管理: &d/Mgdb'
+      - ''
+    trigger-type-dungeon:
+      admin:
+        - ''
+        - '<#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・ &f管理员命令'
+        - ' &b/Mgdt setup <地牢名称> <所属分类> &f: 创建新地牢.'
+        - ' &b/Mgdt join <地牢名称> &f: 加入指定地牢.'
+        - ' &b/Mgdt delete <地牢名称> &f: 删除指定地牢.'
+        - ''
+        - ' &b・ &f打开头目管理: &d/Mgdb'
+        - ' &b・ &f打开关卡地牢管理: &d/Mgd'
+        - ''
+  error:
+    title: "&c&l错误"
+    wait: "&f仍需等待 &c#countdown &f秒!"
+    not-your-genus-skill: '&f当前类型不可使用此功能!'
+    player-not-online: '#prefix 玩家不在线!'
+    select-spawn-first: '#prefix 你需要先设置出生点! &d/Mgd setmainspawn'
+    cannot-created: '#prefix 已存在名为 &d#name &f的地牢; 请考虑修改地牢名称?'
+    no-data-found: '#prefix 无数据可用.'
+    not-whitelist-command: '#prefix 地牢内不可使用该命令!'
+  depends:
+    not-loaded: '#prefix #plugin 未能成功启用, 可能载入时出现了错误.'
+  countdown-warn:
+    title: '&c&l时间不足'
+    subtitle: '&f只剩 &c#remain &f秒了!'
+  genus:
+    unknow-tool: '#prefix &d#name &f为无效物品.'
+    added-skill-tool: '#prefix &d#name &f类型的特殊物品已发送至你的背包!'
+    selected:
+      title: '<#4f91fc>&lMagnesify Dungeons'
+      subtitle: '&f你选择了地牢类型 &e#genus &f!'
+  reload: '#prefix 插件成功重载, 耗时 <#4f91fc>#ms &f毫秒.'
+  no-permission: '#prefix 你没有权限这么做.'
+  in-game-command: '#prefix 你不能在控制台执行此命令.'
+  main-spawn-selected: '#prefix 已设置主出生点.'
+  point:
+    player:
+      reset:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&f你的账户信息已被重置!'
+      set:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&f你的点数已被设置为 &e#amount &f!'
+      taked:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&f#amount 点数已从你的账户中取出!'
+      gived:
+        title: '&8・ <#4b8eff>&lM<#5286ff>&la<#597eff>&lg<#5f75ff>&ln<#666dff>&le<#6d65fe>&ls<#745dfe>&li<#7a55fe>&lf<#814dfe>&ly <#8844fe>&lD<#8f3cfe>&lu<#9534fe>&ln<#9c2cfe>&lg<#a324fd>&le<#aa1bfd>&lo<#b013fd>&ln<#b70bfd>&ls &8・'
+        subtitle: '&f#amount 点数已加入你的账户!'
+    admin:
+      gived: '#prefix &e#player &f已获得 &e#amount &f点数.'
+      reset: '#prefix &e#player &f的账户已被重置.'
+      taked: '#prefix &e#player &f已失去 &e#amount &f点数.'
+      set: '#prefix &e#player &f的点数已被设置为 &e#amount.'
+  market:
+    buy: '#prefix &f物品 #product 售价为 &e#price.'
+    not-enough-balance: '#prefix 你没有足够的钱购买 #product. 你需要: &e#price'
+  status:
+    lose:
+      chat: '#prefix 你被怪物击杀...'
+      title: '&c&l你死了'
+      time-subtitle: '&f你未能在指定时间内通过地牢.'
+      subtitle: '&f你被怪物击杀...'
+    win:
+      chat: '#prefix 你击败了怪物! 你将会在 3 秒内返回起点. 你可以进入下一个地牢了...'
+      title: '&6&l你赢了'
+      subtitle: '&f恭喜! #point 点数已被添加至你的账户!'
+  boss:
+    updated:
+      type: '#prefix &f怪物类型已被更新...'
+      mythic: '#prefix &fMythicBoss 生物: #status'
+    mythic-not-found: '#prefix &fMythicBoss 插件未找到...'
+    creation: '#prefix 进度 &b#done &f已完成. 下一步: &d#next'
+    created: '#prefix 生物已创建. 名称: &d#name, &fID: &d#id.'
+    creation-progress-started: '#prefix 生物创建过程已开始. &d请指定生物名称&f. 若要退出操作, 请输入 &d/Mgdb cancel'
+    deleted: '#prefix 名为 &d#name &f的生物已被删除.'
+    unknow-boss: '#prefix 不存在名为 &d#name &f的生物.'
+    no-progress-found: '#prefix 你没有创建任何生物.'
+  stats:
+    title: "<#4f91fc>&lMagnesify Dungeons &8・ &f排行"
+    sublines: " &f- &a#rank. &f#name"
+  update:
+    point: '#prefix &b#name &f的点数已被更新. 新值: &e#value'
+    name: '#prefix &b#name &f地牢名称已被更新. 新值: &e#value'
+    category: '#prefix &b#name &f地牢分类已被更新. 新值: &e#value'
+    level: '#prefix &b#name &f地牢等级已被更新. 新值: &e#value'
+    next-level: '#prefix &b#name &f地牢下一级别已被更新. 新值: &e#value'
+    boss: '#prefix &b#name &f地牢头目已被更新. 新值: &e#value'
+    play-time: '#prefix &b#name &f地牢游玩时间已被更新. 新值: &e#value'
+    start-time: '#prefix &b#name &f地牢起始时间已被更新. 新值: &e#value'
+    spawn: '#prefix &b#name &f地牢出生点已被更新. 新值: &e#value'
+    level-boss: '#prefix &b#name &f地牢的第 &e#level &f级头目已被改为 &d#boss.'
+  dungeon:
+    boss-not-exists: '#prefix 地牢已被开启但头目不见踪影. 头目是否已经脱逃?'
+    not-in-dungeon: '#prefix 你尚未处于地牢.'
+    not-next-level-dungeon: '#prefix 你现在不能进入此地牢. 你需要先通关前一级地牢!'
+    leave-success: '#prefix 你已离开地牢...'
+    not-first-level: '#prefix 该级地牢不是第一级!'
+    full: '#prefix #name 当前已满. 地牢内的玩家还有 &d#countdown &f秒来完成任务.'
+    already-in-dungeon: '#prefix 你不能进入地牢 #name, 你已经在其他地牢中了!'
+    entering: '<#4f91fc>&l你将会在 #countdown &f秒内传送至地牢... 若要取消, 请输入命令 &d/#custom_commands[leave]'
+    starting: '<#4f91fc>&l战斗将会在 #countdown &f秒内开始... 若要离开, 请输入 &d/#custom_commands[leave]'
+    playing: '&f你需要在 <#4f91fc>&l#countdown &f秒内击败头目! 若要离开, 请输入 &d/#custom_commands[leave]'
+    creation: '#prefix 进度 &b#done &f已完成. 下一步: &d#next'
+    created: '#prefix 地牢已创建. 名称: &d#name, &f分类: &d#category.'
+    creation-progress-started: '#prefix 地牢创建过程已开始. &d请先指定地牢名称&f. 若要取消, 请输入 &d/Mgd cancel'
+    deleted: '#prefix 名为 &d#name &f的地牢已被删除.'
+    unknow-dungeon: '#prefix 没有名为 &d#name &f的地牢.'
+    cancelled: '#prefix &f地牢创建过程已取消.'
+    no-progress-found: '#prefix 你没有在创建任何地牢.'
+    chest-mode:
+      disabled: '#prefix &f箱子编辑模式已被禁用.'
+      enabled: '#prefix &f箱子编辑模式已被启用.'
+    last-level:
+      title: '&6&l最后一关'
+      subtitle: '&f你即将抵达终点!'
+    new-level:
+      title: '&6&l下一关'
+      subtitle: '&f恭喜! 你到达了第 &d#level &f级!'
+    canceled:
+      must-be-number: '#prefix 输入的内容必须为数字.'
+
+plugin:
+  spawn-not-exists: "<#4f91fc>[Magnesify Dungeons] &f出生点所在世界未能找到. 该世界是否已被删除?"
+  unknow-boss: "<#4f91fc>[Magnesify Dungeons] &f不存在名为 %s 的生物. 为了避免错误, 插件正在尝试生成普通生物..."
+  chest-mode: "%s %s 宝箱已为地牢创建!"
+  market-reloaded: "%s &fmarket.yml 保存成功..."
+  boss-gui:
+    name: "&a%s 正在被编辑..."
+    click-with-new-item: '&7手持新物品点此.'
+    drops: '&a更新掉落物'
+    settings: '&a生物设置'
+    details: '&a细节'
+    boss-name: '&f生物名称: &e%s'
+    health: '&f最大生命: &c%s'
+    knockback: '&f击退力度: &a%s'
+    attack: '&f攻击伤害: &a%s'
+    type: '&f类型: &a%s'
+    items: '&a掉落物'
+  challange:
+    setup-subtitle: "<#4b8eff>你正在挑战模式下创建地牢!"
+  developer: "<#4b8eff>Magnesify Dungeons&f, 插件作者 Hacı Mert Gökhan."
+  loaded: "<#4b8eff>[Magnesify Dungeons] &f插件在 %s ms 内载入成功..."
+  data-not-found: "<#4b8eff>[Magnesify Dungeons] 找不到数据 %s, 正在创建."
+  error:
+    ia:
+      genus:  "<#4b8eff>[Magnesify Dungeons] &f'settings.genus.custom-gui-texture' 已设置, 但服务器上没有安装 ItemsAdder..."
+      profile: "<#4b8eff>[Magnesify Dungeons] &f'settings.profile.custom-gui-texture' 已设置, 但服务器上没有安装 ItemsAdder..."
+  boss:
+    created: "<#4b8eff>[Magnesify Dungeons] &f已创建头目 'Magnesify'..."
+  folder:
+    datas:
+      error: "<#4b8eff>[Magnesify Dungeons] &f创建 'datas' 文件夹时出现错误."
+      exists: "<#4b8eff>[Magnesify Dungeons] &f'datas' 文件夹已存在."
+      created: "<#4b8eff>[Magnesify Dungeons] &f'datas' 文件夹创建成功."
+    caches:
+      error: "<#4b8eff>[Magnesify Dungeons] &f创建 'caches' 文件夹时出现错误."
+      exists: "<#4b8eff>[Magnesify Dungeons] &f'caches' 文件夹已存在."
+      created: "<#4b8eff>[Magnesify Dungeons] &f'caches' 文件夹创建成功."
+  supports:
+    items-adder:
+      found: "<#4b8eff>[Magnesify Dungeons] &f兼容插件 'ItemsAdder' 已找到. 正在加入市场..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fItemsAdder 未找到, 正在跳过兼容."
+    papi:
+      found: "<#4b8eff>[Magnesify Dungeons] &f兼容插件 'PlaceHolderAPI' 已找到. 正在兼容..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fPlaceHolderAPI 未找到, 正在跳过兼容."
+    mythicmobs:
+      found: "<#4b8eff>[Magnesify Dungeons] &f兼容插件 'MythicMobs' 已找到. 正在兼容..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fMythicMobs 未找到, 正在跳过兼容."
+    vault:
+      economy: "<#4b8eff>[Magnesify Dungeons] &f未找到经济插件, vault 兼容已跳过..."
+      found: "<#4b8eff>[Magnesify Dungeons] &f兼容插件 'Vault' 已找到. 正在加入市场..."
+      unload: "<#4b8eff>[Magnesify Dungeons] &fVault 兼容已被取消..."
+      not-found: "<#4b8eff>[Magnesify Dungeons] &fVault 未找到, 正在跳过兼容."
+  market:
+    info: "<#4b8eff>[Magnesify Dungeons] &f市场内目前有 <#4b8eff>%s&f 个上架物品."
