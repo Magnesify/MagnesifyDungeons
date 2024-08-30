@@ -76,6 +76,7 @@ messages:
     subtitle: '&fOnly &c#remain &fseconds left!'
   genus:
     unknow-tool: '#prefix &d#name &fis not a known item.'
+    returned-human: '#prefix &7Returned human.'
     added-skill-tool: '#prefix &d#name &ftype’s special item has been added to your inventory!'
     selected:
       title: '<#4f91fc>&lMagnesify Dungeons'
